@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE securityfilter-config PUBLIC
+        "-//SecurityFilter.org//DTD Security Filter Configuration 2.0//EN"
+        "http://www.securityfilter.org/dtd/securityfilter-config_2_0.dtd">
+
+<securityfilter-config>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Secure Page</web-resource-name>
+            <url-pattern>/secure/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>inthisrole</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <form-login-config>
+            <form-login-page>/login.html</form-login-page>
+            <form-error-page>/error.html</form-error-page>
+            <form-default-page>/secure/home.html</form-default-page>
+        </form-login-config>
+    </login-config>
+
+
+    <!-- this is a Catalina realm that will be adapted to the securityfilter by the realm defined above -->
+    <realm className="austral.ing.lab1.service.UserRealm" />
+
+</securityfilter-config>
