@@ -44,19 +44,21 @@ public class Application {
           .build();
 
       // Guardar el usuario en la base de datos
-      EntityManagerFactory entityManagerFactory1 = Persistence.createEntityManagerFactory("test");
-      EntityManager entityManager = entityManagerFactory1.createEntityManager();
+      EntityManager entityManager = entityManagerFactory.createEntityManager();
       Users users = new Users(entityManager);
+      EntityTransaction tx = entityManager.getTransaction();
+        tx.begin();
       User persistedUser = users.persist(user);
-
+      tx.commit();
       // Realizar cualquier otra acción necesaria, como redireccionar o enviar una respuesta
-      response.redirect("/login.html");
+
 
       // Cerrar el EntityManager y la EntityManagerFactory cuando no sean necesarios
       entityManager.close();
       entityManagerFactory.close();
 
-      return null;
+      response.status(200);
+      return "ok";
     });
 
 
