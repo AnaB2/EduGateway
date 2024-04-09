@@ -76,7 +76,7 @@ public class User {
     return password;
   }
 
-  private User(UserBuilder builder) {
+  User(UserBuilder builder) {
     this.firstName = builder.firstName;
     this.lastName = builder.lastName;
     this.password = builder.password;
