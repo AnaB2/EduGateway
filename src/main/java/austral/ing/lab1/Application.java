@@ -50,8 +50,6 @@ public class Application {
         tx.begin();
       User persistedUser = users.persist(user);
       tx.commit();
-      // Realizar cualquier otra acción necesaria, como redireccionar o enviar una respuesta
-
 
       // Cerrar el EntityManager y la EntityManagerFactory cuando no sean necesarios
       entityManager.close();
@@ -60,13 +58,6 @@ public class Application {
       response.status(200);
       return "ok";
     });
-
-
-
-
-
-
-
 
     /* 1. Basic Request */
     Spark.get("/",
@@ -187,6 +178,13 @@ public class Application {
       res.header("Access-Control-Allow-Headers", "*");
       res.type("application/json");
     });
+
+      Spark.post("/signup", (req, res) -> {
+          String username = req.queryParams("username");
+          String email = req.queryParams("email");
+          String password = req.queryParams("password");
+          return "Usuario registrado exitosamente";
+      });
   }
 
   private static void storedBasicUser(EntityManagerFactory entityManagerFactory) {
