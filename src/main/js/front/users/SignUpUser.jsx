@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import {View, Text, ScrollView, TextInput, Button} from 'react-native';
-import { signUp } from './Api';
+import { View, Text, ScrollView, TextInput, Pressable } from 'react-native';
+import { signUpUser } from '../Api';
 
-const Signup = () => {
-    const [username, setUsername] = useState('');
+const SignupUser = () => {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [signUpSuccess, setSignUpSuccess] = useState(false);
@@ -11,9 +12,10 @@ const Signup = () => {
     const handleSubmit = async () => {
         try {
             const userData = {
-                username: username,
                 email: email,
-                password: password
+                password: password,
+                firstName: firstName,
+                lastName: lastName
             };
 
             await signUp(userData);
@@ -29,9 +31,15 @@ const Signup = () => {
                 <Text style={{ fontSize: 24, marginBottom: 20 }}>Registro</Text>
                 <TextInput
                     style={{ width: '100%', height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 10 }}
-                    placeholder="Nombre de usuario"
-                    value={username}
-                    onChangeText={text => setUsername(text)}
+                    placeholder="Nombre"
+                    value={firstName} // Usar firstName como valor
+                    onChangeText={text => setFirstName(text)} // Usar setFirstName para actualizar el estado
+                />
+                <TextInput
+                    style={{ width: '100%', height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 10 }}
+                    placeholder="Apellido"
+                    value={lastName} // Usar lastName como valor
+                    onChangeText={text => setLastName(text)} // Usar setLastName para actualizar el estado
                 />
                 <TextInput
                     style={{ width: '100%', height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 10 }}
@@ -46,18 +54,30 @@ const Signup = () => {
                     onChangeText={text => setPassword(text)}
                     secureTextEntry
                 />
-                <Button
+                <Pressable
                     onPress={handleSubmit}
-                    title="Registrarse"
-                    color="#841584"
-                />
+                    style={({ pressed }) => [
+                        {
+                            backgroundColor: pressed ? '#6e6e6e' : '#841584'
+                        },
+                        {
+                            width: '100%',
+                            padding: 10,
+                            borderRadius: 5
+                        }
+                    ]}
+                >
+                    <Text style={{ color: 'white', textAlign: 'center' }}>Registrarse</Text>
+                </Pressable>
                 {signUpSuccess && <Text style={{ marginTop: 20 }}>Usuario registrado exitosamente</Text>}
             </View>
         </ScrollView>
     );
 };
 
-export default Signup;
+export default SignupUser;
+
+
 
 
 
