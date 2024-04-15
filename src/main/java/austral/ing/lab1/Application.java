@@ -1,6 +1,8 @@
 package austral.ing.lab1;
 
+import austral.ing.lab1.model.Institution;
 import austral.ing.lab1.model.User;
+import austral.ing.lab1.repository.Institutions;
 import austral.ing.lab1.repository.Users;
 import com.google.common.base.Strings;
 import com.google.common.reflect.TypeToken;
@@ -61,28 +63,37 @@ public class Application {
       return "ok";
     });
 
-//    Spark.post("/sign-up-institution", (req, res) -> {
-//      String email = req.queryParams("email");
-//      String password = req.queryParams("password");
-//      String institutionalName = req.queryParams("institutionalName");
-//      String credential = req.queryParams("credential");
-//
-//      Institution institution = new Institution();
-//      institution.setEmail(email);
-//      institution.setPassword(password);
-//      institution.setInstitutionalName(institutionalName);
-//      institution.setCredential(credential);
-//
-//      EntityManager entityManager = entityManagerFactory.createEntityManager();
-//      EntityTransaction tx = entityManager.getTransaction();
-//      tx.begin();
-//      entityManager.persist(institution);
-//      tx.commit();
-//      entityManager.close();
-//
-//      res.status(200);
-//      return "Registro exitoso";
-//      });
+      Spark.post("/sign-up-institution", (request, response) -> {
+          String body = request.body();
+
+          Gson gson = new Gson();
+          Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>(){}.getType());
+
+          String email = formData.get("email");
+          String password = formData.get("password");
+          String institutionalName = formData.get("institutionalName");
+          String credential = formData.get("credential");
+
+          Institution institution = new Institution();
+          institution.setEmail(email);
+          institution.setPassword(password);
+          institution.setInstitutionalName(institutionalName);
+          institution.setCredential(credential);
+
+          EntityManager entityManager = entityManagerFactory.createEntityManager();
+          Institutions institutionRepository = new Institutions(entityManager);
+          EntityTransaction tx = entityManager.getTransaction();
+          tx.begin();
+          Institution persistedInstitution = institutionRepository.persist(institution);
+          tx.commit();
+
+          entityManager.close();
+          entityManagerFactory.close();
+
+          response.status(200);
+          return "ok";
+      });
+
 
 
       /* 1. Basic Request */
