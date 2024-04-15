@@ -6,7 +6,7 @@ import SignupInstitution from "./institutions/SignUpInstitution";
 export default function App() {
   return (
     <View style={styles.container}>
-      <SignupInstitution />
+      <SignupUser />
     </View>
   );
 }

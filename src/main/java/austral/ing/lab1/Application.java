@@ -57,10 +57,10 @@ public class Application {
 
       // Cerrar el EntityManager y la EntityManagerFactory cuando no sean necesarios
       entityManager.close();
-      entityManagerFactory.close();
+      //entityManagerFactory.close();
 
-      response.status(200);
-      return "ok";
+        response.type("application/json");
+        return gson.toJson(Map.of("message", "User signed up successfully"));
     });
 
       Spark.post("/sign-up-institution", (request, response) -> {
@@ -69,13 +69,13 @@ public class Application {
           Gson gson = new Gson();
           Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>(){}.getType());
 
-          String email = formData.get("email");
+          String institutionalEmail = formData.get("institutionalEmail");
           String password = formData.get("password");
           String institutionalName = formData.get("institutionalName");
           String credential = formData.get("credential");
 
           Institution institution = new Institution();
-          institution.setEmail(email);
+          institution.setEmail(institutionalEmail);
           institution.setPassword(password);
           institution.setInstitutionalName(institutionalName);
           institution.setCredential(credential);
@@ -88,10 +88,10 @@ public class Application {
           tx.commit();
 
           entityManager.close();
-          entityManagerFactory.close();
+          //entityManagerFactory.close();
 
-          response.status(200);
-          return "ok";
+          response.type("application/json");
+          return gson.toJson(Map.of("message", "User signed up successfully"));
       });
 
 

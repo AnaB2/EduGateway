@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TextInput, Pressable } from 'react-native';
-import { signUpInstitution } from '../Api'; // Asumiendo que tienes una función signUpInstitution en tu archivo Api.js
+import { signUpInstitution } from '../Api';
 
 const SignupInstitution = () => {
     const [institutionalName, setInstitutionalName] = useState('');
-    const [email, setEmail] = useState('');
+    const [institutionalEmail, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [credential, setCredential] = useState('');
     const [signUpSuccess, setSignUpSuccess] = useState(false);
@@ -12,7 +12,7 @@ const SignupInstitution = () => {
     const handleSubmit = async () => {
         try {
             const institutionData = {
-                email: email,
+                institutionalEmail: institutionalEmail,
                 password: password,
                 institutionalName: institutionalName,
                 credential: credential
@@ -37,8 +37,8 @@ const SignupInstitution = () => {
                 />
                 <TextInput
                     style={{ width: '100%', height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 10 }}
-                    placeholder="Correo electrónico"
-                    value={email}
+                    placeholder="Correo Institucional"
+                    value={institutionalEmail}
                     onChangeText={text => setEmail(text)}
                 />
                 <TextInput
