@@ -9,6 +9,7 @@
         </description>
 
         <class>austral.ing.lab1.model.User</class>
+        <class> austral.ing.lab1.model.Institution</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbc.JDBCDriver"/>

@@ -3,8 +3,8 @@ import { View, Text, ScrollView, TextInput, Pressable } from 'react-native';
 import { signUpUser } from '../Api';
 
 const SignupUser = () => {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    const [firstname, setFirstName] = useState('');
+    const [lastname, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [signUpSuccess, setSignUpSuccess] = useState(false);
@@ -14,11 +14,11 @@ const SignupUser = () => {
             const userData = {
                 email: email,
                 password: password,
-                firstName: firstName,
-                lastName: lastName
+                firstname: firstname,
+                lastname: lastname
             };
 
-            await signUp(userData);
+            await signUpUser(userData);
             setSignUpSuccess(true);
         } catch (error) {
             console.error("Failed to signup:", error);
@@ -32,13 +32,13 @@ const SignupUser = () => {
                 <TextInput
                     style={{ width: '100%', height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 10 }}
                     placeholder="Nombre"
-                    value={firstName} // Usar firstName como valor
+                    value={firstname} // Usar firstName como valor
                     onChangeText={text => setFirstName(text)} // Usar setFirstName para actualizar el estado
                 />
                 <TextInput
                     style={{ width: '100%', height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 10 }}
                     placeholder="Apellido"
-                    value={lastName} // Usar lastName como valor
+                    value={lastname} // Usar lastName como valor
                     onChangeText={text => setLastName(text)} // Usar setLastName para actualizar el estado
                 />
                 <TextInput

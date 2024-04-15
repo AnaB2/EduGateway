@@ -1,6 +1,5 @@
 package austral.ing.lab1;
 
-import austral.ing.lab1.model.Institution;
 import austral.ing.lab1.model.User;
 import austral.ing.lab1.repository.Users;
 import com.google.common.base.Strings;
@@ -14,7 +13,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-
 import spark.Spark;
 
 public class Application {
@@ -39,10 +37,12 @@ public class Application {
 
       String email = formData.get("email");
       String password = formData.get("password");
+      String firstname = formData.get("firstname");
+      String lastname = formData.get("lastname");
 
       // Crear un nuevo usuario
       User user = User.create(email)
-          .password(password)
+          .password(password).firstName(firstname).lastName(lastname)
           .build();
 
       // Guardar el usuario en la base de datos
@@ -61,28 +61,28 @@ public class Application {
       return "ok";
     });
 
-    Spark.post("/sign-up-institution", (req, res) -> {
-      String email = req.queryParams("email");
-      String password = req.queryParams("password");
-      String institutionalName = req.queryParams("institutionalName");
-      String credential = req.queryParams("credential");
-
-      Institution institution = new Institution();
-      institution.setEmail(email);
-      institution.setPassword(password);
-      institution.setInstitutionalName(institutionalName);
-      institution.setCredential(credential);
-
-      EntityManager entityManager = entityManagerFactory.createEntityManager();
-      EntityTransaction tx = entityManager.getTransaction();
-      tx.begin();
-      entityManager.persist(institution);
-      tx.commit();
-      entityManager.close();
-
-      res.status(200);
-      return "Registro exitoso";
-      });
+//    Spark.post("/sign-up-institution", (req, res) -> {
+//      String email = req.queryParams("email");
+//      String password = req.queryParams("password");
+//      String institutionalName = req.queryParams("institutionalName");
+//      String credential = req.queryParams("credential");
+//
+//      Institution institution = new Institution();
+//      institution.setEmail(email);
+//      institution.setPassword(password);
+//      institution.setInstitutionalName(institutionalName);
+//      institution.setCredential(credential);
+//
+//      EntityManager entityManager = entityManagerFactory.createEntityManager();
+//      EntityTransaction tx = entityManager.getTransaction();
+//      tx.begin();
+//      entityManager.persist(institution);
+//      tx.commit();
+//      entityManager.close();
+//
+//      res.status(200);
+//      return "Registro exitoso";
+//      });
 
 
       /* 1. Basic Request */
