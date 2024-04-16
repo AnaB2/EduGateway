@@ -1,6 +1,8 @@
 package austral.ing.lab1;
 
+import austral.ing.lab1.model.Institution;
 import austral.ing.lab1.model.User;
+import austral.ing.lab1.repository.Institutions;
 import austral.ing.lab1.repository.Users;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -100,6 +102,65 @@ public class Application {
                 entityManager.close();
             }
         });
+
+        Spark.post("/sign-up-institution", (request, response) -> {
+            String body = request.body();
+
+            Gson gson = new Gson();
+            Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>(){}.getType());
+
+            String email = formData.get("email");
+            String password = formData.get("password");
+            String institutionalName = formData.get("institutionalName");
+            String credential = formData.get("credential");
+
+            Institution institution = new Institution();
+            institution.setEmail(email);
+            institution.setPassword(password);
+            institution.setInstitutionalName(institutionalName);
+            institution.setCredential(credential);
+
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
+            Institutions institutionRepository = new Institutions(entityManager);
+            EntityTransaction tx = entityManager.getTransaction();
+            tx.begin();
+            Institution persistedInstitution = institutionRepository.persist(institution);
+            tx.commit();
+
+            entityManager.close();
+
+            response.type("application/json");
+            return gson.toJson(Map.of("message", "User signed up successfully"));
+        });
+
+        Spark.post("/log-in-institution", (request, response) -> {
+            String body = request.body();
+            Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {
+            }.getType());
+
+            String email = formData.get("email");
+            String password = formData.get("password");
+
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
+            Institutions institutions = new Institutions(entityManager);
+            Optional<Institution> institutionOptional = institutions.findByEmail(email);
+
+            try {
+                if (institutionOptional.isPresent()) {
+                    Institution institution = institutionOptional.get();
+                    if (institution.getPassword().equals(password)) {
+                        entityManager.close();
+                        response.type("application/json");
+                        return gson.toJson(Map.of("message", "Institution logged in successfully"));
+                    }
+                }
+                response.status(401);
+                return gson.toJson(Map.of("error", "Invalid email or password"));
+            } finally {
+                entityManager.close();
+            }
+        });
+
     }
 }
 

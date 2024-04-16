@@ -1,40 +1,34 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TextInput, Pressable } from 'react-native';
-import { signUpInstitution } from '../Api';
+import { loginInstitution } from '../Api';
 
-const SignupInstitution = () => {
-    const [institutionalName, setInstitutionalName] = useState('');
+const LoginInstitution = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [credential, setCredential] = useState('');
-    const [signUpSuccess, setSignUpSuccess] = useState(false);
+    const [loginSuccess, setLoginSuccess] = useState(false);
+    const [loginError, setLoginError] = useState('');
 
     const handleSubmit = async () => {
         try {
             const institutionData = {
                 email: email,
-                password: password,
-                institutionalName: institutionalName,
-                credential: credential
+                password: password
             };
 
-            await signUpInstitution(institutionData);
-            setSignUpSuccess(true);
+            await loginInstitution(institutionData);
+            setLoginSuccess(true);
+            setLoginError('');
         } catch (error) {
-            console.error("Failed to signup:", error);
+            console.error("Failed to login institution:", error);
+            setLoginSuccess(false);
+            setLoginError('Correo electrónico o contraseña incorrectos');
         }
     };
 
     return (
         <ScrollView>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-                <Text style={{ fontSize: 24, marginBottom: 20 }}>Registro</Text>
-                <TextInput
-                    style={{ width: '100%', height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 10 }}
-                    placeholder="Nombre Institucional"
-                    value={institutionalName} // Usar institutionalName como valor
-                    onChangeText={text => setInstitutionalName(text)} // Usar setInstitutionalName para actualizar el estado
-                />
+                <Text style={{ fontSize: 24, marginBottom: 20 }}>Inicio de sesión para Instituciones</Text>
                 <TextInput
                     style={{ width: '100%', height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 10 }}
                     placeholder="Correo Institucional"
@@ -47,12 +41,6 @@ const SignupInstitution = () => {
                     value={password}
                     onChangeText={text => setPassword(text)}
                     secureTextEntry
-                />
-                <TextInput
-                    style={{ width: '100%', height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 10 }}
-                    placeholder="Credencial"
-                    value={credential}
-                    onChangeText={text => setCredential(text)}
                 />
                 <Pressable
                     onPress={handleSubmit}
@@ -67,12 +55,13 @@ const SignupInstitution = () => {
                         }
                     ]}
                 >
-                    <Text style={{ color: 'white', textAlign: 'center' }}>Registrarse</Text>
+                    <Text style={{ color: 'white', textAlign: 'center' }}>Iniciar sesión</Text>
                 </Pressable>
-                {signUpSuccess && <Text style={{ marginTop: 20 }}>Institución registrada exitosamente</Text>}
+                {loginError !== '' && <Text style={{ color: 'red', marginTop: 10 }}>{loginError}</Text>}
+                {loginSuccess && <Text style={{ marginTop: 10 }}>Inicio de sesión exitoso</Text>}
             </View>
         </ScrollView>
     );
 };
 
-export default SignupInstitution;
+export default LoginInstitution;
