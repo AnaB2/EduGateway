@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TextInput, Pressable } from 'react-native';
 import { signUpUser } from '../Api';
+import { useNavigation } from '@react-navigation/native'; // Importa el hook useNavigation
 
 const SignupUser = () => {
     const [firstname, setFirstName] = useState('');
@@ -8,6 +9,9 @@ const SignupUser = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [signUpSuccess, setSignUpSuccess] = useState(false);
+
+    // Obtenemos el objeto de navegación utilizando el hook useNavigation
+    const navigation = useNavigation();
 
     const handleSubmit = async () => {
         try {
@@ -20,6 +24,10 @@ const SignupUser = () => {
 
             await signUpUser(userData);
             setSignUpSuccess(true);
+
+            // Utilizamos navigation.navigate para redirigir a la pantalla LoginUser
+            navigation.navigate('LoginUser');
+
         } catch (error) {
             console.error("Failed to signup:", error);
         }

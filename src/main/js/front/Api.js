@@ -47,15 +47,33 @@ export const loginUser = async (userData) => {
             },
             body: JSON.stringify(userData),
         });
+
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        return await response.json();
+
+        const responseData = await response.json();
+
+        // Verifica si la respuesta incluye un token
+        if (responseData.token) {
+            // Guarda el token en el almacenamiento local del navegador
+            localStorage.setItem('token', responseData.token);
+
+            // Imprime el token en la consola del navegador
+            console.log('Token received:', responseData.token);
+        } else {
+            // Si la respuesta no incluye un token, lanza un error
+            throw new Error('Token not found in response');
+        }
+
+        return responseData; // Devuelve la respuesta completa, que puede contener otros datos además del token
     } catch (error) {
         console.error("Failed to login:", error);
         throw error;
     }
 };
+
+
 
 export const loginInstitution = async (institutionData) => {
     try {
