@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TextInput, Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { loginUser } from '../Api';
 
 const LoginUser = () => {
+    const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loginSuccess, setLoginSuccess] = useState(false);
@@ -18,6 +20,7 @@ const LoginUser = () => {
             await loginUser(userData);
             setLoginSuccess(true);
             setLoginError('');
+            navigation.navigate('Home');
         } catch (error) {
             console.error("Failed to login:", error);
             setLoginSuccess(false);
