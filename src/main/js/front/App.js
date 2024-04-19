@@ -1,12 +1,22 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import UserList from "./users/UserList";
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import SignupUser from "./users/SignUpUser";
+import LoginUser from "./users/LoginUser";
+import Home from "./pages/Home";
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <UserList />
-    </View>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="SignupUser">
+          <Stack.Screen name="SignupUser" component={SignupUser} />
+          <Stack.Screen name="LoginUser" component={LoginUser} />
+          <Stack.Screen name="Home" component={Home} />
+        </Stack.Navigator>
+      </NavigationContainer>
   );
 }
 
