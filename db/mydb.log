@@ -1,19 +1,19 @@
 /*C4*/SET SCHEMA PUBLIC
-create table Institution (id bigint not null, CREDENTIAL varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-INSERT INTO USER VALUES(33,'talcazar@gmail.com','Tom\u00e1s',NULL,'Alc\u00e1zar','1234')
-COMMIT
 DISCONNECT
 /*C5*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C7*/SET SCHEMA PUBLIC
-DISCONNECT
+/*C2*/SET SCHEMA PUBLIC
+INSERT INTO USER VALUES(34,'talcazar@gmail.es','Tom\u00e1s',NULL,'Alc\u00e1zar','123')
+COMMIT
+INSERT INTO USER VALUES(35,'','',NULL,'','')
+COMMIT
+INSERT INTO USER VALUES(36,'','',NULL,'','')
+COMMIT
+INSERT INTO USER VALUES(37,'','',NULL,'','')
+COMMIT
+INSERT INTO USER VALUES(38,'','',NULL,'','')
+COMMIT
+INSERT INTO USER VALUES(39,'','',NULL,'','')
+COMMIT
 /*C6*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C8*/SET SCHEMA PUBLIC
-create table Opportunity (id bigint not null, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), LANGUAGE varchar(255), OPPORTUNITY_NAME varchar(255), REGION varchar(255), VACANCIES integer, institution_id bigint, primary key (id))
-alter table Opportunity add constraint FK9t6bstl2k0e8y8dqweeot0dkw foreign key (institution_id) references Institution
-/*C10*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C11*/SET SCHEMA PUBLIC
 DISCONNECT
