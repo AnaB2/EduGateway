@@ -3,8 +3,10 @@ package austral.ing.lab1;
 import austral.ing.lab1.authentication.LoginController;
 import austral.ing.lab1.authentication.LogoutController;
 import austral.ing.lab1.model.Institution;
+import austral.ing.lab1.model.Opportunity;
 import austral.ing.lab1.model.User;
 import austral.ing.lab1.repository.Institutions;
+import austral.ing.lab1.repository.Opportunities;
 import austral.ing.lab1.repository.Users;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -168,6 +170,55 @@ public class Application {
                 return gson.toJson(Map.of("error", "Invalid email or password"));
             } finally {
                 entityManager.close();
+            }
+        });
+
+        Spark.post("/add-opportunity", (request, response) -> {
+            String body = request.body();
+            Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {
+            }.getType());
+
+            String email = formData.get("email");
+            String password = formData.get("password");
+
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
+            Institutions institutions = new Institutions(entityManager);
+            Optional<Institution> institutionOptional = institutions.findByEmail(email);
+
+            try {
+                if (institutionOptional.isPresent()) {
+                    Institution institution = institutionOptional.get();
+                    if (institution.getPassword().equals(password)) {
+                        String name = formData.get("name");
+                        String category = formData.get("category");
+                        String region = formData.get("region");
+                        String city = formData.get("city");
+                        String educationalLevel = formData.get("educationalLevel");
+                        String language = formData.get("language");
+                        int vacancies = Integer.parseInt(formData.get("vacancies"));
+
+                        Opportunity opportunity = new Opportunity(institution, name, category, region, city,
+                                educationalLevel, language, vacancies);
+
+                        Opportunities opportunities = new Opportunities(entityManager);
+                        opportunities.persist(opportunity);
+
+                        entityManager.getTransaction().commit();
+                        entityManager.close();
+
+                        response.type("application/json");
+                        return gson.toJson(Map.of("message", "Opportunity added successfully"));
+                    }
+                }
+                response.status(401);
+                return gson.toJson(Map.of("error", "Invalid email or password"));
+            } catch (NumberFormatException e) {
+                response.status(400);
+                return gson.toJson(Map.of("error", "Invalid number format for vacancies"));
+            } finally {
+                if (entityManager.isOpen()) {
+                    entityManager.close();
+                }
             }
         });
 
