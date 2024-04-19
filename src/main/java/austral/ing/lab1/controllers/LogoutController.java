@@ -1,5 +1,6 @@
-package austral.ing.lab1.authentication;
+package austral.ing.lab1.controllers;
 
+import austral.ing.lab1.TokenManager;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -17,7 +18,7 @@ public class LogoutController {
             String token = authorizationHeader.substring(7);
 
             // Invalidar el token llamando al método blacklistToken del TokenManager
-            austral.ing.lab1.authentication.TokenManager.blacklistToken(token);
+            TokenManager.blacklistToken(token);
 
             // Respuesta de éxito
             response.status(200);

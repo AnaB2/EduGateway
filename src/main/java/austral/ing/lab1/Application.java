@@ -1,8 +1,9 @@
 package austral.ing.lab1;
 
-import austral.ing.lab1.authentication.LoginController;
-import austral.ing.lab1.authentication.LogoutController;
-import austral.ing.lab1.authentication.RegisterController;
+import austral.ing.lab1.controllers.LoginController;
+import austral.ing.lab1.controllers.LogoutController;
+import austral.ing.lab1.controllers.OpportunityController;
+import austral.ing.lab1.controllers.RegisterController;
 import com.google.gson.Gson;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -36,18 +37,15 @@ public class Application {
             response.header("Access-Control-Allow-Credentials", "true");
         });
 
-
-
         Spark.post("/sign-up-user", RegisterController.handleRegisterParticipant);
-
-        Spark.post("/log-in", LoginController.handleLogin);
-//        Spark.post("/edit-user", LoginController.handleLogin);
-
-        Spark.post("/log-out-user", LogoutController.handleLogout);
 
         Spark.post("/sign-up-institution", RegisterController.handleRegisterInstitution);
 
+        Spark.post("/log-in", LoginController.handleLogin);
 
+        Spark.post("/log-out-user", LogoutController.handleLogout);
+
+        Spark.post("/add-opportunity", OpportunityController.handleAddOpportunity);
 
     }
 }

@@ -1,5 +1,6 @@
-package austral.ing.lab1.authentication;
+package austral.ing.lab1.controllers;
 
+import austral.ing.lab1.TokenManager;
 import austral.ing.lab1.model.Institution;
 import austral.ing.lab1.model.User;
 import austral.ing.lab1.repository.Institutions;

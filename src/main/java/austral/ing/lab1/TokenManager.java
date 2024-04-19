@@ -1,4 +1,4 @@
-package austral.ing.lab1.authentication;
+package austral.ing.lab1;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

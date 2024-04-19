@@ -1,4 +1,4 @@
-package austral.ing.lab1.authentication;
+package austral.ing.lab1.controllers;
 
 import austral.ing.lab1.model.Institution;
 import austral.ing.lab1.model.User;
