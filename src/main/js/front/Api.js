@@ -40,7 +40,7 @@ export const signUpInstitution = async (institutionData) => {
 
 export const loginUser = async (userData) => {
     try {
-        const response = await fetch(`${API_URL}/log-in-user`, {
+        const response = await fetch(`${API_URL}/log-in`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

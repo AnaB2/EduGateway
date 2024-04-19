@@ -30,7 +30,7 @@ public class Institution {
 
     public Institution() { }
 
-    public static InstitutionBuilder institutionBuilder(String email) {
+    public static InstitutionBuilder create(String email) {
         return new InstitutionBuilder(email);
     }
 
@@ -124,5 +124,4 @@ public class Institution {
         }
     }
 }
-
 
