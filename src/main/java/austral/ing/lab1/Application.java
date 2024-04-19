@@ -111,7 +111,7 @@ public class Application {
 //            } finally {
 //                entityManager.close();
 //            }
-//        });
+//        });1
 
         Spark.post("/sign-up-institution", (request, response) -> {
             String body = request.body();

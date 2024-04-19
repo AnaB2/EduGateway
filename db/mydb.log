@@ -3,3 +3,6 @@ create table Institution (id bigint not null, CREDENTIAL varchar(255), EMAIL var
 alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
 INSERT INTO USER VALUES(33,'talcazar@gmail.com','Tom\u00e1s',NULL,'Alc\u00e1zar','1234')
 COMMIT
+DISCONNECT
+/*C5*/SET SCHEMA PUBLIC
+DISCONNECT
