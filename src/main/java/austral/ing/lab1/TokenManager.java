@@ -14,9 +14,11 @@ public class TokenManager {
     private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private static final Set<String> blacklistedTokens = new HashSet<>();
 
-    public static String generateToken(String email) {
+    public static String generateToken(String email, String userType){
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", email);
+        claims.put("userType", userType);
+
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -36,5 +38,10 @@ public class TokenManager {
 
     public static void blacklistToken(String token) {
         blacklistedTokens.add(token);
+    }
+
+
+    public static String getUserType(String token) {
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("userType", String.class);
     }
 }

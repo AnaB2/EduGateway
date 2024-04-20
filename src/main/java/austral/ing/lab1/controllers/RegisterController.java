@@ -32,6 +32,8 @@ public class RegisterController {
       return "{\"error\": \"Missing or empty fields\"}";
     }
 
+
+
     // Verificar que el correo electrónico tenga el formato adecuado
     String email = formData.get("email");
     if (!email.endsWith("@gmail.com")) {
@@ -52,6 +54,11 @@ public class RegisterController {
     EntityTransaction tx = entityManager.getTransaction();
     try {
       tx.begin();
+
+      if(users.findByEmail(email).isPresent()){
+        response.status(400);
+        return "{\"error\": \"User already exists\"}";
+      }
       User user = User.create(email)
           .password(password).firstName(firstname).lastName(lastname)
           .build();
@@ -108,6 +115,11 @@ public class RegisterController {
     EntityTransaction tx = entityManager.getTransaction();
     try {
       tx.begin();
+
+      if(institutions.findByEmail(email).isPresent()){
+        response.status(400);
+        return "{\"error\": \"Institution already exists\"}";
+      }
 
       Institution institution = Institution.create(email)
           .password(password).institutionalName(institutionalName).credential(credential).build();

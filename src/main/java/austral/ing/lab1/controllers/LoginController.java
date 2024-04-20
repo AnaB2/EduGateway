@@ -55,7 +55,7 @@ public class LoginController {
                 User user = userOptional.get();
                 if (user.getPassword().equals(password)) {
                     // Si las credenciales son válidas para el usuario, generar y enviar el token JWT
-                    String token = TokenManager.generateToken(email);
+                    String token = TokenManager.generateToken(email,"participant");
                     response.header("Authorization", "Bearer " + token);
                     response.type("application/json");
                     // Devolver el token y el mensaje de éxito en formato JSON
@@ -67,7 +67,7 @@ public class LoginController {
                 Institution institution = institutionOptional.get();
                 if (institution.getPassword().equals(password)) {
                     // Si las credenciales son válidas para la institución, generar y enviar el token JWT
-                    String token = TokenManager.generateToken(email);
+                    String token = TokenManager.generateToken(email, "institution");
                     response.header("Authorization", "Bearer " + token);
                     response.type("application/json");
                     // Devolver el token y el mensaje de éxito en formato JSON
