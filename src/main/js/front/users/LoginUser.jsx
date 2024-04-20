@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TextInput, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { loginUser } from '../Api';
+import { loginUser } from '../auth';
 
 const LoginUser = () => {
-    const navigation = useNavigation();
+    const navigation = useNavigation(); // Obtén el objeto de navegación
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loginSuccess, setLoginSuccess] = useState(false);
@@ -17,10 +18,13 @@ const LoginUser = () => {
                 password: password
             };
 
-            await loginUser(userData);
+            await loginUser(userData, navigation);
+
+
             setLoginSuccess(true);
             setLoginError('');
-            navigation.navigate('Home');
+
+
         } catch (error) {
             console.error("Failed to login:", error);
             setLoginSuccess(false);

@@ -4,17 +4,24 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import SignupUser from "./users/SignupUser";
 import LoginUser from "./users/LoginUser";
-import Home from "./users/UserHome";
+import Index from "./pages/index";
+import HomeUser from "./users/UserHome";
+import SignupInstitution from "./institutions/SignupInstitution";
+import HomeInstitution from "./institutions/InstitutionHome";
+
 
 const Stack = createStackNavigator();
 
 export default function App() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="SignupUser">
+            <Stack.Navigator initialRouteName="Index">
+                <Stack.Screen name="Index" component={Index} />
                 <Stack.Screen name="SignupUser" component={SignupUser} />
+                <Stack.Screen name="SignupInstitution" component={SignupInstitution} />
                 <Stack.Screen name="LoginUser" component={LoginUser} />
-                <Stack.Screen name="Home" component={Home} />
+                <Stack.Screen name="HomeUser" component={HomeUser} />
+                <Stack.Screen name="HomeInstitution" component={HomeInstitution} />
             </Stack.Navigator>
         </NavigationContainer>
     );

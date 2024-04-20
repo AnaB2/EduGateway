@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TextInput, Pressable } from 'react-native';
-import { signUpUser } from '../Api';
+import { signUpUser } from '../register';
 import { useNavigation } from '@react-navigation/native'; // Importa el hook useNavigation
 
 const SignupUser = () => {

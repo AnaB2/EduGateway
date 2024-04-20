@@ -7,6 +7,7 @@ import austral.ing.lab1.repository.Institutions;
 import austral.ing.lab1.repository.Users;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import java.util.Map;
 import java.util.Optional;
 import javax.persistence.EntityManager;
@@ -58,8 +59,16 @@ public class LoginController {
                     String token = TokenManager.generateToken(email,"participant");
                     response.header("Authorization", "Bearer " + token);
                     response.type("application/json");
+
+
                     // Devolver el token y el mensaje de éxito en formato JSON
-                    return gson.toJson(Map.of("token", token, "message", "User logged in successfully"));
+                    // Crear un objeto JSON con el token y el userType
+                    JsonObject jsonResponse = new JsonObject();
+                    jsonResponse.addProperty("token", token);
+                    jsonResponse.addProperty("userType", "participant");
+
+
+                    return jsonResponse.toString();
                 }
             }
 
@@ -70,9 +79,18 @@ public class LoginController {
                     String token = TokenManager.generateToken(email, "institution");
                     response.header("Authorization", "Bearer " + token);
                     response.type("application/json");
+
+
+
+
                     // Devolver el token y el mensaje de éxito en formato JSON
-                    return gson.toJson(
-                        Map.of("token", token, "message", "Institution logged in successfully"));
+                    // Crear un objeto JSON con el token y el userType
+                    JsonObject jsonResponse = new JsonObject();
+                    jsonResponse.addProperty("token", token);
+                    jsonResponse.addProperty("userType", "institution");
+
+                    // Devolver el objeto JSON en formato String como respuesta
+                    return jsonResponse.toString();
                 }
             }
 
