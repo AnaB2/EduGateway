@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TextInput, Pressable } from 'react-native';
-import { signUpInstitution } from '../register';
+import { signUpInstitution } from '../reg';
 import {useNavigation} from "@react-navigation/native";
 
 const SignupInstitution = () => {

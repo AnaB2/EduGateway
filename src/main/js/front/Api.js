@@ -8,11 +8,9 @@ export function saveToken(token,email, userType) {
     localStorage.setItem('email', email);
 }
 
-
 // Función para obtener el token del almacenamiento local
 export function getToken() {
-    return localStorage.getItem('token');
-
+    return localStorage.getItem('token')
 }
 
 // Función para obtener el tipo de usuario del almacenamiento local
@@ -23,11 +21,6 @@ export function getUserType() {
 export function getEmail() {
     return localStorage.getItem('email');
 }
-
-
-
-
-
 
 const authorizedFetch = async (url, options) => {
     const token = getToken();
@@ -57,10 +50,21 @@ const authorizedFetch = async (url, options) => {
     return response.json();
 }
 
-
-
-
-
-
-
-
+export const addOpportunity = async (opportunityData) => {
+    try {
+        const response = await fetch(`${API_URL}/add-opportunity`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(opportunityData),
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to add opportunity:", error);
+        throw error;
+    }
+};

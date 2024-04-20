@@ -1,11 +1,6 @@
-// auth.js
 import { saveToken } from './storage';
 
-
 const API_URL = 'http://localhost:4321';
-
-
-
 
 export const loginUser = async(userData, navigation) => {
 
@@ -47,5 +42,3 @@ export const loginUser = async(userData, navigation) => {
         throw error;
     }
 }
-
-// Otras funciones relacionadas con la autenticación...

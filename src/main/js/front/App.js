@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import SignupUser from "./users/SignupUser";
 import LoginUser from "./users/LoginUser";
-import Index from "./pages/index";
+import Index from "./index";
 import HomeUser from "./users/UserHome";
 import SignupInstitution from "./institutions/SignupInstitution";
 import HomeInstitution from "./institutions/InstitutionHome";

@@ -2,7 +2,10 @@ package austral.ing.lab1.model;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
 public class Opportunity {
@@ -12,17 +15,11 @@ public class Opportunity {
     @GenericGenerator(name = "increment", strategy = "increment")
     private Long id;
 
-    @ManyToOne
-    private Institution institution;
-
-    @Column(name = "OPPORTUNITY_NAME")
+    @Column(name = "NAME")
     private String name;
 
     @Column(name = "CATEGORY")
     private String category;
-
-    @Column(name = "REGION")
-    private String region;
 
     @Column(name = "CITY")
     private String city;
@@ -30,25 +27,16 @@ public class Opportunity {
     @Column(name = "EDUCATIONAL_LEVEL")
     private String educationalLevel;
 
+    @Column(name = "DELIVERY_MODE")
+    private String deliveryMode; // Presencial, Virtual, Asincrónico
+
     @Column(name = "LANGUAGE")
     private String language;
 
-    @Column(name = "VACANCIES")
-    private int vacancies;
+    @Column(name = "CAPACITY")
+    private int capacity;
 
     public Opportunity() { }
-
-    public Opportunity(Institution institution, String name, String category, String region, String city,
-                       String educationalLevel, String language, int vacancies) {
-        this.institution = institution;
-        this.name = name;
-        this.category = category;
-        this.region = region;
-        this.city = city;
-        this.educationalLevel = educationalLevel;
-        this.language = language;
-        this.vacancies = vacancies;
-    }
 
     public Long getId() {
         return id;
@@ -56,14 +44,6 @@ public class Opportunity {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Institution getInstitution() {
-        return institution;
-    }
-
-    public void setInstitution(Institution institution) {
-        this.institution = institution;
     }
 
     public String getName() {
@@ -82,14 +62,6 @@ public class Opportunity {
         this.category = category;
     }
 
-    public String getRegion() {
-        return region;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
-    }
-
     public String getCity() {
         return city;
     }
@@ -106,6 +78,14 @@ public class Opportunity {
         this.educationalLevel = educationalLevel;
     }
 
+    public String getDeliveryMode() {
+        return deliveryMode;
+    }
+
+    public void setDeliveryMode(String deliveryMode) {
+        this.deliveryMode = deliveryMode;
+    }
+
     public String getLanguage() {
         return language;
     }
@@ -114,11 +94,11 @@ public class Opportunity {
         this.language = language;
     }
 
-    public int getVacancies() {
-        return vacancies;
+    public int getCapacity() {
+        return capacity;
     }
 
-    public void setVacancies(int vacancies) {
-        this.vacancies = vacancies;
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
     }
 }

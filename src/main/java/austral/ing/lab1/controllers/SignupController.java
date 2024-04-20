@@ -15,7 +15,7 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
-public class RegisterController {
+public class SignupController {
 
   private static final Gson gson = new Gson();
   private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
@@ -32,8 +32,6 @@ public class RegisterController {
       return "{\"error\": \"Missing or empty fields\"}";
     }
 
-
-
     // Verificar que el correo electrónico tenga el formato adecuado
     String email = formData.get("email");
     if (!email.endsWith("@gmail.com")) {
@@ -44,9 +42,6 @@ public class RegisterController {
     String password = formData.get("password");
     String firstname = formData.get("firstname");
     String lastname = formData.get("lastname");
-
-
-
 
     // Crear y persistir el usuario en la base de datos
     EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -76,9 +71,6 @@ public class RegisterController {
       entityManager.close();
     }
   };
-
-
-
 
   public static Route handleRegisterInstitution = (Request request, Response response) -> {
 //     Obtener los datos del Registro del cuerpo de la solicitud

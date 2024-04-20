@@ -1,5 +1,3 @@
-// storage.js
-
 export function saveToken(token, email, userType) {
     // Guarda el token en el almacenamiento local
     localStorage.setItem('token', token);

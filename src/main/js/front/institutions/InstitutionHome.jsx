@@ -1,13 +1,14 @@
 import React from 'react';
+import { View, Text } from 'react-native';
+import AddOpportunity from "../opportunities/AddOpportunity";
 
-
-const HomeInstitution = () => {
+const InstitutionHome = () => {
     return (
-        <div>
-            <h1>Welcome to Your App!</h1>
-            <p>This is the home page of Institution. You can add your content here.</p>
-        </div>
+        <View>
+            <Text>Welcome to Institution Home!</Text>
+            <AddOpportunity />
+        </View>
     );
 };
 
-export default HomeInstitution;
+export default InstitutionHome;

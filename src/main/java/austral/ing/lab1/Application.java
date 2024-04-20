@@ -3,7 +3,7 @@ package austral.ing.lab1;
 import austral.ing.lab1.controllers.LoginController;
 import austral.ing.lab1.controllers.LogoutController;
 import austral.ing.lab1.controllers.OpportunityController;
-import austral.ing.lab1.controllers.RegisterController;
+import austral.ing.lab1.controllers.SignupController;
 import com.google.gson.Gson;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -37,9 +37,9 @@ public class Application {
             response.header("Access-Control-Allow-Credentials", "true");
         });
 
-        Spark.post("/sign-up-user", RegisterController.handleRegisterParticipant);
+        Spark.post("/sign-up-user", SignupController.handleRegisterParticipant);
 
-        Spark.post("/sign-up-institution", RegisterController.handleRegisterInstitution);
+        Spark.post("/sign-up-institution", SignupController.handleRegisterInstitution);
 
         Spark.post("/log-in", LoginController.handleLogin);
 
@@ -47,7 +47,8 @@ public class Application {
 
         Spark.post("/add-opportunity", OpportunityController.handleAddOpportunity);
 
+        //Spark.post("/delete-opportunity", OpportunityController.handleDeleteOpportunity);
+
+        //Spark.post("/modify-opportunity", OpportunityController.handleModifyOpportunity);
     }
 }
-
-
