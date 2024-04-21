@@ -4,10 +4,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import SignupUser from "./users/SignupUser";
 import LoginUser from "./users/LoginUser";
-import Index from "./index";
 import HomeUser from "./users/UserHome";
 import SignupInstitution from "./institutions/SignupInstitution";
 import HomeInstitution from "./institutions/InstitutionHome";
+import Index from "./index";
+
 
 
 const Stack = createStackNavigator();
@@ -15,8 +16,8 @@ const Stack = createStackNavigator();
 export default function App() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Index">
-                <Stack.Screen name="Index" component={Index} />
+            <Stack.Navigator initialRouteName="EduGateway">
+                <Stack.Screen name="EduGateway" component={Index} />
                 <Stack.Screen name="SignupUser" component={SignupUser} />
                 <Stack.Screen name="SignupInstitution" component={SignupInstitution} />
                 <Stack.Screen name="LoginUser" component={LoginUser} />

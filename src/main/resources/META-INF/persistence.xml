@@ -7,10 +7,12 @@
         <description>
             Persistence unit for the JPA tutorial of the Hibernate Getting Started Guide
         </description>
-
+        <class>austral.ing.lab1.relationTables.OpportunityInstitutionRelation</class>
         <class>austral.ing.lab1.model.User</class>
-        <class> austral.ing.lab1.model.Institution</class>
-        <class> austral.ing.lab1.model.Opportunity</class>
+        <class>austral.ing.lab1.model.Institution</class>
+        <class>austral.ing.lab1.model.Opportunity</class>
+
+
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbc.JDBCDriver"/>

@@ -44,4 +44,31 @@ public class TokenManager {
     public static String getUserType(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("userType", String.class);
     }
+
+
+
+    public static boolean isAuthorized(String token, String requestedEmail) {
+        // Verificar si el token está en la lista negra
+        if (isTokenBlacklisted(token)) {
+            return false;
+        }
+
+        // Obtener el correo electrónico asociado al token
+        String userEmail = getUserEmail(token);
+
+        // Verificar si el correo electrónico obtenido está vacío o nulo
+        if (userEmail == null || userEmail.isEmpty()) {
+            return false;
+        }
+
+        // Verificar si el correo electrónico del token coincide con el correo solicitado
+        return userEmail.equals(requestedEmail);
+    }
+
+
+
+
+
+
+
 }
