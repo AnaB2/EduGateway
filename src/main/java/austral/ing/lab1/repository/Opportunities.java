@@ -1,36 +1,35 @@
 package austral.ing.lab1.repository;
 
 import austral.ing.lab1.model.Opportunity;
-
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.List;
-import java.util.Optional;
 
 public class Opportunities {
-
     private final EntityManager entityManager;
 
     public Opportunities(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
-    public Optional<Opportunity> findById(Long id) {
-        return Optional.ofNullable(entityManager.find(Opportunity.class, id));
+    public Opportunity findById(long id) {
+        return entityManager.find(Opportunity.class, id);
     }
 
-    public List<Opportunity> findByInstitutionId(Long institutionId) {
-        return entityManager
-                .createQuery("SELECT o FROM Opportunity o WHERE o.institution.id = :institutionId", Opportunity.class)
-                .setParameter("institutionId", institutionId)
-                .getResultList();
-    }
+    public Opportunity findByName(String name) {
+        TypedQuery<Opportunity> query = entityManager.createQuery(
+                "SELECT o FROM Opportunity o WHERE o.name = :name", Opportunity.class);
+        query.setParameter("name", name);
 
-    public List<Opportunity> listAll() {
-        return entityManager.createQuery("SELECT o FROM Opportunity o", Opportunity.class).getResultList();
+        List<Opportunity> results = query.getResultList();
+        return results.isEmpty() ? null : results.get(0);
     }
 
     public void persist(Opportunity opportunity) {
         entityManager.persist(opportunity);
     }
-}
 
+    public void delete(Opportunity opportunity) {
+        entityManager.remove(opportunity);
+    }
+}

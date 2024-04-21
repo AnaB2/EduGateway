@@ -1,13 +1,30 @@
+// InstitutionHome.jsx
 import React from 'react';
+import { View, Text, Button } from 'react-native';
+import AddOpportunity from "../opportunities/AddOpportunity";
+import DeleteOpportunity from "../opportunities/DeleteOpportunity";
+import ModifyOpportunity from "../opportunities/ModifyOpportunity";
 
+const InstitutionHome = () => {
+    const handleDeleteOpportunity = () => {
+        // Lógica para acceder al componente de eliminación de oportunidades
+        // Puedes mostrar el componente en un modal o cambiar la navegación
+    };
 
-const HomeInstitution = () => {
+    const handleModifyOpportunity = () => {
+        // Lógica para acceder al componente de modificación de oportunidades
+        // Puedes mostrar el componente en un modal o cambiar la navegación
+    };
+
     return (
-        <div>
-            <h1>Welcome to Your App!</h1>
-            <p>This is the home page of Institution. You can add your content here.</p>
-        </div>
+        <View>
+            <Text>Welcome to Institution Home!</Text>
+            <AddOpportunity />
+            <Button title="Eliminar Oportunidad" onPress={handleDeleteOpportunity} />
+            <Button title="Modificar Oportunidad" onPress={handleModifyOpportunity} />
+        </View>
     );
 };
 
-export default HomeInstitution;
+export default InstitutionHome;
+

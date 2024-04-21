@@ -1,11 +1,11 @@
-// storage.js
-
 export function saveToken(token, email, userType) {
     // Guarda el token en el almacenamiento local
     localStorage.setItem('token', token);
     // Guarda el tipo de usuario en el almacenamiento local
     localStorage.setItem('userType', userType);
+    // Guarda el correo electrónico en el almacenamiento local
     localStorage.setItem('email', email);
+
 }
 
 export function getToken() {
@@ -15,7 +15,8 @@ export function getToken() {
 export function getUserType() {
     return localStorage.getItem('userType');
 }
-
 export function getEmail() {
     return localStorage.getItem('email');
-}
+    }
+
+

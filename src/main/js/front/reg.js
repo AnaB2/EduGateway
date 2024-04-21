@@ -1,5 +1,3 @@
-// http.js
-
 const API_URL = 'http://localhost:4321'; // Replace this with your actual backend URL
 
 export const signUpUser = async (userData) => {
