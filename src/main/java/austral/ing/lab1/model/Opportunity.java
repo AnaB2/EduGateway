@@ -36,7 +36,12 @@ public class Opportunity {
     @Column(name = "CAPACITY")
     private int capacity;
 
-    public Opportunity() { }
+    @Column(name = "INSTITUTION_EMAIL")
+    private String institutionEmail;
+
+
+    public Opportunity() {
+    }
 
     public Long getId() {
         return id;
@@ -101,4 +106,16 @@ public class Opportunity {
     public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
+
+
+    public String getInstitutionEmail() {
+        return institutionEmail;
+    }
+
+
+    public void setInstitutionEmail(String institutionEmail) {
+        this.institutionEmail = institutionEmail;
+
+    }
+
 }

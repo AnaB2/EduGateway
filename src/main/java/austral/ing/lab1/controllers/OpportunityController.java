@@ -71,7 +71,16 @@ public class OpportunityController {
             opportunity.setLanguage(language);
             opportunity.setCapacity(capacity);
 
+
+            opportunity.setInstitutionEmail(requestedUserEmail);
+
             opportunities.persist(opportunity);
+
+
+
+
+
+
             tx.commit();
             response.type("application/json");
             return gson.toJson(Map.of("message", "Opportunity added successfully"));

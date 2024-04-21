@@ -1,124 +1,57 @@
-/*C14*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C15*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C16*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-/*C17*/SET SCHEMA PUBLIC
-DISCONNECT
 /*C18*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C19*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-/*C16*/DISCONNECT
-/*C19*/DISCONNECT
-/*C20*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
 /*C21*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
 DISCONNECT
-/*C20*/DISCONNECT
 /*C22*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
+set schema PUBLIC
+drop table OPPORTUNITY
 /*C23*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C24*/SET SCHEMA PUBLIC
+/*C20*/SET SCHEMA PUBLIC
 DISCONNECT
+/*C24*/SET SCHEMA PUBLIC
+create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), DELIVERY_MODE varchar(255), EDUCATIONAL_LEVEL varchar(255), LANGUAGE varchar(255), NAME varchar(255), primary key (id))
+create table OpportunityInstitutionRelation (id bigint not null, institution_email bigint, opportunity_id bigint, primary key (id))
+alter table OpportunityInstitutionRelation add constraint FK3auksu4ulhbm73vq592tklthp foreign key (institution_email) references Institution
+alter table OpportunityInstitutionRelation add constraint FKi8ooecvnrpoxutwh8wewybxfe foreign key (opportunity_id) references Opportunity
 /*C25*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C26*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C27*/SET SCHEMA PUBLIC
-DISCONNECT
+/*C22*/drop table OPPORTUNITYINSTITUTIONRELATION
 /*C28*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C26*/SET SCHEMA PUBLIC
 DISCONNECT
 /*C29*/SET SCHEMA PUBLIC
 DISCONNECT
 /*C30*/SET SCHEMA PUBLIC
 DISCONNECT
 /*C31*/SET SCHEMA PUBLIC
+set schema PUBLIC
 DISCONNECT
+/*C22*/drop table OPPORTUNITY
 /*C32*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
 DISCONNECT
-/*C22*/DISCONNECT
+/*C27*/SET SCHEMA PUBLIC
+DISCONNECT
 /*C33*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
+create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), DELIVERY_MODE varchar(255), EDUCATIONAL_LEVEL varchar(255), LANGUAGE varchar(255), NAME varchar(255), primary key (id))
 /*C34*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-/*C33*/DISCONNECT
-/*C34*/DISCONNECT
-/*C35*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-/*C36*/SET SCHEMA PUBLIC
 DISCONNECT
 /*C37*/SET SCHEMA PUBLIC
 DISCONNECT
+/*C22*/drop table OPPORTUNITY
 /*C38*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-/*C35*/DISCONNECT
-/*C38*/DISCONNECT
+DISCONNECT
+/*C35*/SET SCHEMA PUBLIC
+DISCONNECT
 /*C39*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
+create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), DELIVERY_MODE varchar(255), EDUCATIONAL_LEVEL varchar(255), LANGUAGE varchar(255), NAME varchar(255), primary key (id))
 /*C40*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-/*C39*/DISCONNECT
-/*C40*/DISCONNECT
-/*C41*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
+DISCONNECT
 /*C42*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C41*/DISCONNECT
+/*C22*/drop table OPPORTUNITY
 /*C43*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
 DISCONNECT
-/*C44*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-/*C45*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C46*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C47*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-DISCONNECT
-/*C44*/DISCONNECT
-/*C48*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-/*C49*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C50*/SET SCHEMA PUBLIC
+/*C41*/SET SCHEMA PUBLIC
 DISCONNECT
