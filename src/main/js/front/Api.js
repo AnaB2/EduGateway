@@ -68,3 +68,42 @@ export const addOpportunity = async (opportunityData) => {
         throw error;
     }
 };
+
+export const deleteOpportunity = async (name) => {
+    try {
+        const response = await authorizedFetch(`${API_URL}/delete-opportunity`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name }),
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to delete opportunity:", error);
+        throw error;
+    }
+};
+
+export const modifyOpportunity = async (opportunityData) => {
+    try {
+        const response = await authorizedFetch(`${API_URL}/modify-opportunity`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(opportunityData),
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to modify opportunity:", error);
+        throw error;
+    }
+};
+

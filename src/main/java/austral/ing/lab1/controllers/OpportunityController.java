@@ -73,19 +73,19 @@ public class OpportunityController {
         }
     };
 
-    /*public static Route handleDeleteOpportunity = (Request request, Response response) -> {
-        // Obtener el ID de la oportunidad a eliminar del cuerpo de la solicitud
+    public static Route handleDeleteOpportunity = (Request request, Response response) -> {
+        // Obtener los datos de la oportunidad a eliminar del cuerpo de la solicitud
         String body = request.body();
         Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
 
-        // Verificar que el campo de ID no esté vacío o en blanco
-        if (formData.get("id").trim().isEmpty()) {
+        // Verificar que el campo de nombre no esté vacío o en blanco
+        if (formData.get("name").trim().isEmpty()) {
             response.status(400);
-            return "{\"error\": \"Missing or empty ID field\"}";
+            return "{\"error\": \"Missing or empty name field\"}";
         }
 
-        // Obtener el ID de la oportunidad a eliminar
-        long opportunityId = Long.parseLong(formData.get("id"));
+        // Obtener el nombre de la oportunidad a eliminar
+        String opportunityName = formData.get("name");
 
         // Eliminar la oportunidad de la base de datos
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -94,10 +94,10 @@ public class OpportunityController {
         try {
             tx.begin();
 
-            // Buscar la oportunidad por su ID
-            Optional<Opportunity> opportunity = opportunities.findById(opportunityId);
+            // Buscar la oportunidad por su nombre
+            Opportunity opportunity = opportunities.findByName(opportunityName);
 
-            if (opportunity.isEmpty()) {
+            if (opportunity == null) {
                 response.status(404);
                 return "{\"error\": \"Opportunity not found\"}";
             }
@@ -115,5 +115,72 @@ public class OpportunityController {
         } finally {
             entityManager.close();
         }
-    };*/
+    };
+
+    public static Route handleModifyOpportunity = (Request request, Response response) -> {
+        // Obtener los datos de la oportunidad a modificar del cuerpo de la solicitud
+        String body = request.body();
+        Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
+
+        // Verificar que el campo de nombre no esté vacío o en blanco
+        if (formData.get("name").trim().isEmpty()) {
+            response.status(400);
+            return "{\"error\": \"Missing or empty name field\"}";
+        }
+
+        // Obtener el nombre de la oportunidad a modificar
+        String opportunityName = formData.get("name");
+
+        // Verificar que los campos requeridos no estén vacíos o en blanco
+        if (formData.get("category").trim().isEmpty() || formData.get("city").trim().isEmpty() ||
+                formData.get("educationalLevel").trim().isEmpty() || formData.get("deliveryMode").trim().isEmpty() ||
+                formData.get("language").trim().isEmpty() || formData.get("capacity").trim().isEmpty()) {
+            response.status(400);
+            return "{\"error\": \"Missing or empty fields\"}";
+        }
+
+        // Obtener los nuevos valores de la oportunidad a modificar
+        String category = formData.get("category");
+        String city = formData.get("city");
+        String educationalLevel = formData.get("educationalLevel");
+        String deliveryMode = formData.get("deliveryMode");
+        String language = formData.get("language");
+        int capacity = Integer.parseInt(formData.get("capacity"));
+
+        // Modificar la oportunidad en la base de datos
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Opportunities opportunities = new Opportunities(entityManager);
+        EntityTransaction tx = entityManager.getTransaction();
+        try {
+            tx.begin();
+
+            // Buscar la oportunidad por su nombre
+            Opportunity opportunity = opportunities.findByName(opportunityName);
+
+            if (opportunity == null) {
+                response.status(404);
+                return "{\"error\": \"Opportunity not found\"}";
+            }
+
+            // Actualizar los valores de la oportunidad
+            opportunity.setCategory(category);
+            opportunity.setCity(city);
+            opportunity.setEducationalLevel(educationalLevel);
+            opportunity.setDeliveryMode(deliveryMode);
+            opportunity.setLanguage(language);
+            opportunity.setCapacity(capacity);
+
+            tx.commit();
+            response.type("application/json");
+            return gson.toJson(Map.of("message", "Opportunity modified successfully"));
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            response.status(500);
+            return "{\"error\": \"An error occurred while modifying the opportunity\"}";
+        } finally {
+            entityManager.close();
+        }
+    };
 }

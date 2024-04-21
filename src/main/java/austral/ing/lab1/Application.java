@@ -9,7 +9,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import spark.Spark;
 
-
 public class Application {
 
     private static final Gson gson = new Gson();
@@ -47,8 +46,8 @@ public class Application {
 
         Spark.post("/add-opportunity", OpportunityController.handleAddOpportunity);
 
-        //Spark.post("/delete-opportunity", OpportunityController.handleDeleteOpportunity);
+        Spark.post("/delete-opportunity", OpportunityController.handleDeleteOpportunity);
 
-        //Spark.post("/modify-opportunity", OpportunityController.handleModifyOpportunity);
+        Spark.post("/modify-opportunity", OpportunityController.handleModifyOpportunity);
     }
 }
