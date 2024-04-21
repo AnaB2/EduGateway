@@ -15,6 +15,10 @@ public class Opportunity {
     @GenericGenerator(name = "increment", strategy = "increment")
     private Long id;
 
+
+    @Column(name = "INSTITUTION_EMAIL")
+    private String institutionEmail;
+
     @Column(name = "NAME")
     private String name;
 
@@ -36,8 +40,7 @@ public class Opportunity {
     @Column(name = "CAPACITY")
     private int capacity;
 
-    @Column(name = "INSTITUTION_EMAIL")
-    private String institutionEmail;
+
 
 
     public Opportunity() {

@@ -66,6 +66,7 @@ public class LoginController {
                     JsonObject jsonResponse = new JsonObject();
                     jsonResponse.addProperty("token", token);
                     jsonResponse.addProperty("userType", "participant");
+                    jsonResponse.addProperty("email", email );
 
 
                     return jsonResponse.toString();
@@ -88,6 +89,7 @@ public class LoginController {
                     JsonObject jsonResponse = new JsonObject();
                     jsonResponse.addProperty("token", token);
                     jsonResponse.addProperty("userType", "institution");
+                    jsonResponse.addProperty("email", email );
 
                     // Devolver el objeto JSON en formato String como respuesta
                     return jsonResponse.toString();

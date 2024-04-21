@@ -1,5 +1,7 @@
 package austral.ing.lab1;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -11,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class TokenManager {
+
     private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private static final Set<String> blacklistedTokens = new HashSet<>();
 
@@ -19,17 +22,21 @@ public class TokenManager {
         claims.put("email", email);
         claims.put("userType", userType);
 
-
         return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
-                .signWith(key)
-                .compact();
+            .setClaims(claims)
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + 86400000))
+            .signWith(key)
+            .compact();
     }
 
     public static String getUserEmail(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("email", String.class);
+        Jws<Claims> claimsJws = Jwts.parser().parseClaimsJws(token);
+        Claims claims = claimsJws.getBody();
+
+        // Obtener el correo electrónico del JWT
+        String email = claims.get("email", String.class);
+        return email;
     }
 
     public static boolean isTokenBlacklisted(String token) {
@@ -39,7 +46,6 @@ public class TokenManager {
     public static void blacklistToken(String token) {
         blacklistedTokens.add(token);
     }
-
 
     public static String getUserType(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("userType", String.class);
@@ -64,11 +70,4 @@ public class TokenManager {
         // Verificar si el correo electrónico del token coincide con el correo solicitado
         return userEmail.equals(requestedEmail);
     }
-
-
-
-
-
-
-
 }

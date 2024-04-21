@@ -23,8 +23,14 @@ public class OpportunityController {
         // Obtener el token del encabezado de la solicitud
         String token = request.headers("Authorization");
 
+
+        // Imprimir el token recibido en la consola
+        System.out.println("Token recibido: " + token);
+
+
+
         // Obtener los datos del usuario que realiza la solicitud
-        String requestedUserEmail = request.queryParams("email");
+        String requestedUserEmail = request.headers("Email");
 
         // Verificar si el usuario está autorizado
         if (!TokenManager.isAuthorized(token, requestedUserEmail)) {
