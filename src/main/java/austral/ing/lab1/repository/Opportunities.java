@@ -22,7 +22,7 @@ public class Opportunities {
         query.setParameter("name", name);
 
         List<Opportunity> results = query.getResultList();
-        return results.isEmpty() ? null : results.get(0);
+        return results.isEmpty() ? null : results.getFirst();
     }
 
     public void persist(Opportunity opportunity) {
@@ -31,5 +31,11 @@ public class Opportunities {
 
     public void delete(Opportunity opportunity) {
         entityManager.remove(opportunity);
+    }
+
+    public List<Opportunity> listAll() {
+        TypedQuery<Opportunity> query = entityManager.createQuery(
+                "SELECT o FROM Opportunity o", Opportunity.class);
+        return query.getResultList();
     }
 }
