@@ -1,13 +1,22 @@
-import { saveData } from './storage'; // Solo importa la función saveData, no saveToken
-// Elimina la línea const API_URL = 'http://localhost:4321'; ya que no se usa aquí
+import { saveToken, removeToken} from './storage';
+const API_URL = 'http://localhost:4321';
 
-export const loginUser = async (userData, navigation) => {
+export async function logoutUser(navigation){
     try {
-        const response = await fetch('http://localhost:4321/log-in', {
+        await removeToken();
+        navigation('/')
+    }catch (error){
+        console.log("Error al cerrar sesión")
+        throw error
+    }
+}
+
+export async function loginUser(userData, navigation){
+
+    try {
+        const response = await fetch(`${API_URL}/log-in`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: {'Content-Type': 'application/json',},
             body: JSON.stringify(userData),
         });
 
@@ -19,16 +28,15 @@ export const loginUser = async (userData, navigation) => {
 
         // Verifica si la respuesta incluye un token
         if (responseData.token) {
-            // Guarda el token y otros datos en el almacenamiento local
-            saveData(JSON.stringify(responseData));
-
-            console.log("Token guardado:", responseData.token);
+            // Guarda el token en el almacenamiento local del navegador
+            saveToken(responseData.token, responseData.email, responseData.userType);
 
             // Redirige a la página correspondiente
             if (responseData.userType === 'participant') {
-                navigation.navigate('HomeUser'); // Redirige a la página de participante
+                navigation('inicio-participante'); // Redirige a la página de participante
+
             } else if (responseData.userType === 'institution') {
-                navigation.navigate('HomeInstitution'); // Redirige a la página de institución
+                navigation('inicio-institucion'); // Redirige a la página de institución
             }
         } else {
             // Si la respuesta no incluye un token, lanza un error

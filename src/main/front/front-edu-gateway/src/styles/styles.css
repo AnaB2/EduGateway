@@ -1,0 +1,22 @@
+.body-modal-registro{
+}
+
+.opciones-de-registro{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-left: 20px;
+    padding-right: 20px;
+    column-gap: 10px;
+}
+
+.form-registro{
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+/* NAVBAR */
+.contenedor-navbar{
+    justify-content: space-between;
+}
