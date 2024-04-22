@@ -38,4 +38,21 @@ public class Opportunities {
                 "SELECT o FROM Opportunity o", Opportunity.class);
         return query.getResultList();
     }
+
+
+    public List<Opportunity> findByUserEmail(String userEmail) {
+        TypedQuery<Opportunity> query = entityManager.createQuery(
+            "SELECT o FROM Opportunity o WHERE o.institutionEmail = :userEmail", Opportunity.class);
+        query.setParameter("userEmail", userEmail);
+
+        return query.getResultList();
+    }
+
+
+
+
+
+
+
+
 }

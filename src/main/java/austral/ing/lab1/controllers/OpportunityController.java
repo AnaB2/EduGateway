@@ -201,4 +201,39 @@ public class OpportunityController {
             entityManager.close();
         }
     };
+
+
+
+
+    public static Route handleGetOpportunitiesByEmail = (Request request, Response response) -> {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            String userEmail = request.queryParams("email"); // Obtener el correo electrónico del parámetro de la solicitud
+            if (userEmail == null || userEmail.isEmpty()) {
+                response.status(400);
+                return "{\"error\": \"Email parameter is missing\"}";
+            }
+
+            List<Opportunity> opportunities = new Opportunities(entityManager).findByUserEmail(userEmail);
+
+            // Transformar la lista de oportunidades a JSON
+            String jsonOpportunities = gson.toJson(opportunities);
+
+            // Renderizar el JSON en la respuesta
+            response.type("application/json");
+            return jsonOpportunities;
+        } catch (Exception e) {
+            response.status(500);
+            return "{\"error\": \"An error occurred while fetching opportunities by email\"}";
+        } finally {
+            entityManager.close();
+        }
+    };
+
+
+
+
+
+
+
 }

@@ -1,5 +1,8 @@
 package austral.ing.lab1;
 
+import static austral.ing.lab1.controllers.OpportunityController.handleGetOpportunities;
+import static austral.ing.lab1.controllers.OpportunityController.handleGetOpportunitiesByEmail;
+
 import austral.ing.lab1.controllers.LoginController;
 import austral.ing.lab1.controllers.LogoutController;
 import austral.ing.lab1.controllers.OpportunityController;
@@ -8,8 +11,6 @@ import com.google.gson.Gson;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import spark.Spark;
-
-import static austral.ing.lab1.controllers.OpportunityController.handleGetOpportunities;
 
 
 public class Application {
@@ -55,5 +56,8 @@ public class Application {
         Spark.post("/edit-opportunity", OpportunityController.handleEditOpportunity);
 
         Spark.get("/get-opportunities", handleGetOpportunities);
+
+
+        Spark.get("/get-opportunities-institution", handleGetOpportunitiesByEmail);
     }
 }
