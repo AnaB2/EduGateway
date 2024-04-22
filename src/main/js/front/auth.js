@@ -24,6 +24,8 @@ export const loginUser = async(userData, navigation) => {
             // Guarda el token en el almacenamiento local del navegador
             saveToken(responseData.token, responseData.email, responseData.userType);
 
+            console.log("Token guardado:", responseData.token);
+
             // Redirige a la página correspondiente
             if (responseData.userType === 'participant') {
                 navigation.navigate('HomeUser'); // Redirige a la página de participante

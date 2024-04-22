@@ -1,6 +1,6 @@
 package austral.ing.lab1.controllers;
 
-import austral.ing.lab1.TokenManager;
+
 import austral.ing.lab1.model.Opportunity;
 import austral.ing.lab1.repository.Opportunities;
 import com.google.common.reflect.TypeToken;
@@ -21,11 +21,11 @@ public class OpportunityController {
 
     public static Route handleAddOpportunity = (Request request, Response response) -> {
         // Obtener el token del encabezado de la solicitud
-        String token = request.headers("Authorization");
+//        String token = request.headers("Authorization");
 
 
         // Imprimir el token recibido en la consola
-        System.out.println("Token recibido: " + token);
+//        System.out.println("Token recibido: " + token);
 
 
 
@@ -33,10 +33,10 @@ public class OpportunityController {
         String requestedUserEmail = request.headers("Email");
 
         // Verificar si el usuario está autorizado
-        if (!TokenManager.isAuthorized(token, requestedUserEmail)) {
-            response.status(401);
-            return "{\"error\": \"Unauthorized\"}";
-        }
+//        if (!TokenManager.isAuthorized(token, requestedUserEmail)) {
+//            response.status(401);
+//          return "{\"error\": \"Unauthorized\"}";
+//        }
 
 
 

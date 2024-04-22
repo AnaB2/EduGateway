@@ -1,7 +1,5 @@
 package austral.ing.lab1;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -14,10 +12,12 @@ import java.util.Set;
 
 public class TokenManager {
 
-    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private static final Key JWT_SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
     private static final Set<String> blacklistedTokens = new HashSet<>();
 
     public static String generateToken(String email, String userType){
+
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", email);
         claims.put("userType", userType);
@@ -26,17 +26,12 @@ public class TokenManager {
             .setClaims(claims)
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + 86400000))
-            .signWith(key)
+            .signWith(JWT_SECRET_KEY)
             .compact();
     }
 
     public static String getUserEmail(String token) {
-        Jws<Claims> claimsJws = Jwts.parser().parseClaimsJws(token);
-        Claims claims = claimsJws.getBody();
-
-        // Obtener el correo electrónico del JWT
-        String email = claims.get("email", String.class);
-        return email;
+        return Jwts.parserBuilder().setSigningKey(JWT_SECRET_KEY).build().parseClaimsJws(token).getBody().get("email", String.class);
     }
 
     public static boolean isTokenBlacklisted(String token) {
@@ -48,7 +43,7 @@ public class TokenManager {
     }
 
     public static String getUserType(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("userType", String.class);
+        return Jwts.parserBuilder().setSigningKey(JWT_SECRET_KEY).build().parseClaimsJws(token).getBody().get("userType", String.class);
     }
 
 

@@ -39,7 +39,7 @@ export const addOpportunity = async (opportunityData) => {
         };
 
         if (token && email) {
-            headers.Authorization = `${token}`;
+            headers.Authorization = `Bearer ${token}`;
             headers.Email = email;
         } else {
             throw new Error('Token de sesión no encontrado.');
