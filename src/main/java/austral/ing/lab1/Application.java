@@ -12,6 +12,7 @@ import spark.Spark;
 public class Application {
 
     private static final Gson gson = new Gson();
+    //
     private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
 
     public static void main(String[] args) {
