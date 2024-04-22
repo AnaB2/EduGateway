@@ -11,7 +11,6 @@ import spark.Spark;
 
 import static austral.ing.lab1.controllers.OpportunityController.handleGetOpportunities;
 
-//import static austral.ing.lab1.controllers.OpportunityController.handleGetOpportunities;
 
 public class Application {
 
@@ -53,7 +52,7 @@ public class Application {
 
         Spark.post("/delete-opportunity", OpportunityController.handleDeleteOpportunity);
 
-        //Spark.post("/modify-opportunity", OpportunityController.handleEditOpportunity);
+        Spark.post("/edit-opportunity", OpportunityController.handleEditOpportunity);
 
         Spark.get("/get-opportunities", handleGetOpportunities);
     }

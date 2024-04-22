@@ -31,8 +31,8 @@ public class Opportunity {
     @Column(name = "EDUCATIONAL_LEVEL")
     private String educationalLevel;
 
-    @Column(name = "DELIVERY_MODE")
-    private String deliveryMode; // Presencial, Virtual, Asincrónico
+    @Column(name = "MODALITY")
+    private String modality; // Presencial, Virtual, Asincrónico
 
     @Column(name = "LANGUAGE")
     private String language;
@@ -86,12 +86,12 @@ public class Opportunity {
         this.educationalLevel = educationalLevel;
     }
 
-    public String getDeliveryMode() {
-        return deliveryMode;
+    public String getModality() {
+        return modality;
     }
 
-    public void setDeliveryMode(String deliveryMode) {
-        this.deliveryMode = deliveryMode;
+    public void setModality(String modality) {
+        this.modality = modality;
     }
 
     public String getLanguage() {
