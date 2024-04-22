@@ -106,3 +106,29 @@ export const modifyOpportunity = async (opportunityData) => {
     }
 };
 
+export const getOpportunities = async () => {
+    try {
+        const token = getToken();
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+
+        if (token) {
+            headers.Authorization = `${token}`;
+        }
+
+        const response = await fetch(`${API_URL}/get-opportunities`, {
+            method: 'GET',
+            headers: headers,
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to get opportunities:", error);
+        throw error;
+    }
+};

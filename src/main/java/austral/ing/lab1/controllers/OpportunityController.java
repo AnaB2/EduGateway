@@ -5,6 +5,8 @@ import austral.ing.lab1.model.Opportunity;
 import austral.ing.lab1.repository.Opportunities;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+
+import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -210,5 +212,15 @@ public class OpportunityController {
         } finally {
             entityManager.close();
         }
+    };
+
+    public static Route handleGetOpportunities = (Request request, Response response) -> {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Opportunities opportunities = new Opportunities(entityManager);
+
+        List<Opportunity> allOpportunities = opportunities.listAll();
+
+        response.type("application/json");
+        return gson.toJson(allOpportunities);
     };
 }
