@@ -120,5 +120,4 @@ public class Opportunity {
         this.institutionEmail = institutionEmail;
 
     }
-
 }

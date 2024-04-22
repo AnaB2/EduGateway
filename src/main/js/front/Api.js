@@ -42,41 +42,57 @@ export const addOpportunity = async (opportunityData) => {
     }
 };
 
-export const deleteOpportunity = async (name) => {
+export const deleteOpportunity = async (opportunityName) => {
     try {
-        const response = await authorizedFetch(`${API_URL}/delete-opportunity`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ name }),
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+        const token = getToken();
+        const email = getEmail();
+
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+
+        if (token && email) {
+            headers.Authorization = token;
+            headers.Email = email;
+        } else {
+            throw new Error('Token de sesión no encontrado.');
         }
+
+        const response = await fetch(`${API_URL}/delete-opportunity/${opportunityName}`, {
+            method: 'DELETE',
+            headers: headers
+        });
+
+        if (response.status === 401) {
+            throw new Error('Acceso no autorizado');
+        }
+
+        if (!response.ok) {
+            throw new Error('La respuesta de red no fue exitosa');
+        }
+
         return await response.json();
     } catch (error) {
-        console.error("Failed to delete opportunity:", error);
+        console.error("Error al eliminar la oportunidad:", error);
         throw error;
     }
 };
 
-export const modifyOpportunity = async (opportunityData) => {
+export const getOpportunities = async () => {
     try {
-        const response = await authorizedFetch(`${API_URL}/modify-opportunity`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(opportunityData),
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+        const response = await fetch(`${API_URL}/get-opportunities`);
+
+        if (response.status === 401) {
+            throw new Error('Acceso no autorizado');
         }
+
+        if (!response.ok) {
+            throw new Error('La respuesta de red no fue exitosa');
+        }
+
         return await response.json();
     } catch (error) {
-        console.error("Failed to modify opportunity:", error);
+        console.error("Error al obtener las oportunidades:", error);
         throw error;
     }
 };
-

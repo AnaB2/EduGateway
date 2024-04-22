@@ -32,4 +32,10 @@ public class Opportunities {
     public void delete(Opportunity opportunity) {
         entityManager.remove(opportunity);
     }
+
+    public List<Opportunity> listAll() {
+        TypedQuery<Opportunity> query = entityManager.createQuery(
+                "SELECT o FROM Opportunity o", Opportunity.class);
+        return query.getResultList();
+    }
 }
