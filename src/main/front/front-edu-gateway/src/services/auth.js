@@ -1,7 +1,17 @@
-import { saveToken } from './storage';
+import { saveToken, removeToken} from './storage';
 const API_URL = 'http://localhost:4321';
 
-export const loginUser = async(userData, navigation) => {
+export async function logoutUser(navigation){
+    try {
+        await removeToken();
+        navigation('/')
+    }catch (error){
+        console.log("Error al cerrar sesión")
+        throw error
+    }
+}
+
+export async function loginUser(userData, navigation){
 
     try {
         const response = await fetch(`${API_URL}/log-in`, {

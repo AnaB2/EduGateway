@@ -1,6 +1,6 @@
 //import {useNavigate} from 'react-router-dom';
-import {Registro} from "../../components/componentes-registro/Registro/Registro";
-import {Login} from "../../components/componentes_inicio/Login/Login";
+import {Registro} from "../../components/componentesSignup/Registro";
+import {Login} from "../../components/componentesLogin/Login";
 
 export function Inicio(){
 

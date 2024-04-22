@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
-import {FormularioRegistroParticipante} from "../FormularioRegistroParticipante/FormularioRegistroParticipante";
-import {FormularioRegistroInstitucion} from "../FormularioRegistroInstitucion/FormularioRegistroInstitucion";
+import {FormularioRegistroParticipante} from "./FormularioRegistroParticipante";
+import {FormularioRegistroInstitucion} from "./FormularioRegistroInstitucion";
 import Button from "react-bootstrap/Button";
 
 export function Registro(){
