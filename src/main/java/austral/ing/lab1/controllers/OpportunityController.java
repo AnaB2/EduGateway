@@ -6,6 +6,7 @@ import austral.ing.lab1.repository.Opportunities;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -25,12 +26,6 @@ public class OpportunityController {
         // Obtener el token del encabezado de la solicitud
         String token = request.headers("Authorization");
 
-
-        // Imprimir el token recibido en la consola
-        System.out.println("Token recibido: " + token);
-
-
-
         // Obtener los datos del usuario que realiza la solicitud
         String requestedUserEmail = request.headers("Email");
 
@@ -40,16 +35,14 @@ public class OpportunityController {
             return "{\"error\": \"Unauthorized\"}";
         }
 
-
-
-        // Obtener los datos de la oportunidad del cuerpo de la solicitud
+//         Obtener los datos de la oportunidad del cuerpo de la solicitud
         String body = request.body();
         Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
 
         // Verificar que los campos requeridos no estén vacíos o en blanco
         if (formData.get("name").trim().isEmpty() || formData.get("category").trim().isEmpty() ||
                 formData.get("city").trim().isEmpty() || formData.get("educationalLevel").trim().isEmpty() ||
-                formData.get("deliveryMode").trim().isEmpty() || formData.get("language").trim().isEmpty() ||
+                formData.get("modality").trim().isEmpty() || formData.get("language").trim().isEmpty() ||
                 formData.get("capacity").trim().isEmpty()) {
             response.status(400);
             return "{\"error\": \"Missing or empty fields\"}";
@@ -66,7 +59,7 @@ public class OpportunityController {
             String category = formData.get("category");
             String city = formData.get("city");
             String educationalLevel = formData.get("educationalLevel");
-            String deliveryMode = formData.get("deliveryMode");
+            String modality = formData.get("modality");
             String language = formData.get("language");
             int capacity = Integer.parseInt(formData.get("capacity"));
 
@@ -75,19 +68,13 @@ public class OpportunityController {
             opportunity.setCategory(category);
             opportunity.setCity(city);
             opportunity.setEducationalLevel(educationalLevel);
-            opportunity.setDeliveryMode(deliveryMode);
+            opportunity.setModality(modality);
             opportunity.setLanguage(language);
             opportunity.setCapacity(capacity);
-
 
             opportunity.setInstitutionEmail(requestedUserEmail);
 
             opportunities.persist(opportunity);
-
-
-
-
-
 
             tx.commit();
             response.type("application/json");
@@ -104,23 +91,13 @@ public class OpportunityController {
     };
 
     public static Route handleDeleteOpportunity = (Request request, Response response) -> {
-        // Obtener los datos de la oportunidad a eliminar del cuerpo de la solicitud
-        String body = request.body();
-        Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
-
-        // Verificar que el campo de nombre no esté vacío o en blanco
-        if (formData.get("name").trim().isEmpty()) {
-            response.status(400);
-            return "{\"error\": \"Missing or empty name field\"}";
-        }
-
         // Obtener el nombre de la oportunidad a eliminar
-        String opportunityName = formData.get("name");
+        String opportunityName = request.params(":name");
 
-        // Eliminar la oportunidad de la base de datos
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         Opportunities opportunities = new Opportunities(entityManager);
         EntityTransaction tx = entityManager.getTransaction();
+
         try {
             tx.begin();
 
@@ -132,7 +109,9 @@ public class OpportunityController {
                 return "{\"error\": \"Opportunity not found\"}";
             }
 
+            // Eliminar la oportunidad
             opportunities.delete(opportunity);
+
             tx.commit();
             response.type("application/json");
             return gson.toJson(Map.of("message", "Opportunity deleted successfully"));
@@ -147,40 +126,27 @@ public class OpportunityController {
         }
     };
 
-    public static Route handleModifyOpportunity = (Request request, Response response) -> {
-        // Obtener los datos de la oportunidad a modificar del cuerpo de la solicitud
+    public static Route handleEditOpportunity = (Request request, Response response) -> {
+        // Obtener el nombre de la oportunidad a editar
+        String opportunityName = request.params(":name");
+
+        // Obtener los nuevos datos de la oportunidad del cuerpo de la solicitud
         String body = request.body();
         Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
 
-        // Verificar que el campo de nombre no esté vacío o en blanco
-        if (formData.get("name").trim().isEmpty()) {
-            response.status(400);
-            return "{\"error\": \"Missing or empty name field\"}";
-        }
-
-        // Obtener el nombre de la oportunidad a modificar
-        String opportunityName = formData.get("name");
-
         // Verificar que los campos requeridos no estén vacíos o en blanco
-        if (formData.get("category").trim().isEmpty() || formData.get("city").trim().isEmpty() ||
-                formData.get("educationalLevel").trim().isEmpty() || formData.get("deliveryMode").trim().isEmpty() ||
-                formData.get("language").trim().isEmpty() || formData.get("capacity").trim().isEmpty()) {
+        if (formData.get("category").trim().isEmpty() ||
+                formData.get("city").trim().isEmpty() || formData.get("educationalLevel").trim().isEmpty() ||
+                formData.get("modality").trim().isEmpty() || formData.get("language").trim().isEmpty() ||
+                formData.get("capacity").trim().isEmpty()) {
             response.status(400);
             return "{\"error\": \"Missing or empty fields\"}";
         }
 
-        // Obtener los nuevos valores de la oportunidad a modificar
-        String category = formData.get("category");
-        String city = formData.get("city");
-        String educationalLevel = formData.get("educationalLevel");
-        String deliveryMode = formData.get("deliveryMode");
-        String language = formData.get("language");
-        int capacity = Integer.parseInt(formData.get("capacity"));
-
-        // Modificar la oportunidad en la base de datos
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         Opportunities opportunities = new Opportunities(entityManager);
         EntityTransaction tx = entityManager.getTransaction();
+
         try {
             tx.begin();
 
@@ -192,23 +158,26 @@ public class OpportunityController {
                 return "{\"error\": \"Opportunity not found\"}";
             }
 
-            // Actualizar los valores de la oportunidad
-            opportunity.setCategory(category);
-            opportunity.setCity(city);
-            opportunity.setEducationalLevel(educationalLevel);
-            opportunity.setDeliveryMode(deliveryMode);
-            opportunity.setLanguage(language);
-            opportunity.setCapacity(capacity);
+            // Actualizar los datos de la oportunidad
+            opportunity.setCategory(formData.get("category"));
+            opportunity.setCity(formData.get("city"));
+            opportunity.setEducationalLevel(formData.get("educationalLevel"));
+            opportunity.setModality(formData.get("modality"));
+            opportunity.setLanguage(formData.get("language"));
+            opportunity.setCapacity(Integer.parseInt(formData.get("capacity")));
+
+            // Persistir los cambios en la base de datos
+            opportunities.persist(opportunity);
 
             tx.commit();
             response.type("application/json");
-            return gson.toJson(Map.of("message", "Opportunity modified successfully"));
+            return gson.toJson(Map.of("message", "Opportunity updated successfully"));
         } catch (Exception e) {
             if (tx.isActive()) {
                 tx.rollback();
             }
             response.status(500);
-            return "{\"error\": \"An error occurred while modifying the opportunity\"}";
+            return "{\"error\": \"An error occurred while updating the opportunity\"}";
         } finally {
             entityManager.close();
         }
@@ -216,11 +185,20 @@ public class OpportunityController {
 
     public static Route handleGetOpportunities = (Request request, Response response) -> {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Opportunities opportunities = new Opportunities(entityManager);
+        try {
+            List<Opportunity> opportunities = new ArrayList<>(new Opportunities(entityManager).listAll());
 
-        List<Opportunity> allOpportunities = opportunities.listAll();
+            // Transforma la lista de oportunidades a JSON
+            String jsonOpportunities = gson.toJson(opportunities);
 
-        response.type("application/json");
-        return gson.toJson(allOpportunities);
+            // Renderiza el JSON en la respuesta
+            response.type("application/json");
+            return jsonOpportunities;
+        } catch (Exception e) {
+            response.status(500);
+            return "{\"error\": \"An error occurred while fetching opportunities\"}";
+        } finally {
+            entityManager.close();
+        }
     };
 }

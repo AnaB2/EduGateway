@@ -11,9 +11,11 @@ import spark.Spark;
 
 import static austral.ing.lab1.controllers.OpportunityController.handleGetOpportunities;
 
+
 public class Application {
 
     private static final Gson gson = new Gson();
+    //
     private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
 
     public static void main(String[] args) {
@@ -50,7 +52,7 @@ public class Application {
 
         Spark.post("/delete-opportunity", OpportunityController.handleDeleteOpportunity);
 
-        Spark.post("/modify-opportunity", OpportunityController.handleModifyOpportunity);
+        Spark.post("/edit-opportunity", OpportunityController.handleEditOpportunity);
 
         Spark.get("/get-opportunities", handleGetOpportunities);
     }
