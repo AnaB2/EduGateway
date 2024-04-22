@@ -1,11 +1,9 @@
-import { saveToken } from './storage';
+import { saveData } from './storage'; // Solo importa la función saveData, no saveToken
+// Elimina la línea const API_URL = 'http://localhost:4321'; ya que no se usa aquí
 
-const API_URL = 'http://localhost:4321';
-
-export const loginUser = async(userData, navigation) => {
-
+export const loginUser = async (userData, navigation) => {
     try {
-        const response = await fetch(`${API_URL}/log-in`, {
+        const response = await fetch('http://localhost:4321/log-in', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -21,15 +19,14 @@ export const loginUser = async(userData, navigation) => {
 
         // Verifica si la respuesta incluye un token
         if (responseData.token) {
-            // Guarda el token en el almacenamiento local del navegador
-            saveToken(responseData.token, responseData.email, responseData.userType);
+            // Guarda el token y otros datos en el almacenamiento local
+            saveData(JSON.stringify(responseData));
 
             console.log("Token guardado:", responseData.token);
 
             // Redirige a la página correspondiente
             if (responseData.userType === 'participant') {
                 navigation.navigate('HomeUser'); // Redirige a la página de participante
-
             } else if (responseData.userType === 'institution') {
                 navigation.navigate('HomeInstitution'); // Redirige a la página de institución
             }

@@ -1,6 +1,7 @@
 package austral.ing.lab1.controllers;
 
 
+import austral.ing.lab1.TokenManager;
 import austral.ing.lab1.model.Opportunity;
 import austral.ing.lab1.repository.Opportunities;
 import com.google.common.reflect.TypeToken;
@@ -21,34 +22,42 @@ public class OpportunityController {
 
     public static Route handleAddOpportunity = (Request request, Response response) -> {
         // Obtener el token del encabezado de la solicitud
-//        String token = request.headers("Authorization");
+        String token = request.headers("Authorization");
 
+        // Dividir el encabezado de autorización en dos partes
+//        String[] parts = token.split(" ");
+
+        // Verificar si el encabezado de autorización tiene dos partes
+//        if (parts.length != 2) {
+//            response.status(400);
+//            return "{\"error\": \"Invalid authorization header\"}";
+//        }
+        // Obtener el token y recortarlo
+//        String token1 = parts[1].trim();
 
         // Imprimir el token recibido en la consola
-//        System.out.println("Token recibido: " + token);
-
-
+//        System.out.println("Token recibido: " + token1);
 
         // Obtener los datos del usuario que realiza la solicitud
         String requestedUserEmail = request.headers("Email");
 
         // Verificar si el usuario está autorizado
-//        if (!TokenManager.isAuthorized(token, requestedUserEmail)) {
-//            response.status(401);
-//          return "{\"error\": \"Unauthorized\"}";
-//        }
+        if (!TokenManager.isAuthorized(token, requestedUserEmail)) {
+            response.status(401);
+            return "{\"error\": \"Unauthorized\"}";
+        }
 
 
 
-        // Obtener los datos de la oportunidad del cuerpo de la solicitud
+//         Obtener los datos de la oportunidad del cuerpo de la solicitud
         String body = request.body();
         Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
 
         // Verificar que los campos requeridos no estén vacíos o en blanco
         if (formData.get("name").trim().isEmpty() || formData.get("category").trim().isEmpty() ||
-                formData.get("city").trim().isEmpty() || formData.get("educationalLevel").trim().isEmpty() ||
-                formData.get("deliveryMode").trim().isEmpty() || formData.get("language").trim().isEmpty() ||
-                formData.get("capacity").trim().isEmpty()) {
+            formData.get("city").trim().isEmpty() || formData.get("educationalLevel").trim().isEmpty() ||
+            formData.get("deliveryMode").trim().isEmpty() || formData.get("language").trim().isEmpty() ||
+            formData.get("capacity").trim().isEmpty()) {
             response.status(400);
             return "{\"error\": \"Missing or empty fields\"}";
         }
@@ -161,8 +170,8 @@ public class OpportunityController {
 
         // Verificar que los campos requeridos no estén vacíos o en blanco
         if (formData.get("category").trim().isEmpty() || formData.get("city").trim().isEmpty() ||
-                formData.get("educationalLevel").trim().isEmpty() || formData.get("deliveryMode").trim().isEmpty() ||
-                formData.get("language").trim().isEmpty() || formData.get("capacity").trim().isEmpty()) {
+            formData.get("educationalLevel").trim().isEmpty() || formData.get("deliveryMode").trim().isEmpty() ||
+            formData.get("language").trim().isEmpty() || formData.get("capacity").trim().isEmpty()) {
             response.status(400);
             return "{\"error\": \"Missing or empty fields\"}";
         }

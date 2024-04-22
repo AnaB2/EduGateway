@@ -1,5 +1,6 @@
 package austral.ing.lab1;
 
+import java.util.Base64;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -31,7 +32,16 @@ public class TokenManager {
     }
 
     public static String getUserEmail(String token) {
-        return Jwts.parserBuilder().setSigningKey(JWT_SECRET_KEY).build().parseClaimsJws(token).getBody().get("email", String.class);
+
+        try {
+            System.out.println("Secret key: " + Base64.getEncoder().encodeToString(JWT_SECRET_KEY.getEncoded()));
+            System.out.println("Token: " + token);
+            return Jwts.parserBuilder().setSigningKey(JWT_SECRET_KEY).build().parseClaimsJws(token).getBody().get("email", String.class);
+        } catch (Exception e) {
+            System.out.println("Error al decodificar el token: " + e.getMessage());
+            return null;
+        }
+
     }
 
     public static boolean isTokenBlacklisted(String token) {
@@ -49,6 +59,10 @@ public class TokenManager {
 
 
     public static boolean isAuthorized(String token, String requestedEmail) {
+
+        System.out.println("Token recibido: " + token);
+
+
         // Verificar si el token está en la lista negra
         if (isTokenBlacklisted(token)) {
             return false;
@@ -66,3 +80,4 @@ public class TokenManager {
         return userEmail.equals(requestedEmail);
     }
 }
+

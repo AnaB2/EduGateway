@@ -1,11 +1,13 @@
-export function saveToken(token, email, userType) {
-    // Guarda el token en el almacenamiento local
-    localStorage.setItem('token', token);
-    // Guarda el tipo de usuario en el almacenamiento local
-    localStorage.setItem('userType', userType);
-    // Guarda el correo electrónico en el almacenamiento local
-    localStorage.setItem('email', email);
 
+
+export function saveData(jsonResponse) {
+    // Parse the JSON response
+    const data = JSON.parse(jsonResponse);
+
+    // Store the values in local storage
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('userType', data.userType);
+    localStorage.setItem('email', data.email);
 }
 
 export function getToken() {
@@ -15,8 +17,8 @@ export function getToken() {
 export function getUserType() {
     return localStorage.getItem('userType');
 }
+
 export function getEmail() {
     return localStorage.getItem('email');
-    }
-
+}
 

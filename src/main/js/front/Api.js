@@ -3,32 +3,6 @@ import {getEmail, getToken} from "./storage";
 const API_URL = 'http://localhost:4321'; // Replace this with your actual backend URL
 
 
-// const addAuthorizationHeader = (options) => {
-//     const token = getToken();
-//     const email = getEmail(); // Obtener el email del almacenamiento local
-//
-//     console.log("Token obtenido:", token);
-//     console.log("Email obtenido:", email);
-//
-//     // Verificar si hay un token disponible
-//     if (token) {
-//         // Si existe un token, agregar el encabezado de autorización a las opciones de la solicitud
-//         if (!options.headers) {
-//             options.headers = {};
-//         }
-//         options.headers.Authorization = `${token}`;
-//         options.headers.Email = email;
-//
-//     } else {
-//         // Si no hay un token disponible, lanzar un error
-//         throw new Error('Token de sesión no encontrado.');
-//     }
-//
-//     console.log("Encabezado de autorización agregado:", options.headers.Authorization);
-//
-//     return options;
-// };
-
 export const addOpportunity = async (opportunityData) => {
     try {
         const token = getToken();
@@ -39,7 +13,7 @@ export const addOpportunity = async (opportunityData) => {
         };
 
         if (token && email) {
-            headers.Authorization = `Bearer ${token}`;
+            headers.Authorization = `${token}`;
             headers.Email = email;
         } else {
             throw new Error('Token de sesión no encontrado.');
