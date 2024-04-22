@@ -22,7 +22,7 @@ public class Opportunities {
         query.setParameter("name", name);
 
         List<Opportunity> results = query.getResultList();
-        return results.isEmpty() ? null : results.getFirst();
+        return results.isEmpty() ? null : results.get(0);
     }
 
     public void persist(Opportunity opportunity) {
