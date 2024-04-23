@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import {deleteOpportunity} from "../../../services/Api";
 import {CardFooter} from "react-bootstrap";
 import {EditarOportunidad} from "../institucion/EditarOportunidad";
+import {InscripcionEnOportunidad} from "./InscripcionEnOportunidad";
 
 export function CardOportunidadParticipante({oportunidad, actualizarOportunidades}){
 
@@ -21,7 +22,7 @@ export function CardOportunidadParticipante({oportunidad, actualizarOportunidade
                         {`${oportunidad.category} en ${oportunidad.city} con modalidad ${oportunidad.modality}. El idioma requerido es ${oportunidad.language} y nivel educativo ${oportunidad.educationalLevel}. Capacidad ${oportunidad.capacity}.`}
                     </Card.Text>
                     <div className="footer-card-oportunidad">
-                        <Button variant="dark" onClick={()=>{}}>Inscribirme</Button>
+                        <InscripcionEnOportunidad actualizarOportunidades={actualizarOportunidades} oportunidadData={oportunidad}/>
                     </div>
                 </Card.Body>
             </Card>

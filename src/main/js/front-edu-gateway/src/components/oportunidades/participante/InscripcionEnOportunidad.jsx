@@ -3,15 +3,14 @@ import Modal from 'react-bootstrap/Modal';
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import {useNavigate} from "react-router-dom";
-import {loginUser} from "../../../services/auth";
 import Button from "react-bootstrap/Button";
-import {addOpportunity} from "../../../services/Api";
+import {addInscription} from "../../../services/Api";
+import {getEmail} from "../../../services/storage";
 
-export function InscripcionEnOportunidad({actualizarOportunidades}){
+export function InscripcionEnOportunidad({actualizarOportunidades, oportunidadData}){
 
     const [addSuccess, setAddSuccess] = useState(false); // true o false
     const [addError, setAddError] = useState(''); // indica error en caso de error
-
 
     // Controles del modal
     const[visible, setVisible] = useState(false);
@@ -30,12 +29,12 @@ export function InscripcionEnOportunidad({actualizarOportunidades}){
     const [apellido, setApellido] = useState('');
     const [localidad, setLocalidad] = useState('')
 
-
     // Función que se ejecuta al presionar botón de envío, y que llama a función addOpportunity en Api.js
     async function enviarForm(){
         try{
-            const opportunityData = {name:name, language:apellido, educationalLevel:educationalLevel, modality:modality, city:city, category:category, capacity:capacity}
-            await addOpportunity(opportunityData)
+            const inscriptionData = {name:name, apellido:apellido, localidad:localidad}
+            console.log(inscriptionData)
+            await addInscription(getEmail(), oportunidadData.id, inscriptionData)
             setAddSuccess(true)
             setAddError('')
             actualizarOportunidades()
@@ -48,11 +47,11 @@ export function InscripcionEnOportunidad({actualizarOportunidades}){
 
     return(
         <>
-            <Button variant="dark" onClick={abrir}>Agregar oportunidad</Button>
+            <Button variant="dark" onClick={abrir}>Inscribirme</Button>
 
             <Modal show={visible} onHide={cerrar} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Añadir oportunidad</Modal.Title>
+                    <Modal.Title>Inscribirme en {oportunidadData.name}</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>

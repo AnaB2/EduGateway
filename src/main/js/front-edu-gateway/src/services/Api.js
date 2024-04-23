@@ -162,3 +162,34 @@ export async function getOpportunities() {
     }
 }
 
+export async function addInscription(email, opportunityId, formData){
+    try {
+        console.log("email")
+        console.log(email)
+        console.log("id")
+        console.log(opportunityId)
+        console.log("form data")
+        console.log(formData)
+
+        const response = await fetch(`${API_URL}/add-inscription`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Email': email,
+                'OpportunityId': opportunityId
+            },
+            body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.error('Failed to add inscription:', error);
+        throw error;
+    }
+}
+
