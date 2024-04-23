@@ -1,18 +1,32 @@
 import Card from 'react-bootstrap/Card';
+import Button from "react-bootstrap/Button";
+import {deleteOpportunity} from "../../services/Api";
+import {CardFooter} from "react-bootstrap";
+import {EditarOportunidad} from "./EditarOportunidad";
 
-export function CardOportunidad({}){
+export function CardOportunidad({oportunidad, actualizarOportunidades}){
+
+    async function eliminarOportunidad(){
+        await deleteOpportunity(oportunidad.name)
+        actualizarOportunidades()
+    }
+
     return (
-        <Card style={{ width: '18rem' }}>
-            <Card.Body>
-                <Card.Title>Card Title</Card.Title>
-                <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
-                <Card.Text>
-                    Some quick example text to build on the card title and make up the
-                    bulk of the card's content.
-                </Card.Text>
-                <Card.Link href="#">Card Link</Card.Link>
-                <Card.Link href="#">Another Link</Card.Link>
-            </Card.Body>
-        </Card>
+        <div className="oportunidad">
+            <Card style={{ width: '18rem' }}>
+                <Card.Body>
+                    <Card.Title>{oportunidad.name}</Card.Title>
+                    <Card.Subtitle className="mb-2 text-muted">{`${oportunidad.institutionEmail}`}</Card.Subtitle>
+                    <Card.Text>
+                        {`${oportunidad.category} en ${oportunidad.city} con modalidad ${oportunidad.modality}. El idioma requerido es ${oportunidad.language} y nivel educativo ${oportunidad.educationalLevel}. Capacidad ${oportunidad.capacity}.`}
+                    </Card.Text>
+                    <div className="footer-card-oportunidad">
+                        <EditarOportunidad actualizarOportunidades={actualizarOportunidades} datosAnteriores={oportunidad}></EditarOportunidad>
+                        <Button variant="dark" onClick={()=>{}}>Gestionar Postulaciones</Button>
+                        <Button variant="danger" onClick={eliminarOportunidad}>Eliminar</Button>
+                    </div>
+                </Card.Body>
+            </Card>
+        </div>
     );
 }

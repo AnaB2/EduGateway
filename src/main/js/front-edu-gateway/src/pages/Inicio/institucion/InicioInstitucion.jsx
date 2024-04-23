@@ -17,7 +17,9 @@ export function InicioInstitucion(){
     return(
         <>
             <NavbarInstitucion></NavbarInstitucion>
-            <h1>Inicio institucion</h1>
+            <div className="contenido-pagina">
+                <h1>Inicio institucion</h1>
+            </div>
         </>
     )
 

@@ -6,7 +6,7 @@ import {useNavigate} from "react-router";
 export function InicioParticipante(){
     const navigate = useNavigate()
 
-    if (!getToken() || getUserType()!=="institution"){
+    if (!getToken() || getUserType()!=="participante"){
         return (
             <>
                 {mostrarAlertaAutenticacion(navigate, "/")}
@@ -14,7 +14,12 @@ export function InicioParticipante(){
         )
     }
     return(
-        <NavbarParticipante></NavbarParticipante>
+        <>
+            <NavbarParticipante></NavbarParticipante>
+            <div className="contenido-pagina">
+
+            </div>
+        </>
     )
 
 }

@@ -49,14 +49,14 @@ export function Login(){
                 </Modal.Header>
 
                 <Modal.Body>
-                    <>
+                    <div className="form-login">
                         <FloatingLabel controlId="floatingInput" label="Correo electrónico" className="mb-3">
                             <Form.Control type="email" placeholder="nombre@ejemplo.com" onChange={(event)=>{setEmail(event.target.value)}}/>
                         </FloatingLabel>
                         <FloatingLabel controlId="floatingPassword" label="Contraseña">
                             <Form.Control type="password" placeholder="Contraseña" onChange={(event)=>{setPassword(event.target.value)}}/>
                         </FloatingLabel>
-                    </>
+                    </div>
                 </Modal.Body>
 
                 <Modal.Footer>

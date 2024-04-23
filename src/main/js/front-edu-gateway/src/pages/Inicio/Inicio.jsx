@@ -8,10 +8,10 @@ export function Inicio(){
     //const irARuta = (ruta) => navigate('/registro-participante')
 
     return(
-        <div>
+        <div className="inicio">
             <h1>Inicio</h1>
             <Registro/>
             <Login/>
-            </div>
+        </div>
 )
 }

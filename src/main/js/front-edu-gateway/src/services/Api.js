@@ -70,12 +70,12 @@ export const addOpportunity = async (opportunityData) => {
 
 export const deleteOpportunity = async (name) => {
     try {
-        const response = await authorizedFetch(`${API_URL}/delete-opportunity`, {
+        const response = await fetch(`${API_URL}/delete-opportunity`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ name }),
+            body: JSON.stringify({ name: name}),
         });
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -87,22 +87,53 @@ export const deleteOpportunity = async (name) => {
     }
 };
 
-export const modifyOpportunity = async (opportunityData) => {
+export const modifyOpportunity = async (opportunityData, previousName) => {
     try {
-        const response = await authorizedFetch(`${API_URL}/modify-opportunity`, {
+        opportunityData.previousName = previousName;
+        const response = await fetch(`${API_URL}/edit-opportunity`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(opportunityData),
+            body: JSON.stringify(opportunityData), // convierte objeto opportunityData en JSON
         });
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        return await response.json();
+        return await response.json(); // devuelve objeto
     } catch (error) {
         console.error("Failed to modify opportunity:", error);
         throw error;
     }
 };
+
+export async function getOpportunitiesByInstitution() {
+    try {
+        const token = getToken();
+        const email = getEmail();
+        const headers = {'Content-Type': 'application/json'};
+
+        if (!token || !email) {throw new Error('Token o correo no encontrados.');}
+
+        const queryParams = new URLSearchParams({ email: email }).toString();
+
+        const response = await fetch(`${API_URL}/get-opportunities-institution?${queryParams}`, {
+            method: 'GET',
+            headers: headers,
+        });
+
+        if (response.status === 401) {
+            throw new Error('Unauthorized access');
+        }
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json(); // devuelve objeto
+
+    } catch (error) {
+        console.error("Failed to get opportunities by institution:", error);
+        throw error;
+    }
+}
 

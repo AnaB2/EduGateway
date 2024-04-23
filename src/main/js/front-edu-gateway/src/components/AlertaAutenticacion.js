@@ -6,7 +6,7 @@ export function mostrarAlertaAutenticacion(navigate, destino){
     Swal.fire({
         icon: "error",
         title: "Error de autenticación",
-        text: "Inicia sesión o registrate para ver el contenido.",
+        text: "No tenes permisos para ver el contenido.",
         confirmButtonText: "OK",
         showCancelButton: false, // Ocultar el botón de cancelar
     }).then((result) => {
