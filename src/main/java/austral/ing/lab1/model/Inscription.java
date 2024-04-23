@@ -6,21 +6,19 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class Inscription {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(generator = "increment")
+  @GenericGenerator(name = "increment", strategy = "increment")
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "opportunity_id")
-  private Opportunity opportunity;
+  @Column(name = "opportunity_id")
+  private  Long  opportunity;
 
   @Column(name = "email_participante")
   private String emailParticipante;
@@ -41,6 +39,7 @@ public class Inscription {
   public Inscription() {
   }
 
+
   public Long getId() {
     return id;
   }
@@ -49,11 +48,11 @@ public class Inscription {
     this.id = id;
   }
 
-  public Opportunity getOpportunity() {
+  public Long getOpportunityID() {
     return opportunity;
   }
 
-  public void setOpportunity(Opportunity opportunity) {
+  public void setOpportunityID(Long opportunity) {
     this.opportunity = opportunity;
   }
 

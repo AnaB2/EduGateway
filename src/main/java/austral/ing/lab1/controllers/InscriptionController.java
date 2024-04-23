@@ -26,7 +26,6 @@ public class InscriptionController {
     String requestedUserEmail = request.headers("Email");
     Long opportunityId = Long.parseLong(request.headers("OpportunityId")); // Obtener el ID de la oportunidad del header
 
-
     String body = request.body();
     Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
 
@@ -46,6 +45,8 @@ public class InscriptionController {
 
 
       Opportunity opportunity = entityManager.find(Opportunity.class, opportunityId);
+
+
       if (opportunity == null) {
         response.status(404);
         return "{\"error\": \"Opportunity not found for the provided ID\"}";
@@ -57,22 +58,9 @@ public class InscriptionController {
         return "{\"error\": \"No capacity available for this opportunity\"}";
       }
 
-
-
-
-
-
-
-
-
-
-
-
-
       String name = formData.get("name");
       String apellido = formData.get("apellido");
       String localidad = formData.get("localidad");
-
 
       Inscription inscription = new Inscription();
       inscription.setNombre(name);
@@ -80,13 +68,14 @@ public class InscriptionController {
       inscription.setLocalidad(localidad);
 
       inscription.setEmailParticipante(requestedUserEmail);
-      inscription.setId(opportunityId);
+      inscription.setOpportunityID(opportunityId);
 
       // Establecer el estado como "pendiente" por defecto
       inscription.setEstado(InscriptionStatus.PENDING);
 
       // Decrementar la capacidad de la oportunidad
       opportunity.setCapacity(capacity - 1);
+
 
       inscriptions.persist(inscription);
 
