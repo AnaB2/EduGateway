@@ -4,21 +4,16 @@
     align-items: center;
     justify-content: center;
     height: 100vh; /* Ocupa toda la altura de la pantalla */
-    border: 2px solid black; /* Agrega un borde negro de 2px alrededor del contenedor */
-    padding: 20px; /* Agrega un espacio interno alrededor del contenido */
-    border-radius: 10px; /* Agrega esquinas redondeadas al borde */
 }
 
 .title {
     font-size: 32px;
-    margin-bottom: 30px;
 }
 
 .forms-container {
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
     max-width: 600px; /* Ancho máximo para los formularios */
 }
-
-
