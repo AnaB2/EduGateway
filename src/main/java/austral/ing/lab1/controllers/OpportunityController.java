@@ -202,9 +202,6 @@ public class OpportunityController {
         }
     };
 
-
-
-
     public static Route handleGetOpportunitiesByEmail = (Request request, Response response) -> {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
@@ -229,11 +226,4 @@ public class OpportunityController {
             entityManager.close();
         }
     };
-
-
-
-
-
-
-
 }
