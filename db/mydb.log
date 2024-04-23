@@ -1,16 +1,4 @@
 /*C3*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C4*/SET SCHEMA PUBLIC
+create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), localidad varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
 alter table Opportunity add column MODALITY varchar(255)
-/*C9*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C10*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-/*C11*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C12*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
+alter table Inscription add constraint FKke5046wjc92mw33kwhe5ftgww foreign key (opportunity_id) references Opportunity

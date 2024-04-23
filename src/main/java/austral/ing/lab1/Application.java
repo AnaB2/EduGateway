@@ -57,7 +57,6 @@ public class Application {
 
         Spark.get("/get-opportunities", handleGetOpportunities);
 
-
         Spark.get("/get-opportunities-institution", handleGetOpportunitiesByEmail);
     }
 }
