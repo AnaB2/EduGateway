@@ -4,7 +4,7 @@ import {deleteOpportunity} from "../../services/Api";
 import {CardFooter} from "react-bootstrap";
 import {EditarOportunidad} from "./EditarOportunidad";
 
-export function CardOportunidad({oportunidad, actualizarOportunidades}){
+export function CardOportunidadInstitucion({oportunidad, actualizarOportunidades}){
 
     async function eliminarOportunidad(){
         await deleteOpportunity(oportunidad.name)

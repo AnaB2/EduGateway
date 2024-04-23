@@ -1,7 +1,7 @@
-import { getEmail } from "../../services/storage";
+import { getEmail } from "../../../services/storage";
 import { useEffect, useState } from "react";
-import { getOpportunitiesByInstitution } from "../../services/Api";
-import { CardOportunidad } from "./CardOportunidad";
+import { getOpportunitiesByInstitution } from "../../../services/Api";
+import { CardOportunidadInstitucion } from "./CardOportunidadInstitucion";
 import {AgregarOportunidad} from "./AgregarOportunidad";
 
 export function ContenedorOportunidades() {
@@ -29,7 +29,7 @@ export function ContenedorOportunidades() {
     return (
         <>
             <div className="contenedor-oportunidades">
-                {oportunidades.map((oportunidad) => (<CardOportunidad key={oportunidad.id} oportunidad={oportunidad} actualizarOportunidades={()=>actualizarOportunidades()}/>))}
+                {oportunidades.map((oportunidad) => (<CardOportunidadInstitucion key={oportunidad.id} oportunidad={oportunidad} actualizarOportunidades={()=>actualizarOportunidades()}/>))}
                 {console.log(oportunidades)}
             </div>
             <AgregarOportunidad actualizarOportunidades={()=>actualizarOportunidades()}/>
