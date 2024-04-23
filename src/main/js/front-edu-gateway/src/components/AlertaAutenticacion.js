@@ -5,8 +5,8 @@ export function mostrarAlertaAutenticacion(navigate, destino){
 
     Swal.fire({
         icon: "error",
-        title: "Oops...",
-        text: "Error de autenticación",
+        title: "Error de autenticación",
+        text: "Inicia sesión o registrate para ver el contenido.",
         confirmButtonText: "OK",
         showCancelButton: false, // Ocultar el botón de cancelar
     }).then((result) => {

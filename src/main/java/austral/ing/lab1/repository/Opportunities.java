@@ -22,7 +22,7 @@ public class Opportunities {
         query.setParameter("name", name);
 
         List<Opportunity> results = query.getResultList();
-        return results.isEmpty() ? null : results.getFirst();
+        return results.isEmpty() ? null : results.get(0);
     }
 
     public void persist(Opportunity opportunity) {
@@ -38,4 +38,21 @@ public class Opportunities {
                 "SELECT o FROM Opportunity o", Opportunity.class);
         return query.getResultList();
     }
+
+
+    public List<Opportunity> findByUserEmail(String userEmail) {
+        TypedQuery<Opportunity> query = entityManager.createQuery(
+            "SELECT o FROM Opportunity o WHERE o.institutionEmail = :userEmail", Opportunity.class);
+        query.setParameter("userEmail", userEmail);
+
+        return query.getResultList();
+    }
+
+
+
+
+
+
+
+
 }

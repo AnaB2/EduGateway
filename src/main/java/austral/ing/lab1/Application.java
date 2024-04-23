@@ -1,5 +1,9 @@
 package austral.ing.lab1;
 
+import static austral.ing.lab1.controllers.OpportunityController.handleGetOpportunities;
+import static austral.ing.lab1.controllers.OpportunityController.handleGetOpportunitiesByEmail;
+
+import austral.ing.lab1.controllers.InscriptionController;
 import austral.ing.lab1.controllers.LoginController;
 import austral.ing.lab1.controllers.LogoutController;
 import austral.ing.lab1.controllers.OpportunityController;
@@ -9,11 +13,11 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import spark.Spark;
 
-import static austral.ing.lab1.controllers.OpportunityController.handleGetOpportunities;
 
 public class Application {
 
     private static final Gson gson = new Gson();
+    //
     private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
 
     public static void main(String[] args) {
@@ -50,8 +54,19 @@ public class Application {
 
         Spark.post("/delete-opportunity", OpportunityController.handleDeleteOpportunity);
 
-        Spark.post("/modify-opportunity", OpportunityController.handleModifyOpportunity);
+        Spark.post("/edit-opportunity", OpportunityController.handleEditOpportunity);
 
         Spark.get("/get-opportunities", handleGetOpportunities);
+
+        Spark.get("/get-opportunities-institution", handleGetOpportunitiesByEmail);
+
+        Spark.post("/add-inscription", InscriptionController.handleInscription);
+
+        Spark.post("/approve-inscription", InscriptionController.handleAcceptInscription);
+
+        Spark.post("/reject-inscription", InscriptionController.handleRejectInscription);
+
+
+
     }
 }
