@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+
 public class Inscriptions {
   private final EntityManager entityManager;
 

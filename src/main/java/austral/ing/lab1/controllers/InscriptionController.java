@@ -6,6 +6,8 @@ import austral.ing.lab1.model.Opportunity;
 import austral.ing.lab1.repository.Inscriptions;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -155,7 +157,40 @@ public class InscriptionController {
     } finally {
       entityManager.close();
     }
+
   }
+
+
+  public static Route handleShowInscriptions = (Request request, Response response) -> {
+    EntityManager entityManager = entityManagerFactory.createEntityManager();
+    Inscriptions inscriptions = new Inscriptions(entityManager);
+
+    String requestedUserEmail = request.headers("Email");
+
+    if (requestedUserEmail != null && !requestedUserEmail.isEmpty()) {
+      // Obtener todas las oportunidades asociadas al correo electrónico de la institución
+      List<Opportunity> opportunities = entityManager.createQuery(
+              "SELECT o FROM Opportunity o WHERE o.institutionEmail = :institutionEmail", Opportunity.class)
+          .setParameter("institutionEmail", requestedUserEmail)
+          .getResultList();
+
+      List<Inscription> allInscriptions = new ArrayList<>();
+
+      // Para cada oportunidad encontrada, obtener las inscripciones asociadas
+      for (Opportunity opportunity : opportunities) {
+        List<Inscription> inscriptionsForOpportunity = inscriptions.findByOpportunityId(opportunity.getId());
+        allInscriptions.addAll(inscriptionsForOpportunity);
+      }
+
+      // Convertir la lista de inscripciones a JSON y devolverla como respuesta
+      response.type("application/json");
+      return gson.toJson(allInscriptions);
+    } else {
+      response.status(400); // Bad Request si el correo electrónico está vacío
+      return "Correo electrónico de la institución no proporcionado.";
+    }
+  };
+
 
 
 
