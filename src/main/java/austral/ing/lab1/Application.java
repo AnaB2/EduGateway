@@ -3,6 +3,7 @@ package austral.ing.lab1;
 import static austral.ing.lab1.controllers.OpportunityController.handleGetOpportunities;
 import static austral.ing.lab1.controllers.OpportunityController.handleGetOpportunitiesByEmail;
 
+import austral.ing.lab1.controllers.InscriptionController;
 import austral.ing.lab1.controllers.LoginController;
 import austral.ing.lab1.controllers.LogoutController;
 import austral.ing.lab1.controllers.OpportunityController;
@@ -57,7 +58,15 @@ public class Application {
 
         Spark.get("/get-opportunities", handleGetOpportunities);
 
-
         Spark.get("/get-opportunities-institution", handleGetOpportunitiesByEmail);
+
+        Spark.post("/add-inscription", InscriptionController.handleInscription);
+
+        Spark.post("/approve-inscription", InscriptionController.handleAcceptInscription);
+
+        Spark.post("/reject-inscription", InscriptionController.handleRejectInscription);
+
+
+
     }
 }

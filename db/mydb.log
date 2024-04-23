@@ -1,16 +1,39 @@
-/*C3*/SET SCHEMA PUBLIC
+/*C14*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C4*/SET SCHEMA PUBLIC
-alter table Opportunity add column MODALITY varchar(255)
-/*C9*/SET SCHEMA PUBLIC
+/*C15*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C10*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-/*C11*/SET SCHEMA PUBLIC
+/*C16*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C12*/SET SCHEMA PUBLIC
-drop table if exists User CASCADE 
-create table User (id bigint not null, EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
+/*C17*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C18*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C19*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C20*/SET SCHEMA PUBLIC
+create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), localidad varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
+alter table Inscription add constraint FKke5046wjc92mw33kwhe5ftgww foreign key (opportunity_id) references Opportunity
+/*C21*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C23*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C22*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C20*/DISCONNECT
+/*C30*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C32*/SET SCHEMA PUBLIC
+set schema PUBLIC
+drop table INSCRIPTION
+/*C33*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C29*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C34*/SET SCHEMA PUBLIC
+create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), localidad varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
+alter table Inscription add constraint FKke5046wjc92mw33kwhe5ftgww foreign key (opportunity_id) references Opportunity
+/*C35*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C32*/alter table INSCRIPTION\u000a    add "Estatus" VARCHAR(255)
+/*C37*/SET SCHEMA PUBLIC
+DISCONNECT

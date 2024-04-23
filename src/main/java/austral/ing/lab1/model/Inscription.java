@@ -2,19 +2,20 @@ package austral.ing.lab1.model;
 
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class Inscription {
 
   @Id
-  @GeneratedValue(generator = "increment")
-  @GenericGenerator(name = "increment", strategy = "increment")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne
@@ -33,6 +34,9 @@ public class Inscription {
   @Column(name = "localidad")
   private String localidad;
 
+  @Column(name = "estado")
+  @Enumerated(EnumType.STRING)
+  private InscriptionStatus estado; // Estado de la inscripción (aceptada, rechazada, pendiente, etc.)
 
   public Inscription() {
   }
@@ -68,6 +72,7 @@ public class Inscription {
   public void setNombre(String nombre) {
     this.nombre = nombre;
   }
+
   public String getApellido() {
     return apellido;
   }
@@ -84,7 +89,11 @@ public class Inscription {
     this.localidad = localidad;
   }
 
+  public InscriptionStatus getEstado() {
+    return estado;
+  }
 
-
-
+  public void setEstado(InscriptionStatus estado) {
+    this.estado = estado;
+  }
 }
