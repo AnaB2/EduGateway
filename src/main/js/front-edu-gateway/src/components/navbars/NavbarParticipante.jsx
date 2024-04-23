@@ -8,13 +8,14 @@ export function NavbarParticipante() {
     return (
         <Navbar expand="lg" className="bg-body-tertiary">
             <Container>
-                <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
+                <Navbar.Brand href="#home">EduGateway</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link href="#home">Oportunidades</Nav.Link>
                         <Nav.Link href="#link">Mi perfil</Nav.Link>
                     </Nav>
+                    <LogoutButton></LogoutButton>
                 </Navbar.Collapse>
             </Container>
         </Navbar>
