@@ -6,7 +6,8 @@ import austral.ing.lab1.model.Opportunity;
 import austral.ing.lab1.repository.Inscriptions;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import java.util.ArrayList;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -174,23 +175,39 @@ public class InscriptionController {
           .setParameter("institutionEmail", requestedUserEmail)
           .getResultList();
 
-      List<Inscription> allInscriptions = new ArrayList<>();
+      JsonArray allInscriptionsJson = new JsonArray();
 
       // Para cada oportunidad encontrada, obtener las inscripciones asociadas
       for (Opportunity opportunity : opportunities) {
+        JsonObject opportunityJson = new JsonObject();
+        opportunityJson.addProperty("opportunityName", opportunity.getName());
+
         List<Inscription> inscriptionsForOpportunity = inscriptions.findByOpportunityId(opportunity.getId());
-        allInscriptions.addAll(inscriptionsForOpportunity);
+        JsonArray inscriptionsJson = new JsonArray();
+
+        // Convertir cada inscripción a un objeto JSON
+        for (Inscription inscription : inscriptionsForOpportunity) {
+          JsonObject inscriptionJson = new JsonObject();
+          inscriptionJson.addProperty("inscriptionName", inscription.getNombre());
+          inscriptionJson.addProperty("emailParticipante", inscription.getEmailParticipante());
+          inscriptionJson.addProperty("localidad", inscription.getLocalidad());
+          inscriptionJson.addProperty("estado", inscription.getEstado().toString());
+
+          inscriptionsJson.add(inscriptionJson);
+        }
+
+        opportunityJson.add("inscriptions", inscriptionsJson);
+        allInscriptionsJson.add(opportunityJson);
       }
 
-      // Convertir la lista de inscripciones a JSON y devolverla como respuesta
+      // Establecer el tipo de respuesta y devolver el JSON
       response.type("application/json");
-      return gson.toJson(allInscriptions);
+      return allInscriptionsJson.toString();
     } else {
       response.status(400); // Bad Request si el correo electrónico está vacío
       return "Correo electrónico de la institución no proporcionado.";
     }
   };
-
 
 
 
