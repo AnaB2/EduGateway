@@ -4,7 +4,7 @@ import { getOpportunitiesByInstitution } from "../../../services/Api";
 import { CardOportunidadInstitucion } from "./CardOportunidadInstitucion";
 import {AgregarOportunidad} from "./AgregarOportunidad";
 
-export function ContenedorOportunidades() {
+export function ContenedorOportunidadesInstitucion() {
     const email = getEmail();
     const [oportunidades, setOportunidades] = useState([]);
 

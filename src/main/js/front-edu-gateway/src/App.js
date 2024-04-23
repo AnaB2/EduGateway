@@ -6,6 +6,7 @@ import {Inicio} from './pages/Inicio/Inicio.jsx'
 import {InicioParticipante} from "./pages/Inicio/participante/InicioParticipante";
 import {InicioInstitucion} from "./pages/Inicio/institucion/InicioInstitucion";
 import {GestionarOportunidades} from "./pages/Inicio/institucion/GestionarOportunidades";
+import {VerOportunidades} from "./pages/Inicio/participante/VerOportunidades";
 
 export default function App() {
   return (
@@ -15,8 +16,7 @@ export default function App() {
             <Route path="/inicio-participante" element={<InicioParticipante/>}></Route>
             <Route path="/inicio-institucion" element={<InicioInstitucion/>}></Route>
             <Route path="/inicio-institucion/gestionar-oportunidades" element={<GestionarOportunidades/>}></Route>
-
-
+            <Route path="/inicio-participante/ver-oportunidades" element={<VerOportunidades/>}></Route>
         </Routes>
     </BrowserRouter>
   );

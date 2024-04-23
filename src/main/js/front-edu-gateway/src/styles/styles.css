@@ -5,9 +5,6 @@
     align-items: center;
 }
 
-.body-modal-registro{
-}
-
 .opciones-de-registro{
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -21,7 +18,14 @@
     grid-template-rows: 1fr 1fr 1fr 1fr;
     margin-top: 15px;
     margin-bottom: 15px;
+    padding: 10px 0px;
 }
+
+.form-registro{
+    margin: 15px 0px;
+    gap: 5px;
+}
+
 
 .form-select{
     margin-bottom: 15px;

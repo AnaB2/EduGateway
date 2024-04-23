@@ -12,8 +12,8 @@ export function NavbarParticipante() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="#home">Oportunidades</Nav.Link>
-                        <Nav.Link href="#link">Mi perfil</Nav.Link>
+                        <Nav.Link href="/inicio-participante">Inicio</Nav.Link>
+                        <Nav.Link href="/inicio-participante/ver-oportunidades">Oportunidades</Nav.Link>
                     </Nav>
                     <LogoutButton></LogoutButton>
                 </Navbar.Collapse>

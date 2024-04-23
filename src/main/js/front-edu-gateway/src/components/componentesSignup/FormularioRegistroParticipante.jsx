@@ -39,25 +39,28 @@ export function FormularioRegistroParticipante(){
     }
 
     return(
-        <div className="form-registro">
-            <FloatingLabel controlId="floatingInput" label="Nombre" className="mb-3">
-                <Form.Control type="name" placeholder="Nombre" onChange={(event)=>{setFirstName(event.target.value)}}/>
-            </FloatingLabel>
+        <div>
+            <div className="form-registro">
+                <FloatingLabel controlId="floatingInput" label="Nombre" className="mb-3">
+                    <Form.Control type="name" placeholder="Nombre" onChange={(event)=>{setFirstName(event.target.value)}}/>
+                </FloatingLabel>
 
-            <FloatingLabel controlId="floatingInput" label="Apellido" className="mb-3">
-                <Form.Control type="name" placeholder="Apellido" onChange={(event)=>{setLastName(event.target.value)}}/>
-            </FloatingLabel>
+                <FloatingLabel controlId="floatingInput" label="Apellido" className="mb-3">
+                    <Form.Control type="name" placeholder="Apellido" onChange={(event)=>{setLastName(event.target.value)}}/>
+                </FloatingLabel>
 
-            <FloatingLabel controlId="floatingInput" label="Correo electrónico" className="mb-3">
-                <Form.Control type="email" placeholder="nombre@ejemplo.com" onChange={(event)=>{setEmail(event.target.value)}}/>
-            </FloatingLabel>
+                <FloatingLabel controlId="floatingInput" label="Correo electrónico" className="mb-3">
+                    <Form.Control type="email" placeholder="nombre@ejemplo.com" onChange={(event)=>{setEmail(event.target.value)}}/>
+                </FloatingLabel>
 
-            <FloatingLabel controlId="floatingPassword" label="Contraseña">
-                <Form.Control type="password" placeholder="Contraseña" onChange={(event)=>{setPassword(event.target.value)}}/>
-            </FloatingLabel>
-
-            <Button variant="dark" onClick={enviarForm}>Registrarse</Button>
-            {mensaje}
+                <FloatingLabel controlId="floatingPassword" label="Contraseña" className="mb-3">
+                    <Form.Control type="password" placeholder="Contraseña" onChange={(event)=>{setPassword(event.target.value)}}/>
+                </FloatingLabel>
+            </div>
+            <div>
+                <Button variant="dark" onClick={enviarForm}>Registrarse</Button>
+                {mensaje}
+            </div>
         </div>
     )
 }

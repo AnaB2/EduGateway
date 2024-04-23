@@ -1,6 +1,6 @@
 import Card from 'react-bootstrap/Card';
 import Button from "react-bootstrap/Button";
-import {deleteOpportunity} from "../../services/Api";
+import {deleteOpportunity} from "../../../services/Api";
 import {CardFooter} from "react-bootstrap";
 import {EditarOportunidad} from "./EditarOportunidad";
 

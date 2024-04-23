@@ -17,7 +17,6 @@ export function NavbarInstitucion() {
                     <Nav className="me-auto">
                         <Nav.Link onClick={()=>navigate('/inicio-institucion')}>Inicio</Nav.Link>
                         <Nav.Link onClick={()=>navigate('/inicio-institucion/gestionar-oportunidades')}>Gestionar oportunidades</Nav.Link>
-                        <Nav.Link>Mi perfil</Nav.Link>
                     </Nav>
                     <LogoutButton></LogoutButton>
                 </Navbar.Collapse>
