@@ -15,12 +15,12 @@ export function InicioInstitucion(){
         )
     }
     return(
-        <>
+        <div className="fondo">
             <NavbarInstitucion></NavbarInstitucion>
             <div className="contenido-pagina">
                 <h1>Inicio institucion</h1>
             </div>
-        </>
+        </div>
     )
 
 }

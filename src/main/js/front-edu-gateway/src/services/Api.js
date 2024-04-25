@@ -193,3 +193,27 @@ export async function addInscription(email, opportunityId, formData){
     }
 }
 
+export async function getInscriptions() {
+    try {
+        const token = getToken();
+        const email = getEmail();
+        const headers = {'Content-Type': 'application/json'};
+
+        if (!token || !email) {throw new Error('Token o correo no encontrados.');}
+
+        const response = await fetch(`${API_URL}/get-inscriptions`, {
+            method: 'GET',
+            headers: headers,
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json(); // devuelve objeto
+
+    } catch (error) {
+        console.error("Failed to get inscriptions:", error);
+        throw error;
+    }
+}

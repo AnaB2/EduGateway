@@ -9,11 +9,11 @@ export function LogoutButton(){
         try{
             await logoutUser(navigate)
         }catch (error){
-            console.error("Error en login: ", error) // ¿console log? ¿es buena práctica?
+            console.error("Error en login: ", error)
         }
     }
 
     return(
-        <Button variant="dark" onClick={logoutClick}>Cerrar sesión</Button>
+        <Button variant="outline-primary" onClick={logoutClick}>Cerrar sesión</Button>
     )
 }

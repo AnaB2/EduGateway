@@ -66,9 +66,7 @@ public class Application {
 
         Spark.post("/reject-inscription", InscriptionController.handleRejectInscription);
 
-
-
-
+        Spark.get("/get-inscriptions", InscriptionController.handleShowInscriptions);
 
     }
 }
