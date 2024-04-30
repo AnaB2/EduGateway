@@ -9,9 +9,13 @@ export function Inicio(){
 
     return(
         <div className="inicio">
-            <h1>Inicio</h1>
-            <Registro/>
-            <Login/>
+            <div className="presentacion">
+                <h1 style={{ color: "white", fontSize: "30px" }}>EduGateway</h1>
+                <div className="botones-inicio">
+                    <Registro/>
+                    <Login/>
+                </div>
+            </div>
         </div>
-)
+    )
 }

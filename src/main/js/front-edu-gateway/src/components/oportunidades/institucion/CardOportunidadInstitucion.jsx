@@ -1,8 +1,9 @@
 import Card from 'react-bootstrap/Card';
 import Button from "react-bootstrap/Button";
-import {deleteOpportunity} from "../../services/Api";
+import {deleteOpportunity} from "../../../services/Api";
 import {CardFooter} from "react-bootstrap";
 import {EditarOportunidad} from "./EditarOportunidad";
+import {GestionarPostulaciones} from "./GestionarPostulaciones";
 
 export function CardOportunidadInstitucion({oportunidad, actualizarOportunidades}){
 
@@ -22,7 +23,7 @@ export function CardOportunidadInstitucion({oportunidad, actualizarOportunidades
                     </Card.Text>
                     <div className="footer-card-oportunidad">
                         <EditarOportunidad actualizarOportunidades={actualizarOportunidades} datosAnteriores={oportunidad}></EditarOportunidad>
-                        <Button variant="dark" onClick={()=>{}}>Gestionar Postulaciones</Button>
+                        <GestionarPostulaciones oportunidad={oportunidad}/>
                         <Button variant="danger" onClick={eliminarOportunidad}>Eliminar</Button>
                     </div>
                 </Card.Body>

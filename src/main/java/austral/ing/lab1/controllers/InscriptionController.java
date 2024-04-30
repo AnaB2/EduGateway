@@ -6,14 +6,16 @@ import austral.ing.lab1.model.Opportunity;
 import austral.ing.lab1.repository.Inscriptions;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -29,13 +31,13 @@ public class InscriptionController {
     String requestedUserEmail = request.headers("Email");
     Long opportunityId = Long.parseLong(request.headers("OpportunityId")); // Obtener el ID de la oportunidad del header
 
-
     String body = request.body();
-    Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
+    Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {
+    }.getType());
 
     // Verificar que los campos requeridos no estén vacíos o en blanco
     if (formData.get("name").trim().isEmpty() || formData.get("apellido").trim().isEmpty() ||
-        formData.get("localidad").trim().isEmpty()) {
+            formData.get("localidad").trim().isEmpty()) {
       response.status(400);
       return "{\"error\": \"Missing or empty fields\"}";
     }
@@ -49,6 +51,8 @@ public class InscriptionController {
 
 
       Opportunity opportunity = entityManager.find(Opportunity.class, opportunityId);
+
+
       if (opportunity == null) {
         response.status(404);
         return "{\"error\": \"Opportunity not found for the provided ID\"}";
@@ -60,22 +64,9 @@ public class InscriptionController {
         return "{\"error\": \"No capacity available for this opportunity\"}";
       }
 
-
-
-
-
-
-
-
-
-
-
-
-
       String name = formData.get("name");
       String apellido = formData.get("apellido");
       String localidad = formData.get("localidad");
-
 
       Inscription inscription = new Inscription();
       inscription.setNombre(name);
@@ -83,13 +74,14 @@ public class InscriptionController {
       inscription.setLocalidad(localidad);
 
       inscription.setEmailParticipante(requestedUserEmail);
-      inscription.setId(opportunityId);
+      inscription.setOpportunityID(opportunityId);
 
       // Establecer el estado como "pendiente" por defecto
       inscription.setEstado(InscriptionStatus.PENDING);
 
       // Decrementar la capacidad de la oportunidad
       opportunity.setCapacity(capacity - 1);
+
 
       inscriptions.persist(inscription);
 
@@ -158,9 +150,7 @@ public class InscriptionController {
     } finally {
       entityManager.close();
     }
-
   }
-
 
   public static Route handleShowInscriptions = (Request request, Response response) -> {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -171,9 +161,9 @@ public class InscriptionController {
     if (requestedUserEmail != null && !requestedUserEmail.isEmpty()) {
       // Obtener todas las oportunidades asociadas al correo electrónico de la institución
       List<Opportunity> opportunities = entityManager.createQuery(
-              "SELECT o FROM Opportunity o WHERE o.institutionEmail = :institutionEmail", Opportunity.class)
-          .setParameter("institutionEmail", requestedUserEmail)
-          .getResultList();
+                      "SELECT o FROM Opportunity o WHERE o.institutionEmail = :institutionEmail", Opportunity.class)
+              .setParameter("institutionEmail", requestedUserEmail)
+              .getResultList();
 
       JsonArray allInscriptionsJson = new JsonArray();
 
@@ -209,28 +199,5 @@ public class InscriptionController {
     }
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
+

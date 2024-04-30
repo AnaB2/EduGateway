@@ -4,7 +4,7 @@ import { getOpportunitiesByInstitution } from "../../../services/Api";
 import { CardOportunidadInstitucion } from "./CardOportunidadInstitucion";
 import {AgregarOportunidad} from "./AgregarOportunidad";
 
-export function ContenedorOportunidades() {
+export function ContenedorOportunidadesInstitucion() {
     const email = getEmail();
     const [oportunidades, setOportunidades] = useState([]);
 
@@ -30,7 +30,6 @@ export function ContenedorOportunidades() {
         <>
             <div className="contenedor-oportunidades">
                 {oportunidades.map((oportunidad) => (<CardOportunidadInstitucion key={oportunidad.id} oportunidad={oportunidad} actualizarOportunidades={()=>actualizarOportunidades()}/>))}
-                {console.log(oportunidades)}
             </div>
             <AgregarOportunidad actualizarOportunidades={()=>actualizarOportunidades()}/>
         </>

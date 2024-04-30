@@ -1,39 +1,31 @@
-/*C14*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C15*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C16*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C17*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C18*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C19*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C20*/SET SCHEMA PUBLIC
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), localidad varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-alter table Inscription add constraint FKke5046wjc92mw33kwhe5ftgww foreign key (opportunity_id) references Opportunity
-/*C21*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C23*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C22*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C20*/DISCONNECT
-/*C30*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C32*/SET SCHEMA PUBLIC
-set schema PUBLIC
-drop table INSCRIPTION
-/*C33*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C29*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C34*/SET SCHEMA PUBLIC
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), localidad varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-alter table Inscription add constraint FKke5046wjc92mw33kwhe5ftgww foreign key (opportunity_id) references Opportunity
-/*C35*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C32*/alter table INSCRIPTION\u000a    add "Estatus" VARCHAR(255)
-/*C37*/SET SCHEMA PUBLIC
-DISCONNECT
+/*C3*/SET SCHEMA PUBLIC
+create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
+/*C6*/SET SCHEMA PUBLIC
+DELETE FROM OPPORTUNITY WHERE ID=5
+COMMIT
+/*C7*/SET SCHEMA PUBLIC
+INSERT INTO INSCRIPTION VALUES(1,'Alc\u00e1zar','ana@gmail.com','PENDING','Pilar','Tom\u00e1s',3)
+DELETE FROM OPPORTUNITY WHERE ID=3
+INSERT INTO OPPORTUNITY VALUES(3,14,'Tecnologia','Buenos Aires','Virtual','Secundario','Espa\u00f1ol','Taller','utn@gmail.com',NULL)
+COMMIT
+/*C6*/DELETE FROM OPPORTUNITY WHERE ID=4
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(4,30,'Curso','Buenos Aires',NULL,'Avanzado','Espa\u00f1ol','Curso de Ajedrez','utn@gmail.com','Presencial')
+COMMIT
+DELETE FROM OPPORTUNITY WHERE ID=3
+INSERT INTO OPPORTUNITY VALUES(3,14,'Tecnologia','Buenos Aires','Virtual','Primaria','Espa\u00f1ol','Taller','utn@gmail.com','Virtual')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(5,60,'Voluntariado','Rosario',NULL,'B\u00e1sico','Espa\u00f1ol','Un Techo para mi Pa\u00eds','utn@gmail.com','Presencial')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(6,60,'Evento','Buenos Aires',NULL,'B\u00e1sico','Espa\u00f1ol','Taller de Comedia','utn@gmail.com','Presencial')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(7,130,'Curso','C\u00f3rdoba',NULL,'Avanzado','Java','Taller de Programaci\u00f3n','utn@gmail.com','Virtual')
+COMMIT
+/*C7*/INSERT INTO INSCRIPTION VALUES(2,'Borda','ana@gmail.com','PENDING','San Isidro','Ana',7)
+DELETE FROM OPPORTUNITY WHERE ID=7
+INSERT INTO OPPORTUNITY VALUES(7,129,'Curso','C\u00f3rdoba',NULL,'Avanzado','Java','Taller de Programaci\u00f3n','utn@gmail.com','Virtual')
+COMMIT
+INSERT INTO INSCRIPTION VALUES(3,'Borda','ana@gmail.com','PENDING','San Isidro','Ana',5)
+DELETE FROM OPPORTUNITY WHERE ID=5
+INSERT INTO OPPORTUNITY VALUES(5,59,'Voluntariado','Rosario',NULL,'B\u00e1sico','Espa\u00f1ol','Un Techo para mi Pa\u00eds','utn@gmail.com','Presencial')
+COMMIT

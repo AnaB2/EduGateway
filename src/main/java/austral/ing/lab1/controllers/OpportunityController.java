@@ -13,6 +13,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -92,7 +95,9 @@ public class OpportunityController {
 
     public static Route handleDeleteOpportunity = (Request request, Response response) -> {
         // Obtener el nombre de la oportunidad a eliminar
-        String opportunityName = request.params(":name");
+        String requestBody = request.body();
+        JsonObject jsonBody = JsonParser.parseString(requestBody).getAsJsonObject();
+        String opportunityName = jsonBody.get("name").getAsString();
 
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         Opportunities opportunities = new Opportunities(entityManager);
@@ -128,11 +133,14 @@ public class OpportunityController {
 
     public static Route handleEditOpportunity = (Request request, Response response) -> {
         // Obtener el nombre de la oportunidad a editar
-        String opportunityName = request.params(":name");
+        //String opportunityName = request.params(":name"); (lo incluí en el body)
 
         // Obtener los nuevos datos de la oportunidad del cuerpo de la solicitud
         String body = request.body();
         Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
+
+        // La busca por en nombre anterior, ya que actual puede haber cambiado.
+        String opportunityName = formData.get("previousName");
 
         // Verificar que los campos requeridos no estén vacíos o en blanco
         if (formData.get("category").trim().isEmpty() ||

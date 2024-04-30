@@ -3,9 +3,9 @@ import Modal from 'react-bootstrap/Modal';
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import {useNavigate} from "react-router-dom";
-import {loginUser} from "../../services/auth";
+import {loginUser} from "../../../services/auth";
 import Button from "react-bootstrap/Button";
-import {addOpportunity} from "../../services/Api";
+import {addOpportunity} from "../../../services/Api";
 
 export function AgregarOportunidad({actualizarOportunidades}){
 

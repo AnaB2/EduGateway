@@ -1,27 +1,21 @@
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import {LogoutButton} from "../logoutButton/LogoutButton";
 import {useNavigate} from "react-router";
+import {NavbarBase} from "./NavbarBase";
+import {Nav} from "react-bootstrap";
 
 export function NavbarInstitucion() {
 
     const navigate = useNavigate()
 
+    function contenido(){
+        return(
+            <>
+                <Nav.Link style={{color:"white"}} onClick={()=>navigate('/inicio-institucion')} onMouseOver={(e) => e.target.style.color = 'blue'} onMouseOut={(e) => e.target.style.color = 'white'}>Inicio</Nav.Link>
+                <Nav.Link style={{color:"white"}} onClick={()=>navigate('/inicio-institucion/gestionar-oportunidades')} onMouseOver={(e) => e.target.style.color = 'blue'} onMouseOut={(e) => e.target.style.color = 'white'}>Gestionar oportunidades</Nav.Link>
+            </>
+        )
+    }
+
     return(
-        <Navbar expand="lg" className="bg-body-tertiary">
-            <Container>
-                <Navbar.Brand href="#home">EduGateway</Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="me-auto">
-                        <Nav.Link onClick={()=>navigate('/inicio-institucion')}>Inicio</Nav.Link>
-                        <Nav.Link onClick={()=>navigate('/inicio-institucion/gestionar-oportunidades')}>Gestionar oportunidades</Nav.Link>
-                        <Nav.Link>Mi perfil</Nav.Link>
-                    </Nav>
-                    <LogoutButton></LogoutButton>
-                </Navbar.Collapse>
-            </Container>
-        </Navbar>
+        <NavbarBase contenido={contenido()}/>
     )
 }

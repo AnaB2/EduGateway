@@ -137,3 +137,123 @@ export async function getOpportunitiesByInstitution() {
     }
 }
 
+export async function getOpportunities() {
+    try {
+        const token = getToken();
+        const email = getEmail();
+        const headers = {'Content-Type': 'application/json'};
+
+        if (!token || !email) {throw new Error('Token o correo no encontrados.');}
+
+        const response = await fetch(`${API_URL}/get-opportunities`, {
+            method: 'GET',
+            headers: headers,
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json(); // devuelve objeto
+
+    } catch (error) {
+        console.error("Failed to get opportunities:", error);
+        throw error;
+    }
+}
+
+export async function addInscription(email, opportunityId, formData){
+    try {
+        console.log("email")
+        console.log(email)
+        console.log("id")
+        console.log(opportunityId)
+        console.log("form data")
+        console.log(formData)
+
+        const response = await fetch(`${API_URL}/add-inscription`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Email': email,
+                'OpportunityId': opportunityId
+            },
+            body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.error('Failed to add inscription:', error);
+        throw error;
+    }
+}
+
+export async function getInscriptions() {
+    try {
+        const token = getToken();
+        const email = getEmail();
+        if (!token || !email) {throw new Error('Token o correo no encontrados.');}
+
+        const headers = {
+            'Content-Type': 'application/json',
+            'Email' : email,
+            'Token' : token
+        };
+
+        const response = await fetch(`${API_URL}/get-inscriptions`, {
+            method: 'GET',
+            headers: headers,
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json(); // devuelve objeto
+
+    } catch (error) {
+        console.error("Failed to get inscriptions:", error);
+        throw error;
+    }
+}
+
+export async function approveInscription(inscriptionId){
+    try {
+        const response = await fetch( `${API_URL}/approve-inscription/InscriptionId=${inscriptionId}`, {
+                method:'POST'
+            }
+        )
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+    }
+    catch (error){
+        console.error("Failed to approve inscription:", error);
+        throw error;
+    }
+}
+
+export async function rejectInscription(inscriptionId){
+    try {
+        const response = await fetch( `${API_URL}/reject-inscription/${inscriptionId}`, {
+                method:'POST'
+            }
+        )
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+    }
+    catch (error){
+        console.error("Failed to reject inscription:", error);
+        throw error;
+    }
+}
