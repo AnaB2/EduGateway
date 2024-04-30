@@ -198,6 +198,5 @@ public class InscriptionController {
       return "Correo electrónico de la institución no proporcionado.";
     }
   };
-
 }
 

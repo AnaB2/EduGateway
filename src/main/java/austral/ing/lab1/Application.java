@@ -3,11 +3,7 @@ package austral.ing.lab1;
 import static austral.ing.lab1.controllers.OpportunityController.handleGetOpportunities;
 import static austral.ing.lab1.controllers.OpportunityController.handleGetOpportunitiesByEmail;
 
-import austral.ing.lab1.controllers.InscriptionController;
-import austral.ing.lab1.controllers.LoginController;
-import austral.ing.lab1.controllers.LogoutController;
-import austral.ing.lab1.controllers.OpportunityController;
-import austral.ing.lab1.controllers.SignupController;
+import austral.ing.lab1.controllers.*;
 import com.google.gson.Gson;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -67,6 +63,8 @@ public class Application {
         Spark.post("/reject-inscription", InscriptionController.handleRejectInscription);
 
         Spark.get("/get-inscriptions", InscriptionController.handleShowInscriptions);
+
+        Spark.post("/follow-institution", UserController.handleFollowInstitution);
 
     }
 }

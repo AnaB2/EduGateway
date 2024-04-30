@@ -4,10 +4,9 @@ package austral.ing.lab1.model;
 import com.google.gson.Gson;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -28,6 +27,14 @@ public class User {
 
   @Column(name = "PASSWORD")
   private String password;
+
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+          name = "user_followed_institutions",
+          joinColumns = @JoinColumn(name = "user_id"),
+          inverseJoinColumns = @JoinColumn(name = "institution_id")
+  )
+  private Set<Institution> followedInstitutions = new HashSet<>();
 
   public User() { }
 
@@ -94,6 +101,15 @@ public class User {
   }
 
   public void setActive(boolean b) {
+  }
+
+  public void followInstitution(Institution institution) {
+    followedInstitutions.add(institution);
+    institution.getFollowers().add(this);
+  }
+
+  public Set<Institution> getFollowedInstitutions() {
+    return followedInstitutions;
   }
 
   public static class UserBuilder {

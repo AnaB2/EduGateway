@@ -3,10 +3,9 @@ package austral.ing.lab1.model;
 import com.google.gson.Gson;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Institution {
@@ -27,6 +26,9 @@ public class Institution {
 
     @Column(name = "CREDENTIAL")
     private String credential;
+
+    @ManyToMany(mappedBy = "followedInstitutions", fetch = FetchType.LAZY)
+    private Set<User> followers = new HashSet<>();
 
     public Institution() { }
 
@@ -72,6 +74,10 @@ public class Institution {
 
     public String getCredential() {
         return credential;
+    }
+
+    public Set<User> getFollowers() {
+        return followers;
     }
 
     Institution(InstitutionBuilder builder) {
