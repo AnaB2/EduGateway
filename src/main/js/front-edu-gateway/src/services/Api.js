@@ -222,10 +222,14 @@ export async function getInscriptions() {
     }
 }
 
-export async function approveInscription(inscriptionId){
+export async function approveInscription(emailParticipante){
     try {
-        const response = await fetch( `${API_URL}/approve-inscription/InscriptionId=${inscriptionId}`, {
-                method:'POST'
+        const response = await fetch( `${API_URL}/approve-inscription/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ emailParticipante: emailParticipante}),
             }
         )
         if (!response.ok) {
@@ -240,10 +244,15 @@ export async function approveInscription(inscriptionId){
     }
 }
 
-export async function rejectInscription(inscriptionId){
+export async function rejectInscription(emailParticipante){
     try {
-        const response = await fetch( `${API_URL}/reject-inscription/${inscriptionId}`, {
-                method:'POST'
+
+        const response = await fetch( `${API_URL}/reject-inscription/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ emailParticipante: emailParticipante}),
             }
         )
         if (!response.ok) {

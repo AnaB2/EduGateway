@@ -33,7 +33,8 @@ export function GestionarPostulaciones({oportunidad}){
     async function obtenerInscripciones() {
         try {
             const allInscriptions = await getInscriptions();
-            // console.log(allInscriptions)
+            console.log("Lo que devuelve el request: ")
+            console.log(allInscriptions)
             const inscripcionesOpportunity = allInscriptions.filter(inscripcion => inscripcion.opportunityName == oportunidad.name);
             console.log(inscripcionesOpportunity)
             setInscripciones(inscripcionesOpportunity[0].inscriptions);
@@ -58,14 +59,14 @@ export function GestionarPostulaciones({oportunidad}){
         setRechazados(rechazados);
     }, [inscripciones]);
 
-    function aceptarPostulacion(inscriptionId) {
-        console.log(inscriptionId)
-        approveInscription(inscriptionId)
+    function aceptarPostulacion(emailParticipante) {
+        console.log(emailParticipante)
+        approveInscription(emailParticipante)
         obtenerInscripciones()
     }
 
-    function rechazarPostulacion(inscriptionId){
-        rejectInscription(inscriptionId)
+    function rechazarPostulacion(emailParticipante){
+        rejectInscription(emailParticipante)
         obtenerInscripciones()
     }
 
