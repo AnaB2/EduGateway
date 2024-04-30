@@ -80,19 +80,19 @@ export function GestionarPostulaciones({oportunidad}){
                     <p>Cupos disponibles: {cupos}</p>
                     <div>
                         <div className="pendientes">
-                            {pendientes.map(inscripcion =>(<div style={{backgroundColor:'yellow', display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:'center', padding:'10px'}}>
+                            {pendientes.map(inscripcion =>(<div key={inscripcion.id} style={{backgroundColor:'yellow', display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:'center', padding:'10px'}}>
                                 {inscripcion.inscriptionName}
-                                <div  key={inscripcion.id} style={{display:"flex", flexDirection:"row", gap:'5px'}}>
+                                <div style={{display:"flex", flexDirection:"row", gap:'5px'}}>
                                     <Button onClick={()=>aceptarPostulacion(inscripcion.emailParticipante)} className="btn-dark">SI</Button>
                                     <Button onClick={()=>rechazarPostulacion(inscripcion.emailParticipante)} className="btn-dark">NO</Button>
                                 </div>
                             </div>))}
                         </div>
                         <div className="aceptados">
-                            {aceptados.map(inscripcion =>(<div style={{backgroundColor:'green', display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:'center', padding:'10px'}} key={inscripcion.id}>{inscripcion.inscriptionName}</div>))}
+                            {aceptados.map(inscripcion =>(<div key={`${inscripcion.id}-aceptado`} style={{backgroundColor:'green', display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:'center', padding:'10px'}}>{inscripcion.inscriptionName}</div>))}
                         </div>
                         <div className="rechazados">
-                            {rechazados.map(inscripcion=>(<div style={{backgroundColor:'red', display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:'center', padding:'10px'}} key={inscripcion.id}>{inscripcion.inscriptionName}</div>))}
+                            {rechazados.map(inscripcion=>(<div key={`${inscripcion.id}-rechazado`} style={{backgroundColor:'red', display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:'center', padding:'10px'}}>{inscripcion.inscriptionName}</div>))}
                         </div>
                     </div>
                 </Modal.Body>
