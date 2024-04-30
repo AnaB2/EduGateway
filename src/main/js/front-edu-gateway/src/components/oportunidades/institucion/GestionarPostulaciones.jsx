@@ -33,10 +33,7 @@ export function GestionarPostulaciones({oportunidad}){
     async function obtenerInscripciones() {
         try {
             const allInscriptions = await getInscriptions();
-            console.log("Lo que devuelve el request: ")
-            console.log(allInscriptions)
             const inscripcionesOpportunity = allInscriptions.filter(inscripcion => inscripcion.opportunityName == oportunidad.name);
-            console.log(inscripcionesOpportunity)
             setInscripciones(inscripcionesOpportunity[0].inscriptions);
         } catch (error) {
             console.error("Error al obtener inscripciones:", error);

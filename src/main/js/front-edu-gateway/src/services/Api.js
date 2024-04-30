@@ -223,23 +223,12 @@ export async function approveInscription(emailParticipante){
             'emailParticipante' : emailParticipante
         };
 
-        console.log("HEADER")
-        console.log(headers)
-
         const response = await fetch( `${API_URL}/approve-inscription`, {
                 method: 'POST',
                 headers: headers
             }
         )
 
-        console.log("RESPUESTA")
-        console.log(response)
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        return await response.json();
     }
     catch (error){
         console.error("Failed to approve inscription:", error);
@@ -260,11 +249,6 @@ export async function rejectInscription(emailParticipante){
                 headers: headers
             }
         )
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        return await response.json();
     }
     catch (error){
         console.error("Failed to reject inscription:", error);
