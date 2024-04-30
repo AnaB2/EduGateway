@@ -4,16 +4,16 @@ import austral.ing.lab1.model.Institution;
 import austral.ing.lab1.model.User;
 import austral.ing.lab1.repository.Institutions;
 import austral.ing.lab1.repository.Users;
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import spark.Request;
-import spark.Response;
-import spark.Route;
-
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.util.Map;
+import spark.Request;
+import spark.Response;
+import spark.Route;
 
 public class UserController {
 
@@ -21,15 +21,16 @@ public class UserController {
     private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
 
     public static Route handleFollowInstitution = (Request request, Response response) -> {
-        // Obtener el correo electrónico del usuario y de la institución de los parámetros de la solicitud
-        String userEmail = request.queryParams("userEmail");
-        String institutionEmail = request.queryParams("institutionEmail");
+        String body = request.body();
+        Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String,String>>(){}.getType());
 
-        // Verificar que los parámetros no estén vacíos
-        if (userEmail == null || userEmail.isEmpty() || institutionEmail == null || institutionEmail.isEmpty()) {
+        if(formData.get("UserEmail").trim().isEmpty() || formData.get("institutionEmail").trim().isEmpty()){
             response.status(400);
-            return "{\"error\": \"User email or institution email is missing\"}";
+            return "{\"error\": \"Missing or empty fields\"}";
         }
+
+        String userEmail = formData.get("userEmail");
+        String institutionEmail = formData.get("institutionEmail");
 
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         Users users = new Users(entityManager);
