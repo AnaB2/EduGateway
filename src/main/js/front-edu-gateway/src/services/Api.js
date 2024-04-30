@@ -218,39 +218,37 @@ export async function getInscriptions() {
 
 export async function approveInscription(emailParticipante){
     try {
+        const body = JSON.stringify({ emailParticipante });
         const headers = {
-            'Content-Type': 'application/json',
-            'emailParticipante' : emailParticipante
+            'Content-Type': 'application/json'
         };
 
-        const response = await fetch( `${API_URL}/approve-inscription`, {
-                method: 'POST',
-                headers: headers
-            }
-        )
-
-    }
-    catch (error){
+        const response = await fetch(`${API_URL}/approve-inscription`, {
+            method: 'POST',
+            headers: headers,
+            body: body
+        });
+    } catch (error) {
         console.error("Failed to approve inscription:", error);
         throw error;
     }
 }
 
 export async function rejectInscription(emailParticipante){
-    
+
     try {
+        const body = JSON.stringify({ emailParticipante });
         const headers = {
-            'Content-Type': 'application/json',
-            'emailParticipante' : emailParticipante
+            'Content-Type': 'application/json'
         };
-        
-        const response = await fetch( `${API_URL}/reject-inscription`, {
-                method: 'POST',
-                headers: headers
-            }
-        )
-    }
-    catch (error){
+
+        const response = await fetch(`${API_URL}/reject-inscription`, {
+            method: 'POST',
+            headers: headers,
+            body: body
+        });
+
+    } catch (error) {
         console.error("Failed to reject inscription:", error);
         throw error;
     }

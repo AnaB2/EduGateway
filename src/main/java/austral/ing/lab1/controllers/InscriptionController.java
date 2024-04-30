@@ -102,7 +102,7 @@ public class InscriptionController {
 
 
   public static Route handleAcceptInscription = (Request request, Response response) -> {
-    String emailParticipante = request.headers("emailParticipante");
+    String emailParticipante = request.body();
 
     // Actualizar el estado de la inscripción a "aceptada"
     updateInscriptionStatus(emailParticipante, InscriptionStatus.ACCEPTED, response);
@@ -111,7 +111,7 @@ public class InscriptionController {
   };
 
   public static Route handleRejectInscription = (Request request, Response response) -> {
-    String emailParticipante = request.headers("emailParticipante");
+    String emailParticipante = request.body();
 
     // Actualizar el estado de la inscripción a "rechazada"
     updateInscriptionStatus(emailParticipante, InscriptionStatus.REJECTED, response);
