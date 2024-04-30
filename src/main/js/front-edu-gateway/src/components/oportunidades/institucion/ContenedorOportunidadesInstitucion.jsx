@@ -30,7 +30,6 @@ export function ContenedorOportunidadesInstitucion() {
         <>
             <div className="contenedor-oportunidades">
                 {oportunidades.map((oportunidad) => (<CardOportunidadInstitucion key={oportunidad.id} oportunidad={oportunidad} actualizarOportunidades={()=>actualizarOportunidades()}/>))}
-                {console.log(oportunidades)}
             </div>
             <AgregarOportunidad actualizarOportunidades={()=>actualizarOportunidades()}/>
         </>

@@ -197,9 +197,13 @@ export async function getInscriptions() {
     try {
         const token = getToken();
         const email = getEmail();
-        const headers = {'Content-Type': 'application/json'};
-
         if (!token || !email) {throw new Error('Token o correo no encontrados.');}
+
+        const headers = {
+            'Content-Type': 'application/json',
+            'Email' : email,
+            'Token' : token
+        };
 
         const response = await fetch(`${API_URL}/get-inscriptions`, {
             method: 'GET',
@@ -214,6 +218,42 @@ export async function getInscriptions() {
 
     } catch (error) {
         console.error("Failed to get inscriptions:", error);
+        throw error;
+    }
+}
+
+export async function approveInscription(inscriptionId){
+    try {
+        const response = await fetch( `${API_URL}/approve-inscription/InscriptionId=${inscriptionId}`, {
+                method:'POST'
+            }
+        )
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+    }
+    catch (error){
+        console.error("Failed to approve inscription:", error);
+        throw error;
+    }
+}
+
+export async function rejectInscription(inscriptionId){
+    try {
+        const response = await fetch( `${API_URL}/reject-inscription/${inscriptionId}`, {
+                method:'POST'
+            }
+        )
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+    }
+    catch (error){
+        console.error("Failed to reject inscription:", error);
         throw error;
     }
 }

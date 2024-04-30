@@ -11,7 +11,6 @@ export function ContenedorOportunidadesParticipante() {
         const fetchOpportunities = async () => {
             try {
                 const response = await getOpportunities();
-                console.log(response)
                 setOportunidades(response);
             } catch (error) {
                 console.error('Error al obtener las oportunidades:', error);
@@ -33,7 +32,6 @@ export function ContenedorOportunidadesParticipante() {
         <>
             <div className="contenedor-oportunidades">
                 {oportunidades.map((oportunidad) => (<CardOportunidadParticipante key={oportunidad.id} oportunidad={oportunidad} actualizarOportunidades={()=>actualizarOportunidades()}/>))}
-                {console.log(oportunidades)}
             </div>
         </>
 
