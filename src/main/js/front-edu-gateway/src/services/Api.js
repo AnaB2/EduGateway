@@ -164,12 +164,6 @@ export async function getOpportunities() {
 
 export async function addInscription(email, opportunityId, formData){
     try {
-        console.log("email")
-        console.log(email)
-        console.log("id")
-        console.log(opportunityId)
-        console.log("form data")
-        console.log(formData)
 
         const response = await fetch(`${API_URL}/add-inscription`, {
             method: 'POST',
@@ -207,7 +201,7 @@ export async function getInscriptions() {
 
         const response = await fetch(`${API_URL}/get-inscriptions`, {
             method: 'GET',
-            headers: headers,
+            headers: headers
         });
 
         if (!response.ok) {
@@ -224,14 +218,23 @@ export async function getInscriptions() {
 
 export async function approveInscription(emailParticipante){
     try {
-        const response = await fetch( `${API_URL}/approve-inscription/`, {
+        const headers = {
+            'Content-Type': 'application/json',
+            'emailParticipante' : emailParticipante
+        };
+
+        console.log("HEADER")
+        console.log(headers)
+
+        const response = await fetch( `${API_URL}/approve-inscription`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ emailParticipante: emailParticipante}),
+                headers: headers
             }
         )
+
+        console.log("RESPUESTA")
+        console.log(response)
+
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -245,14 +248,16 @@ export async function approveInscription(emailParticipante){
 }
 
 export async function rejectInscription(emailParticipante){
+    
     try {
-
-        const response = await fetch( `${API_URL}/reject-inscription/`, {
+        const headers = {
+            'Content-Type': 'application/json',
+            'emailParticipante' : emailParticipante
+        };
+        
+        const response = await fetch( `${API_URL}/reject-inscription`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ emailParticipante: emailParticipante}),
+                headers: headers
             }
         )
         if (!response.ok) {
