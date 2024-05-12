@@ -207,7 +207,7 @@ export async function getInscriptions() {
 
         const response = await fetch(`${API_URL}/get-inscriptions`, {
             method: 'GET',
-            headers: headers,
+            headers: headers
         });
 
         if (!response.ok) {
@@ -221,38 +221,39 @@ export async function getInscriptions() {
         throw error;
     }
 }
-
 export async function approveInscription(inscriptionId){
     try {
-        const response = await fetch( `${API_URL}/approve-inscription/InscriptionId=${inscriptionId}`, {
-                method:'POST'
-            }
-        )
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+        const body = JSON.stringify({inscriptionId } );
+        const headers = {
+            'Content-Type': 'application/json'
+        };
 
-        return await response.json();
-    }
-    catch (error){
+        const response = await fetch(`${API_URL}/approve-inscription`, {
+            method: 'POST',
+            headers: headers,
+            body: body
+        });
+    } catch (error) {
         console.error("Failed to approve inscription:", error);
         throw error;
     }
 }
 
 export async function rejectInscription(inscriptionId){
-    try {
-        const response = await fetch( `${API_URL}/reject-inscription/${inscriptionId}`, {
-                method:'POST'
-            }
-        )
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
 
-        return await response.json();
-    }
-    catch (error){
+    try {
+        const body = JSON.stringify({ inscriptionId });
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+
+        const response = await fetch(`${API_URL}/reject-inscription`, {
+            method: 'POST',
+            headers: headers,
+            body: body
+        });
+
+    } catch (error) {
         console.error("Failed to reject inscription:", error);
         throw error;
     }

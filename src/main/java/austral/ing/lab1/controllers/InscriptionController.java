@@ -37,7 +37,7 @@ public class InscriptionController {
 
     // Verificar que los campos requeridos no estén vacíos o en blanco
     if (formData.get("name").trim().isEmpty() || formData.get("apellido").trim().isEmpty() ||
-            formData.get("localidad").trim().isEmpty()) {
+        formData.get("localidad").trim().isEmpty()) {
       response.status(400);
       return "{\"error\": \"Missing or empty fields\"}";
     }
@@ -102,24 +102,32 @@ public class InscriptionController {
 
 
   public static Route handleAcceptInscription = (Request request, Response response) -> {
-    Long inscriptionId = Long.parseLong(request.params("inscriptionId")); // Obtener el ID de la inscripción desde la ruta
+    String requestBody = request.body();
+    Map<String, String> bodyMap = gson.fromJson(requestBody, new TypeToken<Map<String, String>>(){}.getType());
+    String idInscription1 = bodyMap.get("inscriptionId");
+
+    Long idInscriptionLong = Long.parseLong(idInscription1);
 
     // Actualizar el estado de la inscripción a "aceptada"
-    updateInscriptionStatus(inscriptionId, InscriptionStatus.ACCEPTED, response);
+    updateInscriptionStatus(idInscriptionLong, InscriptionStatus.ACCEPTED, response);
 
     return null;
   };
 
   public static Route handleRejectInscription = (Request request, Response response) -> {
-    Long inscriptionId = Long.parseLong(request.params("inscriptionId")); // Obtener el ID de la inscripción desde la ruta
+    String requestBody = request.body();
+    Map<String, String> bodyMap = gson.fromJson(requestBody, new TypeToken<Map<String, String>>(){}.getType());
+    String idInscription1 = bodyMap.get("inscriptionId");
 
+    Long idInscriptionLong = Long.parseLong(idInscription1);
     // Actualizar el estado de la inscripción a "rechazada"
-    updateInscriptionStatus(inscriptionId, InscriptionStatus.REJECTED, response);
+    updateInscriptionStatus(idInscriptionLong, InscriptionStatus.REJECTED, response);
 
     return null;
   };
 
-  private static void updateInscriptionStatus(Long inscriptionId, InscriptionStatus newStatus, Response response) {
+
+  private static void updateInscriptionStatus(Long idInscription, InscriptionStatus newStatus, Response response) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     Inscriptions inscriptions = new Inscriptions(entityManager);
     EntityTransaction tx = entityManager.getTransaction();
@@ -127,14 +135,14 @@ public class InscriptionController {
     try {
       tx.begin();
 
-      Inscription inscription = inscriptions.findById(inscriptionId);
+      Inscription inscription = inscriptions.findById(idInscription);
       if (inscription == null) {
         response.status(404);
-        response.body("{\"error\": \"Inscription not found for the provided ID\"}");
+        response.body("{\"error\": \"Inscription not found for the provided email\"}");
         return;
       }
 
-      inscription.setEstado(newStatus); // Actualizar el estado de la inscripción
+      inscription.setEstado(newStatus); // Update the status of the inscription
 
       inscriptions.persist(inscription);
 
@@ -159,15 +167,15 @@ public class InscriptionController {
     String requestedUserEmail = request.headers("Email");
 
     if (requestedUserEmail != null && !requestedUserEmail.isEmpty()) {
-      // Obtener todas las oportunidades asociadas al correo electrónico de la institución
+      // Fetch all opportunities associated with the email
       List<Opportunity> opportunities = entityManager.createQuery(
-                      "SELECT o FROM Opportunity o WHERE o.institutionEmail = :institutionEmail", Opportunity.class)
-              .setParameter("institutionEmail", requestedUserEmail)
-              .getResultList();
+              "SELECT o FROM Opportunity o WHERE o.institutionEmail = :institutionEmail", Opportunity.class)
+          .setParameter("institutionEmail", requestedUserEmail)
+          .getResultList();
 
       JsonArray allInscriptionsJson = new JsonArray();
 
-      // Para cada oportunidad encontrada, obtener las inscripciones asociadas
+      // For each opportunity, fetch the associated inscriptions
       for (Opportunity opportunity : opportunities) {
         JsonObject opportunityJson = new JsonObject();
         opportunityJson.addProperty("opportunityName", opportunity.getName());
@@ -175,9 +183,10 @@ public class InscriptionController {
         List<Inscription> inscriptionsForOpportunity = inscriptions.findByOpportunityId(opportunity.getId());
         JsonArray inscriptionsJson = new JsonArray();
 
-        // Convertir cada inscripción a un objeto JSON
+        // Convert each inscription to a JSON object
         for (Inscription inscription : inscriptionsForOpportunity) {
           JsonObject inscriptionJson = new JsonObject();
+          inscriptionJson.addProperty("inscriptionId", inscription.getId());
           inscriptionJson.addProperty("inscriptionName", inscription.getNombre());
           inscriptionJson.addProperty("emailParticipante", inscription.getEmailParticipante());
           inscriptionJson.addProperty("localidad", inscription.getLocalidad());
@@ -190,13 +199,13 @@ public class InscriptionController {
         allInscriptionsJson.add(opportunityJson);
       }
 
-      // Establecer el tipo de respuesta y devolver el JSON
+      // Set the response type and return the JSON
       response.type("application/json");
       return allInscriptionsJson.toString();
     } else {
-      response.status(400); // Bad Request si el correo electrónico está vacío
+      response.status(400); // Bad Request if the email is empty
       return "Correo electrónico de la institución no proporcionado.";
     }
   };
-}
 
+}

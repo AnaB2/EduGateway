@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-
 public class Inscriptions {
   private final EntityManager entityManager;
 
@@ -21,7 +20,7 @@ public class Inscriptions {
 
   public Inscription findByEmailAndOpportunityId(String emailParticipante, Long opportunityId) {
     TypedQuery<Inscription> query = entityManager.createQuery(
-        "SELECT i FROM Inscription i WHERE i.emailParticipante = :emailParticipante AND i.opportunity.id = :opportunityId", Inscription.class);
+        "SELECT i FROM Inscription i WHERE i.emailParticipante = :emailParticipante AND i.opportunity = :opportunityId", Inscription.class);
     query.setParameter("emailParticipante", emailParticipante);
     query.setParameter("opportunityId", opportunityId);
 
@@ -30,12 +29,11 @@ public class Inscriptions {
   }
 
 
-  public List<Inscription> findByEmail(String emailParticipante) {
-    TypedQuery<Inscription> query = entityManager.createQuery(
-        "SELECT i FROM Inscription i WHERE i.emailParticipante = :emailParticipante", Inscription.class);
-    query.setParameter("emailParticipante", emailParticipante);
-
-    return query.getResultList();
+  public Inscription findByEmail(String email) {
+    return entityManager
+        .createQuery("SELECT i FROM Inscription i WHERE i.emailParticipante = :email", Inscription.class)
+        .setParameter("email", email)
+        .getSingleResult();
   }
 
   public void persist(Inscription inscripcion) {
@@ -49,11 +47,10 @@ public class Inscriptions {
 
   // Método para obtener las inscripciones por ID de oportunidad
   public List<Inscription> findByOpportunityId(Long opportunityId) {
-    TypedQuery<Inscription> query = entityManager.createQuery(
-        "SELECT i FROM Inscription i WHERE i.opportunity.id = :opportunityId", Inscription.class);
-    query.setParameter("opportunityId", opportunityId);
-
-    return query.getResultList();
+    return entityManager
+        .createQuery("SELECT i FROM Inscription i WHERE i.opportunity = :opportunityId", Inscription.class)
+        .setParameter("opportunityId", opportunityId)
+        .getResultList();
   }
 
   public List<Inscription> listAll() {
