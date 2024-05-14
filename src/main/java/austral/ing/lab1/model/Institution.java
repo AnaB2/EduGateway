@@ -27,6 +27,9 @@ public class Institution {
     @Column(name = "CREDENTIAL")
     private String credential;
 
+    @Column(name = "DESCRIPTION")
+    private String description;
+
     @ManyToMany(mappedBy = "followedInstitutions", fetch = FetchType.LAZY)
     private Set<User> followers = new HashSet<>();
 
@@ -80,11 +83,20 @@ public class Institution {
         return followers;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     Institution(InstitutionBuilder builder) {
         this.institutionalName = builder.institutionalName;
         this.password = builder.password;
         this.email = builder.email;
         this.credential = builder.credential;
+        this.description = builder.description;
     }
 
     public static Institution fromJson(String json) {
@@ -105,6 +117,7 @@ public class Institution {
         private String institutionalName;
         private String password;
         private String credential;
+        private String description;
 
         public InstitutionBuilder(String email) {
             this.email = email;

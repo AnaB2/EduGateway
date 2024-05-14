@@ -66,5 +66,9 @@ public class Application {
 
         Spark.post("/follow-institution", UserController.handleFollowInstitution);
 
+        Spark.post("edit-user", UserController.handleEditUser);
+
+        Spark.post("/edit-institution", InstitutionController.handleEditInstitution);
+
     }
 }
