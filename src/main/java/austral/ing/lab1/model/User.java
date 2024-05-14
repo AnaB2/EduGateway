@@ -4,10 +4,9 @@ package austral.ing.lab1.model;
 import com.google.gson.Gson;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -28,6 +27,17 @@ public class User {
 
   @Column(name = "PASSWORD")
   private String password;
+
+  @Column(name = "DESCRIPTION")
+  private String description;
+
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+          name = "user_followed_institutions",
+          joinColumns = @JoinColumn(name = "user_id"),
+          inverseJoinColumns = @JoinColumn(name = "institution_id")
+  )
+  private Set<Institution> followedInstitutions = new HashSet<>();
 
   public User() { }
 
@@ -76,11 +86,20 @@ public class User {
     return password;
   }
 
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
   private User(UserBuilder builder) {
     this.firstName = builder.firstName;
     this.lastName = builder.lastName;
     this.password = builder.password;
     this.email = builder.email;
+    this.description = builder.description;
   }
 
   public static User fromJson(String json) {
@@ -96,11 +115,21 @@ public class User {
   public void setActive(boolean b) {
   }
 
+  public void followInstitution(Institution institution) {
+    followedInstitutions.add(institution);
+    institution.getFollowers().add(this);
+  }
+
+  public Set<Institution> getFollowedInstitutions() {
+    return followedInstitutions;
+  }
+
   public static class UserBuilder {
     private final String email;
     private String firstName;
     private String lastName;
     private String password;
+    private String description;
 
     public UserBuilder(String email) {
       this.email = email;
@@ -118,6 +147,11 @@ public class User {
 
     public UserBuilder lastName(String lastName) {
       this.lastName = lastName;
+      return this;
+    }
+
+    public UserBuilder description(String description) {
+      this.description = description;
       return this;
     }
 

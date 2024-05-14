@@ -129,8 +129,5 @@ public class SignupController {
     } finally {
       entityManager.close();
     }
-//
-//
   };
-
 }

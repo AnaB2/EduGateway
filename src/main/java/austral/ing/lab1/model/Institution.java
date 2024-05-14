@@ -3,10 +3,9 @@ package austral.ing.lab1.model;
 import com.google.gson.Gson;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Institution {
@@ -27,6 +26,12 @@ public class Institution {
 
     @Column(name = "CREDENTIAL")
     private String credential;
+
+    @Column(name = "DESCRIPTION")
+    private String description;
+
+    @ManyToMany(mappedBy = "followedInstitutions", fetch = FetchType.LAZY)
+    private Set<User> followers = new HashSet<>();
 
     public Institution() { }
 
@@ -74,11 +79,24 @@ public class Institution {
         return credential;
     }
 
+    public Set<User> getFollowers() {
+        return followers;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     Institution(InstitutionBuilder builder) {
         this.institutionalName = builder.institutionalName;
         this.password = builder.password;
         this.email = builder.email;
         this.credential = builder.credential;
+        this.description = builder.description;
     }
 
     public static Institution fromJson(String json) {
@@ -99,6 +117,7 @@ public class Institution {
         private String institutionalName;
         private String password;
         private String credential;
+        private String description;
 
         public InstitutionBuilder(String email) {
             this.email = email;
