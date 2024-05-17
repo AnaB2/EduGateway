@@ -2,7 +2,6 @@ import {getToken, getUserType} from "../../../services/storage";
 import {NavbarInstitucion} from "../../../components/navbars/NavbarInstitucion";
 import {mostrarAlertaAutenticacion} from "../../../components/AlertaAutenticacion";
 import {useNavigate} from "react-router";
-import {AgregarOportunidad} from "../../../components/oportunidades/institucion/AgregarOportunidad";
 import {ContenedorOportunidadesInstitucion} from "../../../components/oportunidades/institucion/ContenedorOportunidadesInstitucion";
 
 export function GestionarOportunidades(){

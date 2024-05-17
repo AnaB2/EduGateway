@@ -1,8 +1,8 @@
 import {getToken, getUserType} from "../../../services/storage";
 import {mostrarAlertaAutenticacion} from "../../../components/AlertaAutenticacion";
-import {NavbarParticipante} from "../../../components/navbars/NavbarParticipante";
 import {useNavigate} from "react-router";
 import {EditarPerfilInstitucion} from "../../../components/perfiles/institucion/EditarPerfilInstitucion";
+import {NavbarInstitucion} from "../../../components/navbars/NavbarInstitucion";
 
 
 export function PerfilInstitucion(){
@@ -18,7 +18,7 @@ export function PerfilInstitucion(){
     }
     return(
         <>
-            <NavbarParticipante></NavbarParticipante>
+            <NavbarInstitucion></NavbarInstitucion>
             <div className="contenido-pagina">
                 <h1></h1>
                 <EditarPerfilInstitucion/>

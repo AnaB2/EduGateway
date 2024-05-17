@@ -38,9 +38,9 @@ public class Application {
             response.header("Access-Control-Allow-Credentials", "true");
         });
 
-        Spark.post("/sign-up-user", SignupController.handleRegisterParticipant);
+        Spark.post("/sign-up-user", SignupController.handleSignupParticipant);
 
-        Spark.post("/sign-up-institution", SignupController.handleRegisterInstitution);
+        Spark.post("/sign-up-institution", SignupController.handleSignupInstitution);
 
         Spark.post("/log-in", LoginController.handleLogin);
 

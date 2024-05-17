@@ -289,12 +289,14 @@ export const editInstitution = async (institutionData, previousEmail) => {
             },
             body: JSON.stringify(institutionData),
         });
+
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error('Failed to edit institution profile: ' + await response.text());
         }
+
         return await response.json();
     } catch (error) {
-        console.error("Failed to edit profile:", error);
+        console.error("Failed to edit institution profile:", error);
         throw error;
     }
 };
