@@ -70,5 +70,9 @@ public class Application {
 
         Spark.post("/edit-institution", InstitutionController.handleEditInstitution);
 
+        Spark.get("/get-user-data", UserController.handleGetUserData);
+
+        Spark.get("/get-institution-data", InstitutionController.handleGetInstitutionData);
+
     }
 }

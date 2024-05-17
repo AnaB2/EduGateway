@@ -21,7 +21,8 @@ public class Institutions {
     public Optional<Institution> findByEmail(String email) {
         return entityManager
                 .createQuery("SELECT i FROM Institution i WHERE i.email LIKE :email", Institution.class)
-                .setParameter("email", email).getResultList()
+                .setParameter("email", email)
+                .getResultList()
                 .stream()
                 .findFirst();
     }

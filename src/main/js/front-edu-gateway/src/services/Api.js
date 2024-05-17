@@ -258,3 +258,44 @@ export async function rejectInscription(inscriptionId){
         throw error;
     }
 }
+
+export const editUser = async (userData, previousEmail) => {
+    try {
+        userData.previousEmail = previousEmail;
+        const response = await fetch(`${API_URL}/edit-user`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to edit profile:", error);
+        throw error;
+    }
+};
+
+export const editInstitution = async (institutionData, previousEmail) => {
+    try {
+        institutionData.previousEmail = previousEmail;
+        const response = await fetch(`${API_URL}/edit-institution`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(institutionData),
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to edit profile:", error);
+        throw error;
+    }
+};
+
