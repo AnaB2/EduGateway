@@ -83,7 +83,7 @@ export function GestionarPostulaciones({oportunidad}){
                     <div>
                         <div className="pendientes">
                             {pendientes.map(inscripcion =>(<div style={{backgroundColor:'yellow', display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:'center', padding:'10px'}}>
-                                {inscripcion.inscriptionName}
+                                {inscripcion.inscriptionName + " ID " + inscripcion.inscriptionId}
                                 <div  key={inscripcion.id} style={{display:"flex", flexDirection:"row", gap:'5px'}}>
                                     <Button onClick={()=>aceptarPostulacion(inscripcion.inscriptionId)} className="btn-dark">SI</Button>
                                     <Button onClick={()=>rechazarPostulacion(inscripcion.inscriptionId)} className="btn-dark">NO</Button>

@@ -216,9 +216,9 @@ export async function getInscriptions() {
     }
 }
 
-export async function approveInscription(emailParticipante){
+export async function approveInscription(inscriptionId){
     try {
-        const body = JSON.stringify({ emailParticipante });
+        const body = JSON.stringify({ inscriptionId });
         const headers = {
             'Content-Type': 'application/json'
         };
@@ -234,10 +234,10 @@ export async function approveInscription(emailParticipante){
     }
 }
 
-export async function rejectInscription(emailParticipante){
+export async function rejectInscription(inscriptionId){
 
     try {
-        const body = JSON.stringify({ emailParticipante });
+        const body = JSON.stringify({ inscriptionId });
         const headers = {
             'Content-Type': 'application/json'
         };
