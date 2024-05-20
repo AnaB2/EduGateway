@@ -6,7 +6,4 @@ out
 build
 target
 *.iml
-db/*
-
-db/mydb.lck
-db/mydb.log
+/db/
