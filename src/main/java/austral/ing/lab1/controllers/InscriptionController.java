@@ -37,7 +37,7 @@ public class InscriptionController {
 
     // Verificar que los campos requeridos no estén vacíos o en blanco
     if (formData.get("name").trim().isEmpty() || formData.get("apellido").trim().isEmpty() ||
-        formData.get("localidad").trim().isEmpty()) {
+            formData.get("localidad").trim().isEmpty()) {
       response.status(400);
       return "{\"error\": \"Missing or empty fields\"}";
     }
@@ -169,9 +169,9 @@ public class InscriptionController {
     if (requestedUserEmail != null && !requestedUserEmail.isEmpty()) {
       // Fetch all opportunities associated with the email
       List<Opportunity> opportunities = entityManager.createQuery(
-              "SELECT o FROM Opportunity o WHERE o.institutionEmail = :institutionEmail", Opportunity.class)
-          .setParameter("institutionEmail", requestedUserEmail)
-          .getResultList();
+                      "SELECT o FROM Opportunity o WHERE o.institutionEmail = :institutionEmail", Opportunity.class)
+              .setParameter("institutionEmail", requestedUserEmail)
+              .getResultList();
 
       JsonArray allInscriptionsJson = new JsonArray();
 
@@ -207,5 +207,4 @@ public class InscriptionController {
       return "Correo electrónico de la institución no proporcionado.";
     }
   };
-
 }

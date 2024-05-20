@@ -17,7 +17,7 @@ export function InicioParticipante(){
         <div>
             <NavbarParticipante></NavbarParticipante>
             <div className="contenido-pagina">
-                <h1>Inicio participante</h1>
+                <h1>Hola, Participante</h1>
             </div>
         </div>
     )
