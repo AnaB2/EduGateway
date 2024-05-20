@@ -10,7 +10,7 @@ export function Inicio(){
     return(
         <div className="inicio">
             <div className="presentacion">
-                <h1 style={{ color: "white", fontSize: "30px" }}>EduGateway</h1>
+                <img src={"/img/logo_blanco_sin_fondo.png"} style={{width:"20vw"}}/>
                 <div className="botones-inicio">
                     <ModalRegistro/>
                     <LoginModal/>
