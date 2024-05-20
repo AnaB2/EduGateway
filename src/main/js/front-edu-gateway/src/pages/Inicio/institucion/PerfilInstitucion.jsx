@@ -1,10 +1,12 @@
 import {getToken, getUserType} from "../../../services/storage";
-import {NavbarInstitucion} from "../../../components/navbars/NavbarInstitucion";
 import {mostrarAlertaAutenticacion} from "../../../components/AlertaAutenticacion";
 import {useNavigate} from "react-router";
-import {ContenedorOportunidadesInstitucion} from "../../../components/oportunidades/institucion/ContenedorOportunidadesInstitucion";
+import {EditarPerfilInstitucion} from "../../../components/perfiles/institucion/EditarPerfilInstitucion";
+import {NavbarInstitucion} from "../../../components/navbars/NavbarInstitucion";
 
-export function GestionarOportunidades(){
+
+export function PerfilInstitucion(){
+
     const navigate = useNavigate()
 
     if (!getToken() || getUserType()!=="institution"){
@@ -18,8 +20,8 @@ export function GestionarOportunidades(){
         <>
             <NavbarInstitucion></NavbarInstitucion>
             <div className="contenido-pagina">
-                <h1>Gestionar oportunidades</h1>
-                <ContenedorOportunidadesInstitucion/>
+                <h1></h1>
+                <EditarPerfilInstitucion/>
             </div>
         </>
     )

@@ -1,16 +1,24 @@
 package austral.ing.lab1.controllers;
 
 import austral.ing.lab1.model.Institution;
+import austral.ing.lab1.model.Opportunity;
 import austral.ing.lab1.model.User;
 import austral.ing.lab1.repository.Institutions;
+import austral.ing.lab1.repository.Opportunities;
 import austral.ing.lab1.repository.Users;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -75,8 +83,7 @@ public class UserController {
 
     public static Route handleEditUser = (Request request, Response response) -> {
         String body = request.body();
-        Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {
-        }.getType());
+        Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
 
         String email = formData.get("previousEmail");
 
@@ -122,5 +129,34 @@ public class UserController {
             entityManager.close();
         }
     };
+
+    public static Route handleGetUserData = (Request request, Response response) -> {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            // Parse the request body as JSON
+            JsonObject jsonObject = JsonParser.parseString(request.body()).getAsJsonObject();
+            String email = jsonObject.has("email") ? jsonObject.get("email").getAsString() : null;
+
+            if (email == null || email.isEmpty()) {
+                response.status(400);
+                return "{\"error\": \"Email parameter is missing\"}";
+            }
+
+            List<User> users = new Users(entityManager).findByEmail(email)
+                    .map(List::of)
+                    .orElseGet(ArrayList::new);
+
+            String jsonUsers = gson.toJson(users);
+
+            response.type("application/json");
+            return jsonUsers;
+        } catch (Exception e) {
+            response.status(500);
+            return "{\"error\": \"An error occurred while fetching opportunities by email\"}";
+        } finally {
+            entityManager.close();
+        }
+    };
+
 }
 

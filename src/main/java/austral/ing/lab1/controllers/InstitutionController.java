@@ -2,14 +2,22 @@ package austral.ing.lab1.controllers;
 
 
 import austral.ing.lab1.model.Institution;
+import austral.ing.lab1.model.User;
 import austral.ing.lab1.repository.Institutions;
+import austral.ing.lab1.repository.Users;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -21,8 +29,7 @@ public class InstitutionController {
 
     public static Route handleEditInstitution = (Request request, Response response) -> {
         String body = request.body();
-        Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {
-        }.getType());
+        Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
 
         String institutionalEmail = formData.get("previousEmail");
 
@@ -47,7 +54,7 @@ public class InstitutionController {
                 return "{\"error\": \"Institution not found\"}";
             }
 
-            institution.setEmail(formData.get("institutionalName"));
+            institution.setInstitutionalName(formData.get("institutionalName"));
             institution.setPassword(formData.get("password"));
             institution.setDescription(formData.get("description"));
 
@@ -66,4 +73,32 @@ public class InstitutionController {
             entityManager.close();
         }
     };
+
+    public static Route handleGetInstitutionData = (Request request, Response response) -> {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            JsonObject jsonObject = JsonParser.parseString(request.body()).getAsJsonObject();
+            String institutionalEmail = jsonObject.has("institutionalEmail") ? jsonObject.get("institutionalEmail").getAsString() : null;
+
+            if (institutionalEmail == null || institutionalEmail.isEmpty()) {
+                response.status(400);
+                return "{\"error\": \"Email parameter is missing\"}";
+            }
+
+            List<Institution> institutions = new Institutions(entityManager).findByEmail(institutionalEmail)
+                    .map(List::of)
+                    .orElseGet(ArrayList::new);
+
+            String jsonInstitutions = gson.toJson(institutions);
+
+            response.type("application/json");
+            return jsonInstitutions;
+        } catch (Exception e) {
+            response.status(500);
+            return "{\"error\": \"An error occurred while fetching institutions by email\"}";
+        } finally {
+            entityManager.close();
+        }
+    };
+
 }

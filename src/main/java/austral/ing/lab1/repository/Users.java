@@ -20,10 +20,11 @@ public class Users {
 
   public Optional<User> findByEmail(String email) {
     return entityManager
-        .createQuery("SELECT u FROM User u WHERE u.email LIKE :email", User.class)
-        .setParameter("email", email).getResultList()
-        .stream()
-        .findFirst();
+            .createQuery("SELECT u FROM User u WHERE u.email LIKE :email", User.class)
+            .setParameter("email", email)
+            .getResultList()
+            .stream()
+            .findFirst();
   }
 
   public List<User> listAll() {

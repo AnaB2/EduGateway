@@ -20,30 +20,22 @@ public class SignupController {
   private static final Gson gson = new Gson();
   private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
 
-  public static Route handleRegisterParticipant = (Request request, Response response) -> {
-    // Obtener los datos del Registro del cuerpo de la solicitud
+  public static Route handleSignupParticipant = (Request request, Response response) -> {
     String body = request.body();
     Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
 
-    // Verificar que los campos requeridos no estén vacíos o en blanco
     if (formData.get("email").trim().isEmpty() || formData.get("password").trim().isEmpty() ||
-        formData.get("firstname").trim().isEmpty() || formData.get("lastname").trim().isEmpty()) {
+            formData.get("firstname").trim().isEmpty() || formData.get("lastname").trim().isEmpty()) {
       response.status(400);
       return "{\"error\": \"Missing or empty fields\"}";
     }
 
-    // Verificar que el correo electrónico tenga el formato adecuado
     String email = formData.get("email");
-    if (!email.endsWith("@gmail.com")) {
+    if (!isValidEmail(email)) {
       response.status(400);
-      return "{\"error\": \"Email must be a valid Gmail address\"}";
+      return "{\"error\": \"Invalid email format\"}";
     }
 
-    String password = formData.get("password");
-    String firstname = formData.get("firstname");
-    String lastname = formData.get("lastname");
-
-    // Crear y persistir el usuario en la base de datos
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     Users users = new Users(entityManager);
     EntityTransaction tx = entityManager.getTransaction();
@@ -51,12 +43,17 @@ public class SignupController {
       tx.begin();
 
       if(users.findByEmail(email).isPresent()){
-        response.status(400);
+        response.status(409);
         return "{\"error\": \"User already exists\"}";
       }
+
+      String password = formData.get("password");
+      String firstname = formData.get("firstname");
+      String lastname = formData.get("lastname");
+
       User user = User.create(email)
-          .password(password).firstName(firstname).lastName(lastname)
-          .build();
+              .password(password).firstName(firstname).lastName(lastname)
+              .build();
       User persistedUser = users.persist(user);
       tx.commit();
       response.type("application/json");
@@ -72,36 +69,22 @@ public class SignupController {
     }
   };
 
-  public static Route handleRegisterInstitution = (Request request, Response response) -> {
-//     Obtener los datos del Registro del cuerpo de la solicitud
+  public static Route handleSignupInstitution = (Request request, Response response) -> {
     String body = request.body();
-    Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {
-    }.getType());
+    Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
 
-//     Verificar que los campos requeridos no estén vacíos o en blanco
     if (formData.get("email").trim().isEmpty() || formData.get("password").trim().isEmpty() ||
-        formData.get("institutionalName").trim().isEmpty() || formData.get("credential").trim().isEmpty()){
+            formData.get("institutionalName").trim().isEmpty() || formData.get("credential").trim().isEmpty()) {
       response.status(400);
       return "{\"error\": \"Missing or empty fields\"}";
     }
 
-//     Verificar que el correo electrónico tenga el formato adecuado
     String email = formData.get("email");
-    if (!email.endsWith("@gmail.com")) {
+    if (!isValidEmail(email)) {
       response.status(400);
-      return "{\"error\": \"Email must be a valid Gmail address\"}";
+      return "{\"error\": \"Invalid email format\"}";
     }
 
-    String password = formData.get("password");
-    String institutionalName = formData.get("institutionalName");
-    String credential = formData.get("credential");
-
-
-
-
-
-
-//     Crear y persistir la Institucion en la base de datos
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     Institutions institutions = new Institutions(entityManager);
     EntityTransaction tx = entityManager.getTransaction();
@@ -109,12 +92,16 @@ public class SignupController {
       tx.begin();
 
       if(institutions.findByEmail(email).isPresent()){
-        response.status(400);
+        response.status(409);
         return "{\"error\": \"Institution already exists\"}";
       }
 
+      String password = formData.get("password");
+      String institutionalName = formData.get("institutionalName");
+      String credential = formData.get("credential");
+
       Institution institution = Institution.create(email)
-          .password(password).institutionalName(institutionalName).credential(credential).build();
+              .password(password).institutionalName(institutionalName).credential(credential).build();
       Institution persistedInstitution = institutions.persist(institution);
 
       tx.commit();
@@ -130,4 +117,11 @@ public class SignupController {
       entityManager.close();
     }
   };
+
+  private static boolean isValidEmail(String email) {
+    // Implement email validation logic here
+    // For example, you can use regular expressions or a library like Apache Commons Validator
+    // Here's a basic example:
+    return email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}");
+  }
 }
