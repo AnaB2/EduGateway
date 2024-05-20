@@ -51,7 +51,7 @@ public class LoginController {
                     jsonResponse.addProperty("token", token);
                     jsonResponse.addProperty("userType", "participant"); // Opción para el tipo de usuario
                     jsonResponse.addProperty("email", email); // Correo electrónico del usuario
-
+                    jsonResponse.addProperty("name", user.getFirstName() + " " + user.getLastName());
                    // Establecer el encabezado Content-Type
                     response.type("application/json");
 
@@ -72,6 +72,7 @@ public class LoginController {
                     jsonResponse.addProperty("token", token);
                     jsonResponse.addProperty("userType", "institution"); // Opción para el tipo de usuario
                     jsonResponse.addProperty("email", email); // Correo electrónico de la institucion
+                    jsonResponse.addProperty("name", institution.getInstitutionalName());
 
                     // Establecer el encabezado Content-Type
                     response.type("application/json");

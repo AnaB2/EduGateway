@@ -29,7 +29,7 @@ export async function loginUser(userData, navigation){
         // Verifica si la respuesta incluye un token
         if (responseData.token) {
             // Guarda el token en el almacenamiento local del navegador
-            saveToken(responseData.token, responseData.email, responseData.userType);
+            saveToken(responseData.token, responseData.email, responseData.userType, responseData.name);
 
             // Redirige a la página correspondiente
             if (responseData.userType === 'participant') {
