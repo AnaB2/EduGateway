@@ -164,12 +164,6 @@ export async function getOpportunities() {
 
 export async function addInscription(email, opportunityId, formData){
     try {
-        console.log("email")
-        console.log(email)
-        console.log("id")
-        console.log(opportunityId)
-        console.log("form data")
-        console.log(formData)
 
         const response = await fetch(`${API_URL}/add-inscription`, {
             method: 'POST',
@@ -221,9 +215,10 @@ export async function getInscriptions() {
         throw error;
     }
 }
-export async function approveInscription(inscriptionId){
+
+export async function approveInscription(emailParticipante){
     try {
-        const body = JSON.stringify({inscriptionId } );
+        const body = JSON.stringify({ emailParticipante });
         const headers = {
             'Content-Type': 'application/json'
         };
@@ -239,10 +234,10 @@ export async function approveInscription(inscriptionId){
     }
 }
 
-export async function rejectInscription(inscriptionId){
+export async function rejectInscription(emailParticipante){
 
     try {
-        const body = JSON.stringify({ inscriptionId });
+        const body = JSON.stringify({ emailParticipante });
         const headers = {
             'Content-Type': 'application/json'
         };
@@ -258,6 +253,70 @@ export async function rejectInscription(inscriptionId){
         throw error;
     }
 }
+
+export async function followInstitution(userEmail, institutionEmail){
+    try {
+        const token = getToken();
+        const email = getEmail();
+        if (!token || !email) {throw new Error('Token o correo no encontrados.');}
+
+        const headers =  {
+            'Content-Type': 'application/json',
+            'Email' : email,
+            'Token' : token
+        };
+
+        const response = await fetch(`${API_URL}/follow-institution`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({ UserEmail: userEmail, institutionEmail: institutionEmail})
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            return await response.json(); // devuelve objeto
+
+        } catch (error) {
+            console.error("Failed to follow institution:", error);
+            throw error;
+        }
+}
+
+export async function isFollowingInstitution(userEmail, institutionEmail){
+    /*try {
+        const token = getToken();
+        const email = getEmail();
+        if (!token || !email) {throw new Error('Token o correo no encontrados.');}
+
+         const headers =  {
+            'Content-Type': 'application/json',
+            'Email' : email,
+            'Token' : token
+        };
+
+        const response = await fetch(`${API_URL}/is-following-institution`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({ UserEmail: userEmail, institutionEmail: institutionEmail})
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json(); // devuelve objeto
+
+    } catch (error) {
+        console.error("Failed to check if user is following institution:", error);
+        throw error;
+    }*/
+        return true;
+}
+
+
+
 
 export const editUser = async (userData, previousEmail) => {
     try {
