@@ -1,0 +1,10 @@
+.portada{
+    height: 100vh;
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    font-size: 5rem;
+    font-family: "Freeman", sans-serif;
+    text-align: center;
+    gap: 5vw;
+}

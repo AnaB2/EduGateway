@@ -3,7 +3,7 @@ Esta aplicación tiene los siguientes casos de uso resueltos:
   src/main/webapp/signup.html (html con formulario con estilos obtenidos de la libraria de CSS e  Bootstrap)
   src/main/java/austral/ing/lab1/service/Signup.java (Servlet con lógica de registración)
 
-* Login de usuario
+* LoginModal de usuario
   src/main/webapp/login.html
   src/main/webapp/WEB-INF/web.xml (Configuración del Security Filter en la web app)
   src/main/webapp/WEB-INF/securityfilter-config.xml (Configuración del Security Filter)

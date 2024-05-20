@@ -1,6 +1,6 @@
 //import {useNavigate} from 'react-router-dom';
-import {Registro} from "../../components/componentesSignup/Registro";
-import {Login} from "../../components/componentesLogin/Login";
+import {ModalRegistro} from "../../components/signup/ModalRegistro";
+import {LoginModal} from "../../components/login/LoginModal";
 
 export function Inicio(){
 
@@ -12,8 +12,8 @@ export function Inicio(){
             <div className="presentacion">
                 <h1 style={{ color: "white", fontSize: "30px" }}>EduGateway</h1>
                 <div className="botones-inicio">
-                    <Registro/>
-                    <Login/>
+                    <ModalRegistro/>
+                    <LoginModal/>
                 </div>
             </div>
         </div>

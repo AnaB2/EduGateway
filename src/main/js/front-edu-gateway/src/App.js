@@ -3,12 +3,12 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 // Componentes
 import {Inicio} from './pages/Inicio/Inicio.jsx'
-import {InicioParticipante} from "./pages/Inicio/participante/InicioParticipante";
-import {InicioInstitucion} from "./pages/Inicio/institucion/InicioInstitucion";
-import {GestionarOportunidades} from "./pages/Inicio/institucion/GestionarOportunidades";
-import {VerOportunidades} from "./pages/Inicio/participante/VerOportunidades";
-import {PerfilParticipante} from "./pages/Inicio/participante/PerfilParticipante";
-import {PerfilInstitucion} from "./pages/Inicio/institucion/PerfilInstitucion";
+import {InicioParticipante} from "./pages/participante/InicioParticipante";
+import {InicioInstitucion} from "./pages/institucion/InicioInstitucion";
+import {GestionarOportunidades} from "./pages/institucion/GestionarOportunidades";
+import {VerOportunidades} from "./pages/participante/VerOportunidades";
+import {PerfilParticipante} from "./pages/participante/PerfilParticipante";
+import {PerfilInstitucion} from "./pages/institucion/PerfilInstitucion";
 
 export default function App() {
   return (
