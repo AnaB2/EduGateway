@@ -100,3 +100,29 @@
     align-items: center;
     gap: 5px;
 }
+
+/* PERFIL PAGINA */
+.contenido-pagina{
+    display: flex;
+    flex-direction: column;
+    gap: 3vh;
+    justify-content: center; /* Centra el contenido verticalmente */
+    height: 80vh; /* Asegura que el contenedor ocupe toda la altura de la ventana (sacando la navbar)*/
+}
+
+.datos-perfil{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.datos-perfil div{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+}
+
+.datos-perfil h1{
+    text-align: center;
+    font-family: "Freeman", sans-serif;
+}

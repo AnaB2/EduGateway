@@ -34,7 +34,7 @@ export function PerfilInstitucion(){
             <div className="contenido-pagina">
 
                 {userData ? (
-                    <div className={"datosPerfil"}>
+                    <div className={"datos-perfil"}>
                         <h1>Perfil</h1>
                         <div>
                             <p>Nombre Institucional:</p>
