@@ -49,6 +49,23 @@ public class Opportunities {
     }
 
 
+    public List<Opportunity> findByCategory(String category) {
+        TypedQuery<Opportunity> query = entityManager.createQuery(
+            "SELECT o FROM Opportunity o WHERE o.category = :category", Opportunity.class);
+        query.setParameter("category", category);
+
+        return query.getResultList();}
+
+
+
+    public List<Opportunity> findByNameOpportunity(String name) {
+        TypedQuery<Opportunity> query = entityManager.createQuery(
+            "SELECT o FROM Opportunity o WHERE o.name = :name", Opportunity.class);
+        query.setParameter("name", name);
+
+        return query.getResultList();
+    }
+
 
 
 

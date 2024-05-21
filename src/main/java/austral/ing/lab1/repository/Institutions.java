@@ -35,5 +35,17 @@ public class Institutions {
         entityManager.persist(institution);
         return institution;
     }
+
+
+    public String findEmailByInstitutionName(String institutionName) {
+        return entityManager
+            .createQuery("SELECT i.email FROM Institution i WHERE i.institutionalName LIKE :name", String.class)
+            .setParameter("name", institutionName)
+            .getSingleResult();
+    }
+
+
+
+
 }
 
