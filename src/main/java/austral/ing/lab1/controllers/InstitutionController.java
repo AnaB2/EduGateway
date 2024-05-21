@@ -77,8 +77,7 @@ public class InstitutionController {
     public static Route handleGetInstitutionData = (Request request, Response response) -> {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            JsonObject jsonObject = JsonParser.parseString(request.body()).getAsJsonObject();
-            String institutionalEmail = jsonObject.has("institutionalEmail") ? jsonObject.get("institutionalEmail").getAsString() : null;
+            String institutionalEmail = request.queryParams("email");
 
             if (institutionalEmail == null || institutionalEmail.isEmpty()) {
                 response.status(400);

@@ -133,9 +133,7 @@ public class UserController {
     public static Route handleGetUserData = (Request request, Response response) -> {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            // Parse the request body as JSON
-            JsonObject jsonObject = JsonParser.parseString(request.body()).getAsJsonObject();
-            String email = jsonObject.has("email") ? jsonObject.get("email").getAsString() : null;
+            String email = request.queryParams("email");
 
             if (email == null || email.isEmpty()) {
                 response.status(400);

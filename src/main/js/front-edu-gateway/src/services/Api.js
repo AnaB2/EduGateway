@@ -1,4 +1,4 @@
-import {getEmail, getToken} from "./storage";
+import {getEmail, getToken, getUserType} from "./storage";
 
 const API_URL = 'http://localhost:4321'; // Replace this with your actual backend URL
 
@@ -361,3 +361,32 @@ export const editInstitution = async (institutionData, previousEmail) => {
 };
 
 
+export async function getData(){
+    try {
+        const token = getToken();
+        const email = getEmail();
+        if (!token || !email) {throw new Error('Token o correo no encontrados.');}
+
+        const url = getUserType()==`institution` ? `${API_URL}/get-institution-data` : `${API_URL}/get-user-data`
+
+        const headers = {
+            'Content-Type': 'application/json',
+            'Token' : token
+        };
+
+        const response = await fetch(`${url}?email=${email}`, {
+            method: 'GET',
+            headers: headers,
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json(); // devuelve objeto
+
+    } catch (error) {
+        console.error(`Failed to get ${getUserType()} data:`, error);
+        throw error;
+    }
+}

@@ -14,8 +14,8 @@ export function GestionarPostulaciones({oportunidad}){
     const [cupos, setCupos] = useState(oportunidad.capacity)
 
     function disminuirCupos(){
-        if (cupos<=0){throw Error("No hay mas cupos.")}
-        setCupos(cupos-1)
+        // HAY QUE HACER QUE PIDA LOS CUPOS AL BACK ACTUALIZADOS
+        // LOS CUPOS TIENEN QUE ACTUALIZARSE DESDE EL BACK CUANDO SE ACEPTA O RECHAZA POSTULACION
     }
 
     // Controles del modal
