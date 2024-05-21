@@ -31,7 +31,7 @@ export function PerfilInstitucion(){
         <>
             <NavbarInstitucion></NavbarInstitucion>
 
-            <div className="contenido-pagina">
+            <div className="contenido-pagina-perfil">
 
                 {userData ? (
                     <div className={"datos-perfil"}>

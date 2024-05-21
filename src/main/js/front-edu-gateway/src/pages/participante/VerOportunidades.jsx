@@ -18,7 +18,7 @@ export function VerOportunidades(){
     return(
         <>
             <NavbarParticipante></NavbarParticipante>
-            <div className="contenido-pagina">
+            <div className="contenido-pagina-oportunidades">
                 <h1>Ver oportunidades</h1>
                 <ContenedorOportunidadesParticipante/>
             </div>

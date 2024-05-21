@@ -30,7 +30,7 @@ export function PerfilParticipante(){
         <>
             <NavbarParticipante></NavbarParticipante>
 
-            <div className="contenido-pagina">
+            <div className="contenido-pagina-perfil">
 
                 {userData ? (
                     <div className={"datos-perfil"}>

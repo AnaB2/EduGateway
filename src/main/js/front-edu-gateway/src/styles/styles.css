@@ -43,13 +43,6 @@
 }
 
 
-.contenido-pagina{
-    margin: 20px 10%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 .opciones-de-registro{
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -86,16 +79,16 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     width: 70%;
-    justify-items: center;
     text-align: center;
     margin-bottom: 20px;
     margin-top:20px;
-
-
+    justify-content: center;
 }
+
 .oportunidad{
     margin: 10px;
 }
+
 .footer-card-oportunidad{
     display: flex;
     flex-direction: column;
@@ -103,13 +96,23 @@
     gap: 5px;
 }
 
-/* PERFIL PAGINA */
-.contenido-pagina{
+/* OPORTUNIDADES / GESTIONAR OPORTUNIDADES */
+.contenido-pagina-oportunidades{
+    margin: 20px 10%;
     display: flex;
     flex-direction: column;
-    gap: 3vh;
+    align-items: center; /* Centra el contenido horizontalmente */
+}
+
+/* PERFIL PAGINA */
+.contenido-pagina-perfil{
+    margin: 20px 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra el contenido horizontalmente */
     justify-content: center; /* Centra el contenido verticalmente */
     height: 80vh; /* Asegura que el contenedor ocupe toda la altura de la ventana (sacando la navbar)*/
+    gap: 3vh;
 }
 
 .datos-perfil{

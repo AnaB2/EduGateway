@@ -17,7 +17,7 @@ export function GestionarOportunidades(){
     return(
         <>
             <NavbarInstitucion></NavbarInstitucion>
-            <div className="contenido-pagina">
+            <div className="contenido-pagina-oportunidades">
                 <h1>Gestionar oportunidades</h1>
                 <ContenedorOportunidadesInstitucion/>
             </div>
