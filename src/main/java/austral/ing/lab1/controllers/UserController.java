@@ -10,6 +10,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -76,6 +77,36 @@ public class UserController {
             }
             response.status(500);
             return "{\"error\": \"An error occurred while following the institution\"}";
+        } finally {
+            entityManager.close();
+        }
+    };
+
+    public static Route handleGetFollowedInstitutions = (Request request, Response response) -> {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        try {
+            String email = request.queryParams("email");
+
+            // Chequear si se recibe el email como parámetro
+            if (email == null || email.isEmpty()) {
+                response.status(400);
+                return "{\"error\": \"Email parameter is missing\"}";
+            }
+
+            // Buscar al usuario por su correo electrónico y obtener la lista de instituciones seguidas
+            List<Institution> institutions = new Users(entityManager).findByEmail(email) // Buscar al usuario por su correo electrónico
+                    .map(User::getFollowedInstitutions) // Obtener la lista de instituciones seguidas
+                    .map(ArrayList::new) // Convertir el Set a List
+                    .orElseGet(ArrayList::new); // Si no se encuentra el usuario, devolver una lista vacía
+
+            String jsonInstitutions = gson.toJson(institutions); // Convertir la lista de instituciones a JSON
+            response.type("application/json"); // Establecer el tipo de contenido de la respuesta
+            return jsonInstitutions;
+
+        } catch (Exception e) {
+            response.status(500);
+            return "{\"error\": \"An error occurred while fetching followed institutions by email\"}";
         } finally {
             entityManager.close();
         }

@@ -1,6 +1,11 @@
 import Card from 'react-bootstrap/Card';
 import Button from "react-bootstrap/Button";
-import {deleteOpportunity, followInstitution, isFollowingInstitution} from "../../../services/Api";
+import {
+    deleteOpportunity,
+    followInstitution,
+    getFollowedInstitutions,
+    isFollowingInstitution
+} from "../../../services/Api";
 import {CardFooter} from "react-bootstrap";
 import {EditarOportunidad} from "../institucion/EditarOportunidad";
 import {InscripcionEnOportunidad} from "./InscripcionEnOportunidad";
@@ -12,8 +17,10 @@ export function CardOportunidadParticipante({oportunidad, actualizarOportunidade
 
     useEffect(() => {
         const checkFollowingStatus = async () => {
-            const following = await isFollowingInstitution(oportunidad.institutionEmail);
-            setIsFollowing(following);
+            const institucionesSeguidas = await getFollowedInstitutions()
+            console.log(institucionesSeguidas)
+            //const following = await isFollowingInstitution(oportunidad.institutionEmail);
+            //setIsFollowing(following);
         };
         checkFollowingStatus();
     }, [oportunidad.institutionEmail]);

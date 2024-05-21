@@ -8,3 +8,11 @@
     text-align: center;
     gap: 5vw;
 }
+
+.portada h1{
+    width: 30vw;
+}
+
+.portada img{
+    width: 30vw;
+}

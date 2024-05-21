@@ -284,6 +284,34 @@ export async function followInstitution(userEmail, institutionEmail){
         }
 }
 
+export async function getFollowedInstitutions(){
+    try {
+        const token = getToken();
+        const email = getEmail();
+        if (!token || !email) {throw new Error('Token o correo no encontrados.');}
+
+        const headers =  {
+            'Content-Type': 'application/json',
+            'Email' : email,
+            'Token' : token
+        };
+
+        const response = await fetch(`${API_URL}/get-followed-institutions?email=${email}`, {
+            method: 'GET',
+            headers: headers
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json(); // devuelve objeto
+    }
+    catch (e){
+        throw `Failed to get followed institutions: ${e}`
+    }
+}
+
 export async function isFollowingInstitution(userEmail, institutionEmail){
     /*try {
         const token = getToken();
