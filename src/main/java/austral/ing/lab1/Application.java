@@ -80,5 +80,9 @@ public class Application {
 
         Spark.get("/filter-by-InstitutionName", FilterController.FilterByNameInstituon);
 
+        Spark.post("/delete-user", UserController.handleDeleteUser);
+
+        Spark.post("/delete-institution", InstitutionController.handleDeleteInstitution);
+
     }
 }

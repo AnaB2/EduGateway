@@ -1,37 +1,36 @@
-import {getToken, getUserType} from "../../services/storage";
-import {mostrarAlertaAutenticacion} from "../../components/AlertaAutenticacion";
-import {NavbarParticipante} from "../../components/navbar/NavbarParticipante";
-import {useNavigate} from "react-router";
-import {EditarPerfilParticipante} from "../../components/perfiles/participante/EditarPerfilParticipante";
-import {getData} from "../../services/Api";
-import {useEffect, useState} from "react";
+import { getToken, getUserType } from "../../services/storage";
+import { mostrarAlertaAutenticacion } from "../../components/AlertaAutenticacion";
+import { NavbarParticipante } from "../../components/navbar/NavbarParticipante";
+import { useNavigate } from "react-router";
+import { EditarPerfilParticipante } from "../../components/perfiles/participante/EditarPerfilParticipante";
+import { EliminarPerfilParticipante } from "../../components/perfiles/participante/EliminarPerfilParticipante";
+import { getData } from "../../services/Api";
+import { useEffect, useState } from "react";
 
-
-export function PerfilParticipante(){
-
-    const navigate = useNavigate()
+export function PerfilParticipante() {
+    const navigate = useNavigate();
     const [userData, setUserData] = useState(null);
 
-    useEffect(() => { // Se ejecuta al cargar la página
-        getData().then(data => { // Obtiene los datos del usuario
-            setUserData(data[0]) // Guarda los datos del usuario
-            console.log(data) // Muestra los datos del usuario
-        }).catch(error => console.error(error)); // Muestra un error si no se pudieron obtener los datos
+    useEffect(() => {
+        getData().then(data => {
+            setUserData(data[0]);
+            console.log(data);
+        }).catch(error => console.error(error));
     }, []);
 
-    if (!getToken() || getUserType()!=="participant"){
+    if (!getToken() || getUserType() !== "participant") {
         return (
             <>
                 {mostrarAlertaAutenticacion(navigate, "/")}
             </>
-        )
+        );
     }
-    return(
+
+    return (
         <>
-            <NavbarParticipante></NavbarParticipante>
+            <NavbarParticipante />
 
             <div className="contenido-pagina-perfil">
-
                 {userData ? (
                     <div className={"datos-perfil"}>
                         <h1>Perfil</h1>
@@ -47,15 +46,31 @@ export function PerfilParticipante(){
                             <p>Correo:</p>
                             <p>{userData.email}</p>
                         </div>
-
                     </div>
                 ) : (
                     <p>Cargando datos del perfil...</p>
                 )}
 
-
-                <EditarPerfilParticipante/>
+                {userData && (
+                    <>
+                        <EditarPerfilParticipante
+                            actualizarParticipante={() => {
+                                getData().then(data => {
+                                    setUserData(data[0]);
+                                    console.log(data);
+                                }).catch(error => console.error(error));
+                            }}
+                            datosAnteriores={userData}
+                        />
+                        <EliminarPerfilParticipante
+                            actualizarParticipante={() => {
+                                navigate("/");
+                            }}
+                            email={userData.email}
+                        />
+                    </>
+                )}
             </div>
         </>
-    )
+    );
 }

@@ -44,8 +44,8 @@ public class Institutions {
             .getSingleResult();
     }
 
-
-
-
+    public void delete(Institution institution) {
+        entityManager.remove(institution);
+    }
 }
 

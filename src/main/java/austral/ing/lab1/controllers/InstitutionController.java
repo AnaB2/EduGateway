@@ -35,7 +35,9 @@ public class InstitutionController {
 
         if (formData.get("institutionalName").trim().isEmpty() ||
                 formData.get("password").trim().isEmpty() ||
-                formData.get("description").trim().isEmpty()) {
+                formData.get("description").trim().isEmpty() ||
+                formData.get("profileImageUrl").trim().isEmpty()
+        ) {
             response.status(400);
             return "{\"error\": \"Missing or empty fields\"}";
         }
@@ -100,4 +102,44 @@ public class InstitutionController {
         }
     };
 
+    public static Route handleDeleteInstitution = (Request request, Response response) -> {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Institutions institutions = new Institutions(entityManager);
+        EntityTransaction tx = entityManager.getTransaction();
+        Gson gson = new Gson();
+
+        try {
+            tx.begin();
+
+            JsonObject jsonObject = gson.fromJson(request.body(), JsonObject.class);
+            String institutionalEmail = jsonObject.get("email").getAsString();
+
+            if (institutionalEmail == null || institutionalEmail.isEmpty()) {
+                response.status(400);
+                return gson.toJson(Map.of("error", "Email parameter is missing"));
+            }
+
+            Institution institution = institutions.findByEmail(institutionalEmail).orElse(null);
+
+            if (institution == null) {
+                response.status(404);
+                return gson.toJson(Map.of("error", "Institution not found"));
+            }
+
+            institutions.delete(institution);
+
+            tx.commit();
+            response.type("application/json");
+            return gson.toJson(Map.of("message", "Institution deleted successfully"));
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            response.status(500);
+            return gson.toJson(Map.of("error", "An error occurred while deleting the institution"));
+        } finally {
+            entityManager.close();
+        }
+    };
 }
+
