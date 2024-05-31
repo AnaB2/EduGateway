@@ -1,56 +1,72 @@
-import {getToken, getUserType} from "../../services/storage";
-import {mostrarAlertaAutenticacion} from "../../components/AlertaAutenticacion";
-import {useNavigate} from "react-router";
-import {EditarPerfilInstitucion} from "../../components/perfiles/institucion/EditarPerfilInstitucion";
-import {NavbarInstitucion} from "../../components/navbar/NavbarInstitucion";
-import {getData} from "../../services/Api";
-import {useEffect, useState} from "react";
+import { getToken, getUserType } from "../../services/storage";
+import { mostrarAlertaAutenticacion } from "../../components/AlertaAutenticacion";
+import { NavbarInstitucion } from "../../components/navbar/NavbarInstitucion";
+import { useNavigate } from "react-router";
+import { EditarPerfilInstitucion } from "../../components/perfiles/institucion/EditarPerfilInstitucion";
+import { EliminarPerfilInstitucion } from "../../components/perfiles/institucion/EliminarPerfilInstitucion";
+import { getData } from "../../services/Api";
+import { useEffect, useState } from "react";
 
+export function PerfilInstitucion() {
+    const navigate = useNavigate();
+    const [institutionData, setInstitutionData] = useState(null);
 
-export function PerfilInstitucion(){
-
-    const navigate = useNavigate()
-    const [userData, setUserData] = useState(null);
-
-    useEffect(() => { // Se ejecuta al cargar la página
-        getData().then(data => { // Obtiene los datos del usuario
-            setUserData(data[0]) // Guarda los datos del usuario
-            console.log(data) // Muestra los datos del usuario
-        }).catch(error => console.error(error)); // Muestra un error si no se pudieron obtener los datos
+    useEffect(() => {
+        getData().then(data => {
+            setInstitutionData(data[0]);
+            console.log(data);
+        }).catch(error => console.error(error));
     }, []);
 
-
-    if (!getToken() || getUserType()!=="institution"){
+    if (!getToken() || getUserType() !== "institution") {
         return (
             <>
                 {mostrarAlertaAutenticacion(navigate, "/")}
             </>
-        )
+        );
     }
-    return(
+
+    return (
         <>
-            <NavbarInstitucion></NavbarInstitucion>
+            <NavbarInstitucion />
 
             <div className="contenido-pagina-perfil">
-
-                {userData ? (
+                {institutionData ? (
                     <div className={"datos-perfil"}>
                         <h1>Perfil</h1>
                         <div>
-                            <p>Nombre Institucional:</p>
-                            <p>{userData.institutionalName}</p>
+                            <p>Nombre:</p>
+                            <p>{institutionData.name}</p>
                         </div>
                         <div>
                             <p>Correo:</p>
-                            <p>{userData.email}</p>
+                            <p>{institutionData.email}</p>
                         </div>
                     </div>
                 ) : (
                     <p>Cargando datos del perfil...</p>
                 )}
 
-                 <EditarPerfilInstitucion/>
+                {institutionData && (
+                    <>
+                        <EditarPerfilInstitucion
+                            actualizarInstitucion={() => {
+                                getData().then(data => {
+                                    setInstitutionData(data[0]);
+                                    console.log(data);
+                                }).catch(error => console.error(error));
+                            }}
+                            datosAnteriores={institutionData}
+                        />
+                        <EliminarPerfilInstitucion
+                            actualizarInstitucion={() => {
+                                navigate("/");
+                            }}
+                            email={institutionData.email}
+                        />
+                    </>
+                )}
             </div>
         </>
-    )
+    );
 }

@@ -76,5 +76,15 @@ public class Application {
 
         Spark.get("/get-institution-data", InstitutionController.handleGetInstitutionData);
 
+        Spark.get("/filter-by-category", FilterController.FilterByCategory);
+
+        Spark.get("/filter-by-nameOpportunity", FilterController.FilterByNameOpportunity);
+
+        Spark.get("/filter-by-InstitutionName", FilterController.FilterByNameInstituon);
+
+        Spark.post("/delete-user", UserController.handleDeleteUser);
+
+        Spark.post("/delete-institution", InstitutionController.handleDeleteInstitution);
+
     }
 }

@@ -61,12 +61,19 @@ export function GestionarPostulaciones({oportunidad}){
     function aceptarPostulacion(inscriptionId) {
         console.log(inscriptionId)
         approveInscription(inscriptionId)
-        obtenerInscripciones()
+            .then(() =>  {
+                obtenerInscripciones();
+            })
     }
 
     function rechazarPostulacion(inscriptionId){
         rejectInscription(inscriptionId)
-        obtenerInscripciones()
+
+
+            .then(() =>  {
+                obtenerInscripciones();
+            })
+
     }
 
     return(

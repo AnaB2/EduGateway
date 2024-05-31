@@ -187,5 +187,44 @@ public class UserController {
         }
     };
 
+    public static Route handleDeleteUser = (Request request, Response response) -> {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Users users = new Users(entityManager);
+        EntityTransaction tx = entityManager.getTransaction();
+        Gson gson = new Gson();
+
+        try {
+            tx.begin();
+
+            JsonObject jsonObject = gson.fromJson(request.body(), JsonObject.class);
+            String email = jsonObject.get("email").getAsString();
+
+            if (email == null || email.isEmpty()) {
+                response.status(400);
+                return gson.toJson(Map.of("error", "Email parameter is missing"));
+            }
+
+            User user = users.findByEmail(email).orElse(null);
+
+            if (user == null) {
+                response.status(404);
+                return gson.toJson(Map.of("error", "User not found"));
+            }
+
+            users.delete(user);
+
+            tx.commit();
+            response.type("application/json");
+            return gson.toJson(Map.of("message", "User deleted successfully"));
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            response.status(500);
+            return gson.toJson(Map.of("error", "An error occurred while deleting the user"));
+        } finally {
+            entityManager.close();
+        }
+    };
 }
 

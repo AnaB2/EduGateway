@@ -418,3 +418,45 @@ export async function getData(){
         throw error;
     }
 }
+
+export const deleteUser = async (email) => {
+    try {
+        const response = await fetch(`${API_URL}/delete-user`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to delete user: ' + await response.text());
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to delete user:", error);
+        throw error;
+    }
+};
+
+export const deleteInstitution = async (email) => {
+    try {
+        const response = await fetch(`${API_URL}/delete-institution`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to delete institution: ' + await response.text());
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to delete institution:", error);
+        throw error;
+    }
+};

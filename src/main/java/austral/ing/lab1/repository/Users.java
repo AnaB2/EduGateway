@@ -35,4 +35,8 @@ public class Users {
     entityManager.persist(user);
     return user;
   }
+
+  public void delete(User user) {
+    entityManager.remove(user);
+  }
 }
