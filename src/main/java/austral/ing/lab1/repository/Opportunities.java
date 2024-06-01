@@ -18,7 +18,7 @@ public class Opportunities {
 
     public Opportunity findByName(String name) {
         TypedQuery<Opportunity> query = entityManager.createQuery(
-                "SELECT o FROM Opportunity o WHERE o.name = :name", Opportunity.class);
+            "SELECT o FROM Opportunity o WHERE o.name = :name", Opportunity.class);
         query.setParameter("name", name);
 
         List<Opportunity> results = query.getResultList();
@@ -35,7 +35,7 @@ public class Opportunities {
 
     public List<Opportunity> listAll() {
         TypedQuery<Opportunity> query = entityManager.createQuery(
-                "SELECT o FROM Opportunity o", Opportunity.class);
+            "SELECT o FROM Opportunity o", Opportunity.class);
         return query.getResultList();
     }
 
@@ -54,22 +54,16 @@ public class Opportunities {
             "SELECT o FROM Opportunity o WHERE o.category = :category", Opportunity.class);
         query.setParameter("category", category);
 
-        return query.getResultList();}
-
-
-
-    public List<Opportunity> findByNameOpportunity(String name) {
-        TypedQuery<Opportunity> query = entityManager.createQuery(
-            "SELECT o FROM Opportunity o WHERE o.name = :name", Opportunity.class);
-        query.setParameter("name", name);
-
         return query.getResultList();
     }
 
 
+    public List<Opportunity> findByNameOpportunity(String name) {
+        TypedQuery<Opportunity> query = entityManager.createQuery(
+            "SELECT o FROM Opportunity o WHERE o.name LIKE :name", Opportunity.class);
+        query.setParameter("name", "%" + name + "%");
 
-
-
-
+        return query.getResultList();
+    }
 
 }
