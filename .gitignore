@@ -6,8 +6,6 @@ out
 build
 target
 *.iml
-/db/
-node_modules/
 package-lock.json
-
-node_modules/
+/src/main/js/front-edu-gateway/node_modules/
+/db/
