@@ -1,18 +1,18 @@
-import { getToken, getUserType } from "../../services/storage";
+import {getEmail, getToken, getUserType} from "../../services/storage";
 import { mostrarAlertaAutenticacion } from "../../components/AlertaAutenticacion";
 import { NavbarParticipante } from "../../components/navbar/NavbarParticipante";
 import { useNavigate } from "react-router";
 import { EditarPerfilParticipante } from "../../components/perfiles/participante/EditarPerfilParticipante";
 import { EliminarPerfilParticipante } from "../../components/perfiles/participante/EliminarPerfilParticipante";
-import { getData } from "../../services/Api";
 import { useEffect, useState } from "react";
+import {getUserData} from "../../services/Api";
 
 export function PerfilParticipante() {
     const navigate = useNavigate();
     const [userData, setUserData] = useState(null);
 
     useEffect(() => {
-        getData().then(data => {
+        getUserData(getEmail()).then(data => {
             setUserData(data[0]);
             console.log(data);
         }).catch(error => console.error(error));
@@ -55,7 +55,7 @@ export function PerfilParticipante() {
                     <>
                         <EditarPerfilParticipante
                             actualizarParticipante={() => {
-                                getData().then(data => {
+                                getUserData(getEmail()).then(data => {
                                     setUserData(data[0]);
                                     console.log(data);
                                 }).catch(error => console.error(error));
