@@ -38,7 +38,7 @@ public class OpportunityController {
             return "{\"error\": \"Unauthorized\"}";
         }
 
-//         Obtener los datos de la oportunidad del cuerpo de la solicitud
+        // Obtener los datos de la oportunidad del cuerpo de la solicitud
         String body = request.body();
         Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
 
@@ -51,7 +51,6 @@ public class OpportunityController {
             return "{\"error\": \"Missing or empty fields\"}";
         }
 
-        // Crear y persistir la oportunidad en la base de datos
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         Opportunities opportunities = new Opportunities(entityManager);
         EntityTransaction tx = entityManager.getTransaction();
@@ -65,6 +64,12 @@ public class OpportunityController {
             String modality = formData.get("modality");
             String language = formData.get("language");
             int capacity = Integer.parseInt(formData.get("capacity"));
+
+            // Verificar que la capacidad no sea negativa
+            if (capacity < 0) {
+                response.status(400);
+                return "{\"error\": \"Capacity cannot be negative\"}";
+            }
 
             Opportunity opportunity = new Opportunity();
             opportunity.setName(name);
@@ -92,6 +97,7 @@ public class OpportunityController {
             entityManager.close();
         }
     };
+
 
     public static Route handleDeleteOpportunity = (Request request, Response response) -> {
         // Obtener el nombre de la oportunidad a eliminar
