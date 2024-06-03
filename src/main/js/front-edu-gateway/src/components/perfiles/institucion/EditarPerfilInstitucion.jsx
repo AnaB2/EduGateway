@@ -3,19 +3,18 @@ import Modal from 'react-bootstrap/Modal';
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {editInstitution} from "../../../services/Api";
-//import { useNavigate } from "react-router-dom";
+import { editInstitution } from "../../../services/Api";
 
-export function EditarPerfilInstitucion({ actualizarParticipante, datosAnteriores = {} }) {
+export function EditarPerfilInstitucion({ actualizarInstitucion, datosAnteriores = {} }) {
     const [addSuccess, setAddSuccess] = useState(false);
     const [addError, setAddError] = useState('');
-    const[visible, setVisible] = useState(false);
+    const [visible, setVisible] = useState(false);
     const abrir = () => setVisible(true);
     const cerrar = () => {
-        setVisible(false)
-        setAddError('')
-        setAddSuccess(false)
-    }
+        setVisible(false);
+        setAddError('');
+        setAddSuccess(false);
+    };
 
     const [institutionalName, setInstitutionalName] = useState(datosAnteriores.institutionalName);
     const [password, setPassword] = useState(datosAnteriores.password);
@@ -23,11 +22,16 @@ export function EditarPerfilInstitucion({ actualizarParticipante, datosAnteriore
 
     async function enviarForm() {
         try {
-            const institutionData = { institutionalName: institutionalName, password: password, description: description };
+            const institutionData = {
+                institutionalName: institutionalName,
+                password: password,
+                description: description
+            };
+            console.log("Sending institution data: ", institutionData); // Log the data being sent
             await editInstitution(institutionData, datosAnteriores.email);
             setAddSuccess(true);
             setAddError('');
-            actualizarParticipante();
+            actualizarInstitucion();
         } catch (error) {
             console.error("Error al editar perfil: ", error);
             setAddSuccess(false);
@@ -46,7 +50,7 @@ export function EditarPerfilInstitucion({ actualizarParticipante, datosAnteriore
 
                 <Modal.Body>
                     <div className="form-perfil">
-                        <FloatingLabel controlId="floatingFirstName" label="Nombre Institucional" className="mb-3">
+                        <FloatingLabel controlId="floatingInstitutionalName" label="Nombre Institucional" className="mb-3">
                             <Form.Control defaultValue={datosAnteriores.institutionalName} type="text" placeholder="Nombre Intitucional" onChange={(event) => setInstitutionalName(event.target.value)} />
                         </FloatingLabel>
                         <FloatingLabel controlId="floatingPassword" label="Contraseña" className="mb-3">
