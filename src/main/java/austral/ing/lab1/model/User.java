@@ -1,6 +1,7 @@
 package austral.ing.lab1.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.google.gson.Gson;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -31,11 +32,14 @@ public class User {
   @Column(name = "DESCRIPTION")
   private String description;
 
+
+
+
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
-          name = "user_followed_institutions",
-          joinColumns = @JoinColumn(name = "user_id"),
-          inverseJoinColumns = @JoinColumn(name = "institution_id")
+      name = "user_followed_institutions",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "institution_id")
   )
   private Set<Institution> followedInstitutions = new HashSet<>();
 

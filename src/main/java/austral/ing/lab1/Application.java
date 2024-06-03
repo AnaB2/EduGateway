@@ -66,8 +66,6 @@ public class Application {
 
         Spark.post("/follow-institution", UserController.handleFollowInstitution);
 
-        Spark.post("/get-followed-institutions", UserController.handleGetFollowedInstitutions);
-
         Spark.post("/edit-user", UserController.handleEditUser);
 
         Spark.post("/edit-institution", InstitutionController.handleEditInstitution);
@@ -85,6 +83,18 @@ public class Application {
         Spark.post("/delete-user", UserController.handleDeleteUser);
 
         Spark.post("/delete-institution", InstitutionController.handleDeleteInstitution);
+
+        Spark.get("/get-followed-institutions-by-user/:userId", UserController.handleGetFollowedInstitutionsByUser);
+
+        Spark.get("/get-institution-followers", UserController.handleGetFollowersByInstitution);
+
+
+
+
+
+
+
+
 
     }
 }

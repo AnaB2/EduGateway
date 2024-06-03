@@ -1,17 +1,16 @@
-import { getEmail } from "../../../services/storage";
 import { useEffect, useState } from "react";
 import {CardOportunidadParticipante} from "./CardOportunidadParticipante";
 import {getOpportunities} from "../../../services/Api";
 
-export function ContenedorOportunidadesParticipante() {
-    const email = getEmail();
+export function ContenedorOportunidadesParticipante({institutionEmail}) {
+
     const [oportunidades, setOportunidades] = useState([]);
 
     useEffect(() => {
         const fetchOpportunities = async () => {
             try {
                 const response = await getOpportunities();
-                setOportunidades(response);
+                !institutionEmail ? setOportunidades(response) : setOportunidades(response.filter(oportunidad => oportunidad.institutionEmail === institutionEmail));
             } catch (error) {
                 console.error('Error al obtener las oportunidades:', error);
             }
@@ -31,7 +30,7 @@ export function ContenedorOportunidadesParticipante() {
     return (
         <>
             <div className="contenedor-oportunidades">
-                {oportunidades.map((oportunidad) => (<CardOportunidadParticipante key={oportunidad.id} oportunidad={oportunidad} actualizarOportunidades={()=>actualizarOportunidades()}/>))}
+                {oportunidades.map((oportunidad) => (<CardOportunidadParticipante mostrarLink={!institutionEmail} key={oportunidad.id} oportunidad={oportunidad} actualizarOportunidades={()=>actualizarOportunidades()}/>))}
             </div>
         </>
 

@@ -1,48 +1,51 @@
 import Card from 'react-bootstrap/Card';
-import Button from "react-bootstrap/Button";
-import {
-    deleteOpportunity,
-    followInstitution,
-    getFollowedInstitutions,
-    isFollowingInstitution
-} from "../../../services/Api";
-import {CardFooter} from "react-bootstrap";
-import {EditarOportunidad} from "../institucion/EditarOportunidad";
+import {getInstitutionData,} from "../../../services/Api";
+import {Nav} from "react-bootstrap";
 import {InscripcionEnOportunidad} from "./InscripcionEnOportunidad";
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router";
 
-export function CardOportunidadParticipante({oportunidad, actualizarOportunidades}){
+export function CardOportunidadParticipante({oportunidad, actualizarOportunidades, mostrarLink}){
 
-    const [isFollowing, setIsFollowing] = useState(false)
+    const [institutionData, setInstitutionData] = useState(null);
+    const [institutionName, setInstitutionName] = useState("");
+
+    const getThisInstitutionData = async () => {
+        try {
+            getInstitutionData(oportunidad.institutionEmail).then(data => {
+                setInstitutionData(data[0]);
+                setInstitutionName(data[0].institutionalName);
+            });
+        } catch (error) {
+            console.error('Error al obtener el nombre de la institución:', error);
+        }
+    }
 
     useEffect(() => {
-        const checkFollowingStatus = async () => {
-            const institucionesSeguidas = await getFollowedInstitutions()
-            console.log(institucionesSeguidas)
-            //const following = await isFollowingInstitution(oportunidad.institutionEmail);
-            //setIsFollowing(following);
-        };
-        checkFollowingStatus();
-    }, [oportunidad.institutionEmail]);
+        getThisInstitutionData();
+    }, []);
 
-    const followButton = isFollowing ? <p>Siguiendo</p> : <Button variant="outline-primary" onClick={followInstitution}>Seguir</Button>;
-
-    async function eliminarOportunidad(){
-        await deleteOpportunity(oportunidad.name)
-        actualizarOportunidades()
-    }
+    const navigate = useNavigate()
 
     return (
         <div className="oportunidad">
             <Card style={{ width: '18rem' }}>
                 <Card.Body>
-                    <Card.Title>{oportunidad.name}</Card.Title>
-                    <Card.Subtitle className="mb-2 text-muted">{`${oportunidad.institutionEmail}`}</Card.Subtitle>
+                    <Card.Title>{oportunidad.name.charAt(0).toUpperCase() + "" + oportunidad.name.slice(1).toLowerCase()}</Card.Title>
+                    <Card.Subtitle className="mb-2 text-muted">
+                        {
+                            mostrarLink ? (
+                                <Nav.Link onClick={()=> navigate(`/ver-perfil-institucion/${institutionName}`, {state: institutionData})} onMouseOver={(e) => e.target.style.color = 'blue'} onMouseOut={(e) => e.target.style.color = '#212529BF'}>
+                                    {`${institutionName.toUpperCase()} (ver perfil)`}
+                                </Nav.Link>
+                            ) :
+                                `${institutionName.toUpperCase()}`
+                        }
+                    </Card.Subtitle>
                     <Card.Text>
-                        {`${oportunidad.category} en ${oportunidad.city} con modalidad ${oportunidad.modality}. El idioma requerido es ${oportunidad.language} y nivel educativo ${oportunidad.educationalLevel}. Capacidad ${oportunidad.capacity}.`}
+                        {`${oportunidad.category.toLowerCase()} en ${oportunidad.city} con modalidad ${oportunidad.modality.toLowerCase()}. El idioma requerido es ${oportunidad.language.toLowerCase()} y nivel educativo ${oportunidad.educationalLevel.toLowerCase()}. Capacidad ${oportunidad.capacity}.`}
                     </Card.Text>
                     <div className="footer-card-oportunidad">
-                        {followButton}
                         <InscripcionEnOportunidad actualizarOportunidades={actualizarOportunidades} oportunidadData={oportunidad}/>
                     </div>
                 </Card.Body>

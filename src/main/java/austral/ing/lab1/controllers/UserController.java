@@ -1,8 +1,10 @@
 package austral.ing.lab1.controllers;
 
 import austral.ing.lab1.model.Institution;
+import austral.ing.lab1.model.InstitutionDTO;
 import austral.ing.lab1.model.Opportunity;
 import austral.ing.lab1.model.User;
+import austral.ing.lab1.model.UserDTO;
 import austral.ing.lab1.repository.Institutions;
 import austral.ing.lab1.repository.Opportunities;
 import austral.ing.lab1.repository.Users;
@@ -13,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -34,13 +38,14 @@ public class UserController {
         Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {
         }.getType());
 
-        if (formData.get("UserEmail").trim().isEmpty() || formData.get("institutionEmail").trim().isEmpty()) {
+        if (formData.get("userId").trim().isEmpty() ||
+            formData.get("institutionId").trim().isEmpty()) {
             response.status(400);
             return "{\"error\": \"Missing or empty fields\"}";
         }
 
-        String userEmail = formData.get("userEmail");
-        String institutionEmail = formData.get("institutionEmail");
+        Long userId = Long.parseLong(formData.get("userId"));
+        Long institutionId = Long.parseLong(formData.get("institutionId"));
 
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         Users users = new Users(entityManager);
@@ -49,20 +54,20 @@ public class UserController {
 
         try {
             tx.begin();
-
-            // Buscar al usuario por su correo electrónico
-            User user = users.findByEmail(userEmail).orElse(null);
+            // Buscar al usuario por su ID
+            User user = users.findById(userId).orElse(null);
             if (user == null) {
                 response.status(404);
                 return "{\"error\": \"User not found\"}";
             }
 
-            // Buscar a la institución por su correo electrónico
-            Institution institution = institutions.findByEmail(institutionEmail).orElse(null);
+            // Buscar a la institución por su ID
+            Institution institution = institutions.findById(institutionId).orElse(null);
             if (institution == null) {
                 response.status(404);
                 return "{\"error\": \"Institution not found\"}";
             }
+
 
             // Agregar la institución a la lista de instituciones seguidas por el usuario
             user.followInstitution(institution);
@@ -82,31 +87,93 @@ public class UserController {
         }
     };
 
-    public static Route handleGetFollowedInstitutions = (Request request, Response response) -> {
+    public static Route handleGetFollowersByInstitution = (Request request, Response response) -> {
+        String institutionIdParam = request.params(":institutionId");
+        if (institutionIdParam == null || institutionIdParam.trim().isEmpty()) {
+            response.status(400);
+            return "{\"error\": \"Missing institution ID\"}";
+        }
+
+        Long institutionId = Long.parseLong(institutionIdParam);
+
         EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Institutions institutions = new Institutions(entityManager);
+        EntityTransaction tx = entityManager.getTransaction();
 
         try {
-            String email = request.queryParams("email");
+            tx.begin();
 
-            // Chequear si se recibe el email como parámetro
-            if (email == null || email.isEmpty()) {
-                response.status(400);
-                return "{\"error\": \"Email parameter is missing\"}";
+            // Buscar a la institución por su ID
+            Institution institution = institutions.findById(institutionId).orElse(null);
+            if (institution == null) {
+                response.status(404);
+                return "{\"error\": \"Institution not found\"}";
             }
 
-            // Buscar al usuario por su correo electrónico y obtener la lista de instituciones seguidas
-            List<Institution> institutions = new Users(entityManager).findByEmail(email) // Buscar al usuario por su correo electrónico
-                    .map(User::getFollowedInstitutions) // Obtener la lista de instituciones seguidas
-                    .map(ArrayList::new) // Convertir el Set a List
-                    .orElseGet(ArrayList::new); // Si no se encuentra el usuario, devolver una lista vacía
+            // Obtener los seguidores de la institución
+            Set<User> followers = institution.getFollowers();
 
-            String jsonInstitutions = gson.toJson(institutions); // Convertir la lista de instituciones a JSON
-            response.type("application/json"); // Establecer el tipo de contenido de la respuesta
-            return jsonInstitutions;
+            // Convertir los seguidores a DTOs
+            Set<UserDTO> followerDTOs = followers.stream()
+                .map(UserDTO::new)
+                .collect(Collectors.toSet());
 
+            tx.commit();
+            response.type("application/json");
+            return gson.toJson(followerDTOs);
         } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
             response.status(500);
-            return "{\"error\": \"An error occurred while fetching followed institutions by email\"}";
+            return "{\"error\": \"An error occurred while fetching the followers\"}";
+        } finally {
+            entityManager.close();
+        }
+    };
+
+
+    public static Route handleGetFollowedInstitutionsByUser = (Request request, Response response) -> {
+        String userIdParam = request.params(":userId");
+        if (userIdParam == null || userIdParam.trim().isEmpty()) {
+            response.status(400);
+            return "{\"error\": \"Missing user ID\"}";
+        }
+
+        Long userId = Long.parseLong(userIdParam);
+
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Users users = new Users(entityManager);
+        EntityTransaction tx = entityManager.getTransaction();
+
+        try {
+            tx.begin();
+
+            // Buscar al usuario por su ID
+            User user = users.findById(userId).orElse(null);
+            if (user == null) {
+                response.status(404);
+                return "{\"error\": \"User not found\"}";
+            }
+
+            // Obtener las instituciones seguidas por el usuario
+            Set<Institution> followedInstitutions = user.getFollowedInstitutions();
+
+
+            // Convertir las instituciones a DTOs
+            Set<InstitutionDTO> followedInstitutionDTOs = followedInstitutions.stream()
+                .map(InstitutionDTO::new)
+                .collect(Collectors.toSet());
+
+            tx.commit();
+            response.type("application/json");
+            return gson.toJson(followedInstitutionDTOs);
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            response.status(500);
+            return "{\"error\": \"An error occurred while fetching the followed institutions\"}";
         } finally {
             entityManager.close();
         }

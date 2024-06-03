@@ -72,7 +72,7 @@ public class FilterController {
 
   };
 
-
+  // Hacer que de lo que se escriba es decir el nombre de la institucion, darme todos los mails asociados a esos posibles nombres y luego buscar las oportunidades.
   public static Route FilterByNameInstituon = (Request request, Response response) -> {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
@@ -121,3 +121,20 @@ public class FilterController {
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
