@@ -25,14 +25,13 @@ export function InscripcionEnOportunidad({actualizarOportunidades, oportunidadDa
     const navigate = useNavigate()
 
     // Controles de respuesta de form
-    const [name, setName] = useState('');
-    const [apellido, setApellido] = useState('');
-    const [localidad, setLocalidad] = useState('')
+    const [localidad, setLocalidad] = useState('');
+    const [mensaje, setMensaje] = useState('');
 
-    // Función que se ejecuta al presionar botón de envío, y que llama a función addOpportunity en Api.js
+    // Función que se ejecuta al presionar botón de envío, y que llama a función addInscription en Api.js
     async function enviarForm(){
         try{
-            const inscriptionData = {name:name, apellido:apellido, localidad:localidad}
+            const inscriptionData = {localidad:localidad, mensaje:mensaje}
             console.log(inscriptionData)
             await addInscription(getEmail(), oportunidadData.id, inscriptionData)
             setAddSuccess(true)
@@ -55,20 +54,16 @@ export function InscripcionEnOportunidad({actualizarOportunidades, oportunidadDa
                 </Modal.Header>
 
                 <Modal.Body>
-                        <FloatingLabel controlId="floatingName" label="Nombre" className="mb-3">
-                            <Form.Control type="text" placeholder="Nombre de participante" onChange={(event)=>{setName(event.target.value)}}/>
-                        </FloatingLabel>
-                        <FloatingLabel controlId="floatingApellido" label="Apellido" className="mb-3">
-                            <Form.Control type="text" placeholder="Apellido de participante" onChange={(event)=>{setApellido(event.target.value)}}/>
-                        </FloatingLabel>
-                        <FloatingLabel controlId="floatingEducationalLevel" label="Localidad" className="mb-3">
-                            <Form.Control type="text" placeholder="Localidad de participante" onChange={(event)=>{setLocalidad(event.target.value)}}/>
-                        </FloatingLabel>
+                    <FloatingLabel controlId="floatingEducationalLevel" label="Localidad" className="mb-3">
+                        <Form.Control type="text" placeholder="Localidad de participante" onChange={(event)=>{setLocalidad(event.target.value)}}/>
+                    </FloatingLabel>
+                    <FloatingLabel controlId="floatingMensaje" label="Mensaje" className="mb-3">
+                        <Form.Control as="textarea" placeholder="Mensaje" onChange={(event)=>{setMensaje(event.target.value)}}/>
+                    </FloatingLabel>
                 </Modal.Body>
 
-
                 <Modal.Footer>
-                    {addError!=='' && <p style={{ color: 'red', marginTop: 10 }}>{addError}</p>}
+                    {addError !== '' && <p style={{ color: 'red', marginTop: 10 }}>{addError}</p>}
                     {addSuccess && <p style={{ marginTop: 10 }}>Inscripción con éxito.</p>}
                     <Button variant="success" onClick={enviarForm}>Confirmar</Button>
                     <Button variant="dark" onClick={cerrar}>Cerrar</Button>
