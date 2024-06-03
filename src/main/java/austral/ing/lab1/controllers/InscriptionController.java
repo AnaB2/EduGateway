@@ -27,7 +27,6 @@ public class InscriptionController {
 
   public static Route handleInscription = (Request request, Response response) -> {
 
-
     String requestedUserEmail = request.headers("Email");
     Long opportunityId = Long.parseLong(request.headers("OpportunityId")); // Obtener el ID de la oportunidad del header
 
@@ -35,23 +34,20 @@ public class InscriptionController {
     Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {
     }.getType());
 
-    // Verificar que los campos requeridos no estén vacíos o en blanco
-    if (formData.get("name").trim().isEmpty() || formData.get("apellido").trim().isEmpty() ||
-            formData.get("localidad").trim().isEmpty()) {
+    // Verify required fields are not empty or blank
+    if (formData.get("localidad").trim().isEmpty() || formData.get("mensaje").trim().isEmpty()) {
       response.status(400);
       return "{\"error\": \"Missing or empty fields\"}";
     }
 
-    // Crear y persistir la oportunidad en la base de datos
+    // Create and persist the opportunity in the database
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     Inscriptions inscriptions = new Inscriptions(entityManager);
     EntityTransaction tx = entityManager.getTransaction();
     try {
       tx.begin();
 
-
       Opportunity opportunity = entityManager.find(Opportunity.class, opportunityId);
-
 
       if (opportunity == null) {
         response.status(404);
@@ -64,24 +60,27 @@ public class InscriptionController {
         return "{\"error\": \"No capacity available for this opportunity\"}";
       }
 
-      String name = formData.get("name");
-      String apellido = formData.get("apellido");
       String localidad = formData.get("localidad");
+      String mensaje = formData.get("mensaje");
+
+      // Fetch the user's existing data
+      String name = "Predetermined Name"; // Replace with actual method to fetch user's name
+      String apellido = "Predetermined Apellido"; // Replace with actual method to fetch user's apellido
 
       Inscription inscription = new Inscription();
       inscription.setNombre(name);
       inscription.setApellido(apellido);
       inscription.setLocalidad(localidad);
+      inscription.setMensaje(mensaje);
 
       inscription.setEmailParticipante(requestedUserEmail);
       inscription.setOpportunityID(opportunityId);
 
-      // Establecer el estado como "pendiente" por defecto
+      // Set status to "pending" by default
       inscription.setEstado(InscriptionStatus.PENDING);
 
-      // Decrementar la capacidad de la oportunidad
+      // Decrement the opportunity's capacity
       opportunity.setCapacity(capacity - 1);
-
 
       inscriptions.persist(inscription);
 
@@ -97,11 +96,9 @@ public class InscriptionController {
     } finally {
       entityManager.close();
     }
-
   };
 
-
-  public static Route handleAcceptInscription = (Request request, Response response) -> {
+public static Route handleAcceptInscription = (Request request, Response response) -> {
     String requestBody = request.body();
     Map<String, String> bodyMap = gson.fromJson(requestBody, new TypeToken<Map<String, String>>(){}.getType());
     String idInscription1 = bodyMap.get("inscriptionId");

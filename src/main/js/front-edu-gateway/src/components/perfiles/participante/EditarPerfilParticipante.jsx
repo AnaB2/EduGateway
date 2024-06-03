@@ -26,7 +26,14 @@ export function EditarPerfilParticipante({ actualizarParticipante, datosAnterior
 
     async function enviarForm() {
         try {
-            const userData = { firstname: firstName, lastname: lastName, password: password, description: description };
+            const userData = {
+                previousEmail: datosAnteriores.email,
+                firstName: firstName,
+                lastName: lastName,
+                password: password,
+                description: description
+            };
+            console.log("Sending user data: ", userData); // Add this line for debugging
             await editUser(userData, datosAnteriores.email);
             setAddSuccess(true);
             setAddError('');

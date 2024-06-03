@@ -35,9 +35,7 @@ public class InstitutionController {
 
         if (formData.get("institutionalName").trim().isEmpty() ||
                 formData.get("password").trim().isEmpty() ||
-                formData.get("description").trim().isEmpty() ||
-                formData.get("profileImageUrl").trim().isEmpty()
-        ) {
+                formData.get("description").trim().isEmpty()) {
             response.status(400);
             return "{\"error\": \"Missing or empty fields\"}";
         }
@@ -48,7 +46,7 @@ public class InstitutionController {
 
         try {
             tx.begin();
-
+            System.out.println("Searching for institution with email: " + institutionalEmail);
             Institution institution = institutions.findByEmail(institutionalEmail).orElse(null);
 
             if (institution == null) {
@@ -56,19 +54,23 @@ public class InstitutionController {
                 return "{\"error\": \"Institution not found\"}";
             }
 
+            System.out.println("Institution found: " + institution.getInstitutionalName());
             institution.setInstitutionalName(formData.get("institutionalName"));
             institution.setPassword(formData.get("password"));
             institution.setDescription(formData.get("description"));
 
             institutions.persist(institution);
-
             tx.commit();
+
+            System.out.println("Institutional profile updated successfully");
+
             response.type("application/json");
             return gson.toJson(Map.of("message", "Institutional profile updated successfully"));
         } catch (Exception e) {
             if (tx.isActive()) {
                 tx.rollback();
             }
+            e.printStackTrace(); // Log the exception details
             response.status(500);
             return "{\"error\": \"An error occurred while updating the institutional profile\"}";
         } finally {

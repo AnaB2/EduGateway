@@ -32,6 +32,9 @@ public class Inscription {
   @Column(name = "localidad")
   private String localidad;
 
+  @Column(name = "mensaje")
+  private String mensaje;
+
   @Column(name = "estado")
   @Enumerated(EnumType.STRING)
   private InscriptionStatus estado; // Estado de la inscripción (aceptada, rechazada, pendiente, etc.)
@@ -95,4 +98,12 @@ public class Inscription {
   public void setEstado(InscriptionStatus estado) {
     this.estado = estado;
   }
+
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
+    }
 }
