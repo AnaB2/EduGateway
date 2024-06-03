@@ -38,7 +38,7 @@ public class Application {
             response.header("Access-Control-Allow-Credentials", "true");
         });
 
-        Spark.post("/sign-up-user", SignupController.handleSignupParticipant);
+        Spark.post("/sign-up-user", SignupController.handleSignupUser);
 
         Spark.post("/sign-up-institution", SignupController.handleSignupInstitution);
 
@@ -87,14 +87,5 @@ public class Application {
         Spark.get("/get-followed-institutions-by-user/:userId", UserController.handleGetFollowedInstitutionsByUser);
 
         Spark.get("/get-institution-followers", UserController.handleGetFollowersByInstitution);
-
-
-
-
-
-
-
-
-
     }
 }
