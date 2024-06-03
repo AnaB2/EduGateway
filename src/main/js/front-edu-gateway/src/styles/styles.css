@@ -131,3 +131,24 @@
     text-align: center;
     font-family: "Freeman", sans-serif;
 }
+
+/* CONTENIDO PÁGINA DE PERFIL PÚBLICO */
+.contenido-pagina-perfil-publico{
+    margin: 20px 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra el contenido horizontalmente */
+    gap: 3vh;
+}
+
+.datos-perfil-publico div{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+}
+
+.datos-perfil-publico h1{
+    text-align: center;
+    font-family: "Freeman", sans-serif;
+}

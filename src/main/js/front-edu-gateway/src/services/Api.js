@@ -388,33 +388,42 @@ export const editInstitution = async (institutionData, previousEmail) => {
     }
 };
 
-
-export async function getData(){
+export const getInstitutionData = async (email) => {
     try {
-        const token = getToken();
-        const email = getEmail();
-        if (!token || !email) {throw new Error('Token o correo no encontrados.');}
-
-        const url = getUserType()==`institution` ? `${API_URL}/get-institution-data` : `${API_URL}/get-user-data`
-
-        const headers = {
-            'Content-Type': 'application/json',
-            'Token' : token
-        };
-
-        const response = await fetch(`${url}?email=${email}`, {
+        const response = await fetch(`${API_URL}/get-institution-data?email=${email}`, {
             method: 'GET',
-            headers: headers,
+            headers: {
+                'Content-Type': 'application/json',
+            },
         });
 
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error('Failed to get institution data: ' + await response.text());
         }
 
-        return await response.json(); // devuelve objeto
-
+        return await response.json();
     } catch (error) {
-        console.error(`Failed to get ${getUserType()} data:`, error);
+        console.error("Failed to get institution data:", error);
+        throw error;
+    }
+};
+
+export const getUserData = async (email) => {
+    try {
+        const response = await fetch(`${API_URL}/get-user-data?email=${email}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to get user data: ' + await response.text());
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to get user data:", error);
         throw error;
     }
 }
@@ -460,3 +469,4 @@ export const deleteInstitution = async (email) => {
         throw error;
     }
 };
+

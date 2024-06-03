@@ -46,19 +46,20 @@ public class LoginController {
                 if (user.getPassword().equals(password)) {
                     String token = TokenManager.generateToken(email, "participant");
 
-                   // Crear un objeto JSON con el token, el tipo de usuario y el correo electrónico
+                    // Crear un objeto JSON con el token, el tipo de usuario y el correo electrónico
                     JsonObject jsonResponse = new JsonObject();
                     jsonResponse.addProperty("token", token);
                     jsonResponse.addProperty("userType", "participant"); // Opción para el tipo de usuario
                     jsonResponse.addProperty("email", email); // Correo electrónico del usuario
                     jsonResponse.addProperty("name", user.getFirstName() + " " + user.getLastName());
-                   // Establecer el encabezado Content-Type
+                    jsonResponse.addProperty("id", user.getId());
+                    // Establecer el encabezado Content-Type
                     response.type("application/json");
 
                     // Establecer el encabezado Authorization con el token en el formato Bearer
                     response.header("Authorization", "Bearer " + token);
 
-                  // Devolver el objeto JSON como cuerpo de la respuesta
+                    // Devolver el objeto JSON como cuerpo de la respuesta
                     return jsonResponse.toString();
                 }
             }
@@ -73,6 +74,7 @@ public class LoginController {
                     jsonResponse.addProperty("userType", "institution"); // Opción para el tipo de usuario
                     jsonResponse.addProperty("email", email); // Correo electrónico de la institucion
                     jsonResponse.addProperty("name", institution.getInstitutionalName());
+                    jsonResponse.addProperty("id", institution.getId());
 
                     // Establecer el encabezado Content-Type
                     response.type("application/json");

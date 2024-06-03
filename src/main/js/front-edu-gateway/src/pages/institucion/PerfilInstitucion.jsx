@@ -1,18 +1,21 @@
-import { getToken, getUserType } from "../../services/storage";
+import {getEmail, getToken, getUserType} from "../../services/storage";
 import { mostrarAlertaAutenticacion } from "../../components/AlertaAutenticacion";
 import { NavbarInstitucion } from "../../components/navbar/NavbarInstitucion";
 import { useNavigate } from "react-router";
 import { EditarPerfilInstitucion } from "../../components/perfiles/institucion/EditarPerfilInstitucion";
 import { EliminarPerfilInstitucion } from "../../components/perfiles/institucion/EliminarPerfilInstitucion";
-import { getData } from "../../services/Api";
 import { useEffect, useState } from "react";
+import {getInstitutionData} from "../../services/Api";
 
 export function PerfilInstitucion() {
+
+    // PERFIL DE INSTITUCIÓN QUE VA A VER LA INSTITUCIÓN PARA PODER EDITAR SU PERFIL
+
     const navigate = useNavigate();
     const [institutionData, setInstitutionData] = useState(null);
 
     useEffect(() => {
-        getData().then(data => {
+        getInstitutionData(getEmail()).then(data => {
             setInstitutionData(data[0]);
             console.log(data);
         }).catch(error => console.error(error));
@@ -51,7 +54,7 @@ export function PerfilInstitucion() {
                     <>
                         <EditarPerfilInstitucion
                             actualizarInstitucion={() => {
-                                getData().then(data => {
+                                getInstitutionData(getEmail()).then(data => {
                                     setInstitutionData(data[0]);
                                     console.log(data);
                                 }).catch(error => console.error(error));
