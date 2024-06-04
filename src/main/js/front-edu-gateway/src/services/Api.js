@@ -187,6 +187,16 @@ export async function addInscription(email, opportunityId, formData){
     }
 }
 
+// In your API services file (e.g., Api.js)
+export async function getUserDetails(email) {
+    const response = await fetch(`/api/users?email=${email}`);
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return await response.json();
+}
+
+
 export async function getInscriptions() {
     try {
         const token = getToken();
