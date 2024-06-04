@@ -12,7 +12,8 @@
         <class>austral.ing.lab1.model.Opportunity</class>
         <class>austral.ing.lab1.model.Inscription</class>
         <class>austral.ing.lab1.model.Notification</class>
-
+        <class>austral.ing.lab1.model.Chat</class>
+        <class>austral.ing.lab1.model.Message</class>
 
 
         <properties>
@@ -20,6 +21,7 @@
             <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:hsql://localhost/xdb;shutdown=true"/>
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect" />
 
 
             <property name="hibernate.show_sql" value="true" />

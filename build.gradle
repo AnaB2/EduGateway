@@ -47,4 +47,10 @@ dependencies {
 
     //Implementacion de WebSocket
     implementation 'javax.websocket:javax.websocket-api:1.1'
+
+
+    //Implementacion de JAPA
+    implementation 'org.hibernate:hibernate-core:5.4.32.Final'
+    implementation 'javax.persistence:javax.persistence-api:2.2'
+    implementation 'com.h2database:h2:1.4.200'
 }
