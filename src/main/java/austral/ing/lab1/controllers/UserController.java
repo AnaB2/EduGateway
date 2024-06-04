@@ -118,6 +118,9 @@ public class UserController {
                 .map(UserDTO::new)
                 .collect(Collectors.toSet());
 
+            // Eliminar las instituciones seguidas por cada seguidor
+            followerDTOs.forEach(follower -> follower.getFollowedInstitutions().clear());
+
             tx.commit();
             response.type("application/json");
             return gson.toJson(followerDTOs);
@@ -165,6 +168,10 @@ public class UserController {
                 .map(InstitutionDTO::new)
                 .collect(Collectors.toSet());
 
+
+            // Eliminar los seguidores de cada institución
+            followedInstitutionDTOs.forEach(institution -> institution.getFollowers().clear());
+
             tx.commit();
             response.type("application/json");
             return gson.toJson(followedInstitutionDTOs);
@@ -186,9 +193,9 @@ public class UserController {
         String email = formData.get("previousEmail");
 
         if (formData.get("firstName").trim().isEmpty() ||
-                formData.get("lastName").trim().isEmpty() ||
-                formData.get("password").trim().isEmpty() ||
-                formData.get("description").trim().isEmpty()) {
+            formData.get("lastName").trim().isEmpty() ||
+            formData.get("password").trim().isEmpty() ||
+            formData.get("description").trim().isEmpty()) {
             response.status(400);
             return "{\"error\": \"Missing or empty fields\"}";
         }
@@ -239,8 +246,13 @@ public class UserController {
             }
 
             List<User> users = new Users(entityManager).findByEmail(email)
-                    .map(List::of)
-                    .orElseGet(ArrayList::new);
+                .map(List::of)
+                .orElseGet(ArrayList::new);
+
+            users.forEach(user -> {
+                Set<Institution> followedInstitutions = user.getFollowedInstitutions();
+                followedInstitutions.forEach(institution -> institution.setFollowers(new HashSet<>()));
+            });
 
             String jsonUsers = gson.toJson(users);
 

@@ -23,5 +23,10 @@ public class UserDTO {
         .collect(Collectors.toList());
   }
 
+
+  public List<InstitutionDTO> getFollowedInstitutions() {
+    return followedInstitutions;
+  }
+
   // getters y setters
 }

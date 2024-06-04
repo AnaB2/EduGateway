@@ -21,5 +21,10 @@ public class InstitutionDTO {
         .collect(Collectors.toList());
   }
 
+
+  public List<UserDTO> getFollowers() {
+    return followers;
+  }
+
   // getters y setters
 }

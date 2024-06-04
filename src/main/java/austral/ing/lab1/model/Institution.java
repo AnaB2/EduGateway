@@ -1,5 +1,6 @@
 package austral.ing.lab1.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.Gson;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -30,6 +31,7 @@ public class Institution {
     @Column(name = "DESCRIPTION")
     private String description;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "followedInstitutions", fetch = FetchType.LAZY)
     private Set<User> followers = new HashSet<>();
 
@@ -89,6 +91,10 @@ public class Institution {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setFollowers(Set<User> followers) {
+        this.followers = followers;
     }
 
     Institution(InstitutionBuilder builder) {

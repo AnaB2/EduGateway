@@ -86,6 +86,6 @@ public class Application {
 
         Spark.get("/get-followed-institutions-by-user/:userId", UserController.handleGetFollowedInstitutionsByUser);
 
-        Spark.get("/get-institution-followers", UserController.handleGetFollowersByInstitution);
+        Spark.get("/get-institution-followers/:institutionId", UserController.handleGetFollowersByInstitution);
     }
 }
