@@ -4,10 +4,12 @@ import static austral.ing.lab1.controllers.OpportunityController.handleGetOpport
 import static austral.ing.lab1.controllers.OpportunityController.handleGetOpportunitiesByEmail;
 
 import austral.ing.lab1.controllers.*;
+import austral.ing.lab1.repository.NotificationEndpoint;
 import com.google.gson.Gson;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import spark.Spark;
+import static spark.Spark.webSocket;
 
 
 public class Application {
@@ -87,5 +89,9 @@ public class Application {
         Spark.get("/get-followed-institutions-by-user/:userId", UserController.handleGetFollowedInstitutionsByUser);
 
         Spark.get("/get-institution-followers/:institutionId", UserController.handleGetFollowersByInstitution);
+
+        webSocket("/notifications", NotificationEndpoint.class); //necesito un cliente de websocket
+
+
     }
 }

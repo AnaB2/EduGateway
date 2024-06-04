@@ -113,13 +113,15 @@ public class UserController {
             // Obtener los seguidores de la institución
             Set<User> followers = institution.getFollowers();
 
+            // Eliminar las instituciones seguidas por cada seguidor
+            followers.forEach(follower -> follower.getFollowedInstitutions().clear());
+
             // Convertir los seguidores a DTOs
             Set<UserDTO> followerDTOs = followers.stream()
                 .map(UserDTO::new)
                 .collect(Collectors.toSet());
 
-            // Eliminar las instituciones seguidas por cada seguidor
-            followerDTOs.forEach(follower -> follower.getFollowedInstitutions().clear());
+
 
             tx.commit();
             response.type("application/json");
@@ -162,15 +164,12 @@ public class UserController {
             // Obtener las instituciones seguidas por el usuario
             Set<Institution> followedInstitutions = user.getFollowedInstitutions();
 
+            followedInstitutions.forEach(institution -> institution.setFollowers(new HashSet<>()));
 
             // Convertir las instituciones a DTOs
             Set<InstitutionDTO> followedInstitutionDTOs = followedInstitutions.stream()
                 .map(InstitutionDTO::new)
                 .collect(Collectors.toSet());
-
-
-            // Eliminar los seguidores de cada institución
-            followedInstitutionDTOs.forEach(institution -> institution.getFollowers().clear());
 
             tx.commit();
             response.type("application/json");
