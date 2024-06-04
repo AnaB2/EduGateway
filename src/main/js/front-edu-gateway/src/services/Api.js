@@ -254,7 +254,7 @@ export async function rejectInscription(inscriptionId){
     }
 }
 
-export async function followInstitution(userEmail, institutionEmail){
+export async function followInstitution(userId, institutionId){
     try {
         const token = getToken();
         const email = getEmail();
@@ -269,7 +269,7 @@ export async function followInstitution(userEmail, institutionEmail){
         const response = await fetch(`${API_URL}/follow-institution`, {
                 method: 'POST',
                 headers: headers,
-                body: JSON.stringify({ UserEmail: userEmail, institutionEmail: institutionEmail})
+                body: JSON.stringify({ userId: userId, institutionId: institutionId})
             });
 
             if (!response.ok) {

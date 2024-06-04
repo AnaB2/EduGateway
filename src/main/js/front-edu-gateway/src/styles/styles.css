@@ -77,8 +77,8 @@
 /* CONTENEDOR OPORTUNIDADES */
 .contenedor-oportunidades{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    width: 70%;
+    grid-template-columns: 300px 300px 300px;
+    width: 100%;
     text-align: center;
     margin-bottom: 20px;
     margin-top:20px;
@@ -149,6 +149,9 @@
 }
 
 .datos-perfil-publico h1{
-    text-align: center;
     font-family: "Freeman", sans-serif;
+}
+
+.datos-perfil-publico{
+    text-align: center;
 }

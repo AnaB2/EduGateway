@@ -25,10 +25,10 @@ export function getName() {
     return localStorage.getItem('name');
 }
 
-
 export function getId() {
     return localStorage.getItem('id');
 }
+
 
 export function removeToken() {
     // Elimina el token del almacenamiento local

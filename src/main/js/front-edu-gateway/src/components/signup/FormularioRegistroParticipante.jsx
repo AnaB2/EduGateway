@@ -26,7 +26,7 @@ export function FormularioRegistroParticipante() {
             };
 
             await signUpUser(userData);
-            setMensaje({ text: 'ModalRegistro exitoso', color: 'green' });
+            setMensaje({ text: 'Registro exitoso', color: 'green' });
             navigate('/');
         } catch (error) {
             setMensaje({ text: 'Error de registro', color: 'red' });
