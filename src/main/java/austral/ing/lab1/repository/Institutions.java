@@ -20,11 +20,11 @@ public class Institutions {
 
     public Optional<Institution> findByEmail(String email) {
         return entityManager
-            .createQuery("SELECT i FROM Institution i WHERE i.email LIKE :email", Institution.class)
-            .setParameter("email", email)
-            .getResultList()
-            .stream()
-            .findFirst();
+                .createQuery("SELECT i FROM Institution i WHERE i.email LIKE :email", Institution.class)
+                .setParameter("email", email)
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 
     public List<Institution> listAll() {
@@ -38,9 +38,9 @@ public class Institutions {
 
     public String findEmailByInstitutionName(String institutionName) {
         return entityManager
-            .createQuery("SELECT i.email FROM Institution i WHERE i.institutionalName LIKE :name", String.class)
-            .setParameter("name", institutionName)
-            .getSingleResult();
+                .createQuery("SELECT i.email FROM Institution i WHERE i.institutionalName LIKE :name", String.class)
+                .setParameter("name", institutionName)
+                .getSingleResult();
     }
 
 
@@ -49,4 +49,3 @@ public class Institutions {
         entityManager.remove(institution);
     }
 }
-
