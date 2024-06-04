@@ -3,22 +3,23 @@ package austral.ing.lab1.controllers;
 import austral.ing.lab1.model.Inscription;
 import austral.ing.lab1.model.InscriptionStatus;
 import austral.ing.lab1.model.Opportunity;
+import austral.ing.lab1.model.User;
 import austral.ing.lab1.repository.Inscriptions;
+import austral.ing.lab1.repository.Users;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-
-import java.util.List;
-import java.util.Map;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import spark.Request;
 import spark.Response;
 import spark.Route;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import java.util.List;
+import java.util.Map;
 
 public class InscriptionController {
 
@@ -43,6 +44,7 @@ public class InscriptionController {
     // Create and persist the opportunity in the database
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     Inscriptions inscriptions = new Inscriptions(entityManager);
+    Users users = new Users(entityManager);
     EntityTransaction tx = entityManager.getTransaction();
     try {
       tx.begin();
@@ -60,16 +62,18 @@ public class InscriptionController {
         return "{\"error\": \"No capacity available for this opportunity\"}";
       }
 
+      User user = users.findByEmail(requestedUserEmail).orElse(null);
+      if (user == null) {
+        response.status(404);
+        return "{\"error\": \"User not found for the provided email\"}";
+      }
+
       String localidad = formData.get("localidad");
       String mensaje = formData.get("mensaje");
 
-      // Fetch the user's existing data
-      String name = "Predetermined Name"; // Replace with actual method to fetch user's name
-      String apellido = "Predetermined Apellido"; // Replace with actual method to fetch user's apellido
-
       Inscription inscription = new Inscription();
-      inscription.setNombre(name);
-      inscription.setApellido(apellido);
+      inscription.setNombre(user.getFirstName());
+      inscription.setApellido(user.getLastName());
       inscription.setLocalidad(localidad);
       inscription.setMensaje(mensaje);
 
