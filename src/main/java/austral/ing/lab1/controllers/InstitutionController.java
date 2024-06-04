@@ -9,8 +9,10 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -91,6 +93,14 @@ public class InstitutionController {
             List<Institution> institutions = new Institutions(entityManager).findByEmail(institutionalEmail)
                     .map(List::of)
                     .orElseGet(ArrayList::new);
+
+            // Eliminar
+
+            institutions.forEach(institution -> {
+                Set<User> followedInstitutions = institution.getFollowers();
+                followedInstitutions.forEach(user-> institution.setFollowers(new HashSet<>()));
+            });
+
 
             String jsonInstitutions = gson.toJson(institutions);
 
