@@ -8,6 +8,7 @@ import austral.ing.lab1.repository.NotificationEndpoint;
 import com.google.gson.Gson;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import spark.Spark;
 import static spark.Spark.webSocket;
 
@@ -20,6 +21,10 @@ public class Application {
 
     public static void main(String[] args) {
         Spark.port(4321);
+
+        // Configurar el endpoint de WebSocket antes de las rutas HTTP
+        webSocket("/notifications", NotificationEndpoint.class);
+
 
         Spark.options("/*", (request, response) -> {
             String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
@@ -90,8 +95,10 @@ public class Application {
 
         Spark.get("/get-institution-followers/:institutionId", UserController.handleGetFollowersByInstitution);
 
-        webSocket("/notifications", NotificationEndpoint.class); //necesito un cliente de websocket
+        Spark.post("/create-chat", ChatController.handleCreateChat);
 
+        Spark.post("/send-message", ChatController.handleSendMessage);
 
+        Spark.post("/get-chat-messages/:chat-id", ChatController.handleSendMessage);
     }
 }
