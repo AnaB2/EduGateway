@@ -51,3 +51,15 @@ GRANT DBA TO SA
 SET SCHEMA SYSTEM_LOBS
 INSERT INTO BLOCKS VALUES(0,2147483647,0)
 SET SCHEMA PUBLIC
+INSERT INTO INSTITUTION VALUES(1,'123','fla@gmail.com','FLA','123',NULL)
+INSERT INTO INSTITUTION VALUES(2,'123','austral@gmail.com','AUSTRAL','123',NULL)
+INSERT INTO INSTITUTION VALUES(3,'123','utn@gmail.com','UTN','123',NULL)
+INSERT INTO INSTITUTION VALUES(4,'123','cet@gmail.com','Chicas en tecnolog\u00eda','123',NULL)
+INSERT INTO OPPORTUNITY VALUES(1,10,'Voluntariado','Argentina',NULL,'secundario completo','espa\u00f1ol','SOMOS','fla@gmail.com','online')
+INSERT INTO OPPORTUNITY VALUES(2,40,'Evento','Pilar, Buenos Aires',NULL,'universitario en curso','espa\u00f1ol','hackaton','austral@gmail.com','presencial')
+INSERT INTO OPPORTUNITY VALUES(3,30,'Curso','Argentina',NULL,'secundario en curso o finalizado','espa\u00f1ol','programaci\u00f3n frontend','cet@gmail.com','virtual')
+INSERT INTO USER VALUES(1,'mar@gmail.com',NULL,NULL,'123',NULL)
+INSERT INTO USER VALUES(2,'ana@gmail.com',NULL,NULL,'123',NULL)
+INSERT INTO USER VALUES(3,'tomi@gmail.com',NULL,NULL,'123',NULL)
+INSERT INTO USER VALUES(4,'abru@gmail.com',NULL,NULL,'123',NULL)
+INSERT INTO USER_FOLLOWED_INSTITUTIONS VALUES(1,2)
