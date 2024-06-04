@@ -28,12 +28,11 @@ export function ContenedorOportunidadesParticipante({institutionEmail}) {
     }
 
     return (
-        <>
-            <div className="contenedor-oportunidades">
-                {oportunidades.map((oportunidad) => (<CardOportunidadParticipante mostrarLink={!institutionEmail} key={oportunidad.id} oportunidad={oportunidad} actualizarOportunidades={()=>actualizarOportunidades()}/>))}
-            </div>
-        </>
-
-
+        <div className="contenedor-oportunidades">
+            {oportunidades.map((oportunidad) => (
+                <CardOportunidadParticipante mostrarLink={!institutionEmail} key={oportunidad.id}
+                                             oportunidad={oportunidad}
+                                             actualizarOportunidades={() => actualizarOportunidades()}/>))}
+        </div>
     );
 }
