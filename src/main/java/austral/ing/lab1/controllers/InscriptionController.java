@@ -2,9 +2,11 @@ package austral.ing.lab1.controllers;
 
 import austral.ing.lab1.model.Inscription;
 import austral.ing.lab1.model.InscriptionStatus;
+import austral.ing.lab1.model.Notification;
 import austral.ing.lab1.model.Opportunity;
 import austral.ing.lab1.model.User;
 import austral.ing.lab1.repository.Inscriptions;
+import austral.ing.lab1.repository.NotificationService;
 import austral.ing.lab1.repository.Users;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -112,6 +114,13 @@ public static Route handleAcceptInscription = (Request request, Response respons
     // Actualizar el estado de la inscripción a "aceptada"
     updateInscriptionStatus(idInscriptionLong, InscriptionStatus.ACCEPTED, response);
 
+  // Enviar notificación
+  NotificationService notificationService = new NotificationService(entityManagerFactory.createEntityManager());
+  String message = "Your inscription has been accepted.";
+  Notification notification = new Notification(message, idInscriptionLong, null);
+  notificationService.sendNotification(notification);
+
+
     return null;
   };
 
@@ -123,6 +132,15 @@ public static Route handleAcceptInscription = (Request request, Response respons
     Long idInscriptionLong = Long.parseLong(idInscription1);
     // Actualizar el estado de la inscripción a "rechazada"
     updateInscriptionStatus(idInscriptionLong, InscriptionStatus.REJECTED, response);
+
+    // Enviar notificación
+    NotificationService notificationService = new NotificationService(entityManagerFactory.createEntityManager());
+    String message = "Your inscription has been rejected.";
+    Notification notification = new Notification(message, idInscriptionLong, null);
+    notificationService.sendNotification(notification);
+
+
+
 
     return null;
   };

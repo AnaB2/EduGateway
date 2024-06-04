@@ -11,6 +11,7 @@
         <class>austral.ing.lab1.model.Institution</class>
         <class>austral.ing.lab1.model.Opportunity</class>
         <class>austral.ing.lab1.model.Inscription</class>
+        <class>austral.ing.lab1.model.Notification</class>
 
 
 

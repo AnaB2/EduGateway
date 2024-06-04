@@ -95,6 +95,7 @@ public class Institution {
         this.followers = followers;
     }
 
+
     Institution(InstitutionBuilder builder) {
         this.institutionalName = builder.institutionalName;
         this.password = builder.password;
