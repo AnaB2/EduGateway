@@ -81,9 +81,7 @@ public class Institution {
         return credential;
     }
 
-    public Set<User> getFollowers() {
-        return followers;
-    }
+
 
     public String getDescription() {
         return description;
@@ -118,6 +116,15 @@ public class Institution {
     public void setActive(boolean b) {
     }
 
+    public Set<User> getFollowers() {
+        return followers;
+    }
+
+
+
+
+
+
     public static class InstitutionBuilder {
         private final String email;
         private String institutionalName;
@@ -147,5 +154,11 @@ public class Institution {
         public Institution build() {
             return new Institution(this);
         }
+
+
+
+
+
     }
+
 }
