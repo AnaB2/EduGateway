@@ -1,6 +1,3 @@
-/*C25*/SET SCHEMA PUBLIC
-DELETE FROM INSCRIPTION WHERE ID=4
-INSERT INTO INSCRIPTION VALUES(4,'De Jesus','mar@gmail.com','ACCEPTED','CABA','Mar',1,'Hola, quiero inscribirme :p')
-COMMIT
-INSERT INTO NOTIFICATION VALUES(3,NULL,'Your inscription has been accepted.',FALSE,1)
+/*C16*/SET SCHEMA PUBLIC
+INSERT INTO OPPORTUNITY VALUES(6,90,'Programa','aaa',NULL,'aaa','aa','aaa','utn@gmail.com','aa')
 COMMIT

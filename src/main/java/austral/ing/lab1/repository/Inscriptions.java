@@ -58,4 +58,12 @@ public class Inscriptions {
         "SELECT i FROM Inscription i", Inscription.class);
     return query.getResultList();
   }
+
+  public List<Inscription> findByUserEmail(String userEmail) {
+    TypedQuery<Inscription> query = entityManager.createQuery(
+            "SELECT i FROM Inscription i WHERE i.emailParticipante = :userEmail", Inscription.class);
+    query.setParameter("userEmail", userEmail);
+    return query.getResultList();
+  }
+
 }
