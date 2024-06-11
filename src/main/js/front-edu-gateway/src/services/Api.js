@@ -1,57 +1,33 @@
-import {getEmail, getToken, getUserType} from "./storage";
+import { getEmail, getId, getToken } from "./storage";
 
 const API_URL = 'http://localhost:4321'; // Replace this with your actual backend URL
 
+const addAuthorizationHeader = (headers) => {
+    const token = getToken();
+    const email = getEmail();
 
-// const addAuthorizationHeader = (options) => {
-//     const token = getToken();
-//     const email = getEmail(); // Obtener el email del almacenamiento local
-//
-//     console.log("Token obtenido:", token);
-//     console.log("Email obtenido:", email);
-//
-//     // Verificar si hay un token disponible
-//     if (token) {
-//         // Si existe un token, agregar el encabezado de autorización a las opciones de la solicitud
-//         if (!options.headers) {
-//             options.headers = {};
-//         }
-//         options.headers.Authorization = `${token}`;
-//         options.headers.Email = email;
-//
-//     } else {
-//         // Si no hay un token disponible, lanzar un error
-//         throw new Error('Token de sesión no encontrado.');
-//     }
-//
-//     console.log("Encabezado de autorización agregado:", options.headers.Authorization);
-//
-//     return options;
-// };
+    if (!token || !email) {
+        throw new Error('Token o correo no encontrados.');
+    }
+
+    return {
+        ...headers,
+        Authorization: token,
+        Email: email,
+    };
+};
 
 export const addOpportunity = async (opportunityData) => {
     try {
-        const token = getToken();
-        const email = getEmail();
-
-        const headers = {
-            'Content-Type': 'application/json'
-        };
-
-        if (token && email) {
-            headers.Authorization = `${token}`;
-            headers.Email = email;
-        } else {
-            throw new Error('Token de sesión no encontrado.');
-        }
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
 
         const response = await fetch(`${API_URL}/add-opportunity`, {
             method: 'POST',
-            headers: headers,
-            body: JSON.stringify(opportunityData)
+            headers,
+            body: JSON.stringify(opportunityData),
         });
-
-        console.log("Datos de la oportunidad:", opportunityData);
 
         if (response.status === 401) {
             throw new Error('Unauthorized access');
@@ -70,16 +46,20 @@ export const addOpportunity = async (opportunityData) => {
 
 export const deleteOpportunity = async (name) => {
     try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
         const response = await fetch(`${API_URL}/delete-opportunity`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ name: name}),
+            headers,
+            body: JSON.stringify({ name }),
         });
+
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
+
         return await response.json();
     } catch (error) {
         console.error("Failed to delete opportunity:", error);
@@ -90,36 +70,39 @@ export const deleteOpportunity = async (name) => {
 export const modifyOpportunity = async (opportunityData, previousName) => {
     try {
         opportunityData.previousName = previousName;
+
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
         const response = await fetch(`${API_URL}/edit-opportunity`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(opportunityData), // convierte objeto opportunityData en JSON
+            headers,
+            body: JSON.stringify(opportunityData),
         });
+
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        return await response.json(); // devuelve objeto
+
+        return await response.json();
     } catch (error) {
         console.error("Failed to modify opportunity:", error);
         throw error;
     }
 };
 
-export async function getOpportunitiesByInstitution() {
+export async function getOpportunitiesByInstitution(name) {
     try {
-        const token = getToken();
-        const email = getEmail();
-        const headers = {'Content-Type': 'application/json'};
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
 
-        if (!token || !email) {throw new Error('Token o correo no encontrados.');}
+        const queryParams = new URLSearchParams({ InstitutionName: name }).toString();
 
-        const queryParams = new URLSearchParams({ email: email }).toString();
-
-        const response = await fetch(`${API_URL}/get-opportunities-institution?${queryParams}`, {
+        const response = await fetch(`${API_URL}/filter-by-InstitutionName?${queryParams}`, {
             method: 'GET',
-            headers: headers,
+            headers,
         });
 
         if (response.status === 401) {
@@ -129,50 +112,24 @@ export async function getOpportunitiesByInstitution() {
             throw new Error('Network response was not ok');
         }
 
-        return await response.json(); // devuelve objeto
-
+        return await response.json();
     } catch (error) {
         console.error("Failed to get opportunities by institution:", error);
         throw error;
     }
 }
 
-export async function getOpportunities() {
+export async function getOpportunitiesByCategory(category) {
     try {
-        const token = getToken();
-        const email = getEmail();
-        const headers = {'Content-Type': 'application/json'};
-
-        if (!token || !email) {throw new Error('Token o correo no encontrados.');}
-
-        const response = await fetch(`${API_URL}/get-opportunities`, {
-            method: 'GET',
-            headers: headers,
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
         });
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+        const queryParams = new URLSearchParams({ category }).toString();
 
-        return await response.json(); // devuelve objeto
-
-    } catch (error) {
-        console.error("Failed to get opportunities:", error);
-        throw error;
-    }
-}
-
-export async function addInscription(email, opportunityId, formData){
-    try {
-
-        const response = await fetch(`${API_URL}/add-inscription`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Email': email,
-                'OpportunityId': opportunityId
-            },
-            body: JSON.stringify(formData)
+        const response = await fetch(`${API_URL}/filter-by-category?${queryParams}`, {
+            method: 'GET',
+            headers,
         });
 
         if (!response.ok) {
@@ -180,195 +137,245 @@ export async function addInscription(email, opportunityId, formData){
         }
 
         return await response.json();
+    } catch (error) {
+        console.error("Failed to get opportunities by category:", error);
+        throw error;
+    }
+}
 
+export async function getOpportunitiesByName(name) {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const queryParams = new URLSearchParams({ name }).toString();
+
+        const response = await fetch(`${API_URL}/filter-by-nameOpportunity?${queryParams}`, {
+            method: 'GET',
+            headers,
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to get opportunities by name:", error);
+        throw error;
+    }
+}
+
+export async function getOpportunities() {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const response = await fetch(`${API_URL}/get-opportunities`, {
+            method: 'GET',
+            headers,
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to get opportunities:", error);
+        throw error;
+    }
+}
+
+export async function getFollowedInstitutions() {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const userId = getId();
+
+        const response = await fetch(`${API_URL}/get-followed-institutions-by-user/${userId}`, {
+            method: 'GET',
+            headers,
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to get followed institutions:", error);
+        throw error;
+    }
+}
+
+export async function addInscription(email, opportunityId, formData) {
+    try {
+        const response = await fetch(`${API_URL}/add-inscription`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Email': email,
+                'OpportunityId': opportunityId,
+            },
+            body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
     } catch (error) {
         console.error('Failed to add inscription:', error);
         throw error;
     }
 }
 
-// In your API services file (e.g., Api.js)
 export async function getUserDetails(email) {
-    const response = await fetch(`/api/users?email=${email}`);
+    const response = await fetch(`${API_URL}/api/users?email=${email}`);
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
     return await response.json();
 }
 
-
 export async function getInscriptions() {
     try {
-        const token = getToken();
-        const email = getEmail();
-        if (!token || !email) {throw new Error('Token o correo no encontrados.');}
-
-        const headers = {
+        const headers = addAuthorizationHeader({
             'Content-Type': 'application/json',
-            'Email' : email,
-            'Token' : token
-        };
+        });
 
         const response = await fetch(`${API_URL}/get-inscriptions`, {
             method: 'GET',
-            headers: headers
+            headers,
         });
 
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
 
-        return await response.json(); // devuelve objeto
-
+        return await response.json();
     } catch (error) {
         console.error("Failed to get inscriptions:", error);
         throw error;
     }
 }
 
-export async function approveInscription(inscriptionId){
+export async function approveInscription(inscriptionId) {
     try {
-        const body = JSON.stringify({ inscriptionId });
-        const headers = {
-            'Content-Type': 'application/json'
-        };
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
 
         const response = await fetch(`${API_URL}/approve-inscription`, {
             method: 'POST',
-            headers: headers,
-            body: body
+            headers,
+            body: JSON.stringify({ inscriptionId }),
         });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
     } catch (error) {
         console.error("Failed to approve inscription:", error);
         throw error;
     }
 }
 
-export async function rejectInscription(inscriptionId){
-
+export async function rejectInscription(inscriptionId) {
     try {
-        const body = JSON.stringify({ inscriptionId });
-        const headers = {
-            'Content-Type': 'application/json'
-        };
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
 
         const response = await fetch(`${API_URL}/reject-inscription`, {
             method: 'POST',
-            headers: headers,
-            body: body
+            headers,
+            body: JSON.stringify({ inscriptionId }),
         });
 
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
     } catch (error) {
         console.error("Failed to reject inscription:", error);
         throw error;
     }
 }
 
-export async function followInstitution(userId, institutionId){
+export async function followInstitution(userId, institutionId) {
     try {
-        const token = getToken();
-        const email = getEmail();
-        if (!token || !email) {throw new Error('Token o correo no encontrados.');}
-
-        const headers =  {
+        const headers = addAuthorizationHeader({
             'Content-Type': 'application/json',
-            'Email' : email,
-            'Token' : token
-        };
+        });
 
         const response = await fetch(`${API_URL}/follow-institution`, {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify({ userId: userId, institutionId: institutionId})
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            return await response.json(); // devuelve objeto
-
-        } catch (error) {
-            console.error("Failed to follow institution:", error);
-            throw error;
-        }
-}
-
-export async function getFollowedInstitutions(){
-    try {
-        const token = getToken();
-        const email = getEmail();
-        if (!token || !email) {throw new Error('Token o correo no encontrados.');}
-
-        const headers =  {
-            'Content-Type': 'application/json',
-            'Email' : email,
-            'Token' : token
-        };
-
-        const response = await fetch(`${API_URL}/get-followed-institutions?email=${email}`, {
-            method: 'GET',
-            headers: headers
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ userId, institutionId }),
         });
 
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
 
-        return await response.json(); // devuelve objeto
-    }
-    catch (e){
-        throw `Failed to get followed institutions: ${e}`
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to follow institution:", error);
+        throw error;
     }
 }
 
-export async function isFollowingInstitution(userEmail, institutionEmail){
-    /*try {
-        const token = getToken();
-        const email = getEmail();
-        if (!token || !email) {throw new Error('Token o correo no encontrados.');}
-
-         const headers =  {
+export async function isFollowingInstitution(userEmail, institutionEmail) {
+    try {
+        const headers = addAuthorizationHeader({
             'Content-Type': 'application/json',
-            'Email' : email,
-            'Token' : token
-        };
+        });
 
         const response = await fetch(`${API_URL}/is-following-institution`, {
             method: 'POST',
-            headers: headers,
-            body: JSON.stringify({ UserEmail: userEmail, institutionEmail: institutionEmail})
+            headers,
+            body: JSON.stringify({ UserEmail: userEmail, InstitutionEmail: institutionEmail }),
         });
 
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
 
-        return await response.json(); // devuelve objeto
-
+        return await response.json();
     } catch (error) {
         console.error("Failed to check if user is following institution:", error);
         throw error;
-    }*/
-        return true;
+    }
 }
-
-
-
 
 export const editUser = async (userData, previousEmail) => {
     try {
         userData.previousEmail = previousEmail;
+
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
         const response = await fetch(`${API_URL}/edit-user`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers,
             body: JSON.stringify(userData),
         });
+
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
+
         return await response.json();
     } catch (error) {
         console.error("Failed to edit profile:", error);
@@ -379,11 +386,14 @@ export const editUser = async (userData, previousEmail) => {
 export const editInstitution = async (institutionData, previousEmail) => {
     try {
         institutionData.previousEmail = previousEmail;
+
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
         const response = await fetch(`${API_URL}/edit-institution`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers,
             body: JSON.stringify(institutionData),
         });
 
@@ -436,7 +446,7 @@ export const getUserData = async (email) => {
         console.error("Failed to get user data:", error);
         throw error;
     }
-}
+};
 
 export const deleteUser = async (email) => {
     try {
@@ -479,4 +489,3 @@ export const deleteInstitution = async (email) => {
         throw error;
     }
 };
-
