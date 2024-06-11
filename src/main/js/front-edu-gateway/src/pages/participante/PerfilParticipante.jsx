@@ -1,19 +1,26 @@
-import {getEmail, getToken, getUserType} from "../../services/storage";
+import { getEmail, getToken, getUserType } from "../../services/storage";
 import { mostrarAlertaAutenticacion } from "../../components/AlertaAutenticacion";
 import { NavbarParticipante } from "../../components/navbar/NavbarParticipante";
 import { useNavigate } from "react-router";
 import { EditarPerfilParticipante } from "../../components/perfiles/participante/EditarPerfilParticipante";
 import { EliminarPerfilParticipante } from "../../components/perfiles/participante/EliminarPerfilParticipante";
 import { useEffect, useState } from "react";
-import {getUserData} from "../../services/Api";
+import { getUserData, getUserHistory } from "../../services/Api";
+import { VerHistorialParticipante } from "../../components/perfiles/participante/VerHistorialParticipante";
 
 export function PerfilParticipante() {
     const navigate = useNavigate();
     const [userData, setUserData] = useState(null);
+    const [inscriptions, setInscriptions] = useState([]);
 
     useEffect(() => {
         getUserData(getEmail()).then(data => {
             setUserData(data[0]);
+            console.log(data);
+        }).catch(error => console.error(error));
+
+        getUserHistory(getEmail()).then(data => {
+            setInscriptions(data);
             console.log(data);
         }).catch(error => console.error(error));
     }, []);
@@ -46,13 +53,6 @@ export function PerfilParticipante() {
                             <p>Correo:</p>
                             <p>{userData.email}</p>
                         </div>
-                    </div>
-                ) : (
-                    <p>Cargando datos del perfil...</p>
-                )}
-
-                {userData && (
-                    <>
                         <EditarPerfilParticipante
                             actualizarParticipante={() => {
                                 getUserData(getEmail()).then(data => {
@@ -62,6 +62,14 @@ export function PerfilParticipante() {
                             }}
                             datosAnteriores={userData}
                         />
+                        <VerHistorialParticipante inscriptions={inscriptions} />
+                    </div>
+                ) : (
+                    <p>Cargando datos del perfil...</p>
+                )}
+
+                {userData && (
+                    <>
                         <EliminarPerfilParticipante
                             actualizarParticipante={() => {
                                 navigate("/");

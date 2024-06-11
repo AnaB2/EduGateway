@@ -564,6 +564,31 @@ export const deleteInstitution = async (email) => {
     }
 };
 
+export const getUserHistory = async (email) => {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const queryParams = new URLSearchParams({ email }).toString();
+
+        const response = await fetch(`${API_URL}/get-user-history?${queryParams}`, {
+            method: 'GET',
+            headers,
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to get user history:", error);
+        throw error;
+    }
+
+}
+
 export const getInstitutionHistory = async (email) => {
     try {
         const headers = addAuthorizationHeader({

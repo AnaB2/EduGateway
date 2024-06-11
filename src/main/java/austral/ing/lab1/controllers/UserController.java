@@ -1,10 +1,7 @@
 package austral.ing.lab1.controllers;
 
-import austral.ing.lab1.model.Institution;
-import austral.ing.lab1.model.InstitutionDTO;
-import austral.ing.lab1.model.Opportunity;
-import austral.ing.lab1.model.User;
-import austral.ing.lab1.model.UserDTO;
+import austral.ing.lab1.model.*;
+import austral.ing.lab1.repository.Inscriptions;
 import austral.ing.lab1.repository.Institutions;
 import austral.ing.lab1.repository.Opportunities;
 import austral.ing.lab1.repository.Users;
@@ -410,4 +407,30 @@ public class UserController {
             entityManager.close();
         }
     };
+
+    public static Route handleGetUserHistory = (Request request, Response response) -> {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            String userEmail = request.queryParams("email");
+            if (userEmail == null || userEmail.isEmpty()) {
+                response.status(400);
+                return "{\"error\": \"Email parameter is missing\"}";
+            }
+
+            List<Inscription> inscriptions = new Inscriptions(entityManager).findByUserEmail(userEmail);
+
+            // Convert the list of inscriptions to JSON
+            String jsonInscriptions = gson.toJson(inscriptions);
+
+            // Set the response type
+            response.type("application/json");
+            return jsonInscriptions;
+        } catch (Exception e) {
+            response.status(500);
+            return "{\"error\": \"An error occurred while fetching user history\"}";
+        } finally {
+            entityManager.close();
+        }
+    };
+
 }

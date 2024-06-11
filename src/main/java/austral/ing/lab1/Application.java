@@ -104,5 +104,7 @@ public class Application {
         Spark.post("/get-chat-messages/:chat-id", ChatController.handleSendMessage);
 
         Spark.get("/get-institution-history", InstitutionController.handleGetInstitutionHistory);
+
+        Spark.get("/get-user-history", UserController.handleGetUserHistory);
     }
 }
