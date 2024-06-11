@@ -31,6 +31,9 @@ public class Institution {
     @Column(name = "DESCRIPTION")
     private String description;
 
+    @Column(name = "PROFILE_PICTURE")
+    private String profilePicture;
+
     @JsonIgnore
     @ManyToMany(mappedBy = "followedInstitutions", fetch = FetchType.LAZY)
     private Set<User> followers = new HashSet<>();
@@ -81,8 +84,6 @@ public class Institution {
         return credential;
     }
 
-
-
     public String getDescription() {
         return description;
     }
@@ -94,6 +95,12 @@ public class Institution {
     public void setFollowers(Set<User> followers) {
         this.followers = followers;
     }
+
+    public String getProfilePicture(){return profilePicture;}
+
+    public void setProfilePicture(String profilePicture){this.profilePicture = profilePicture;}
+
+    public void deleteProfilePicture(){this.profilePicture = null;}
 
 
     Institution(InstitutionBuilder builder) {

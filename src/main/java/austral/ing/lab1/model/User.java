@@ -32,6 +32,8 @@ public class User {
   @Column(name = "DESCRIPTION")
   private String description;
 
+  @Column(name = "PROFILE_PICTURE")
+  private String profilePicture;
 
 
 
@@ -81,7 +83,6 @@ public class User {
     this.id = id;
   }
 
-
   public void setPassword(String password) {
     this.password = password;
   }
@@ -97,6 +98,12 @@ public class User {
   public void setDescription(String description) {
     this.description = description;
   }
+
+  public String getProfilePicture(){return profilePicture;}
+
+  public void setProfilePicture(String profilePicture){this.profilePicture = profilePicture;}
+
+  public void deleteProfilePicture(){this.profilePicture = null;}
 
   private User(UserBuilder builder) {
     this.firstName = builder.firstName;
@@ -123,6 +130,12 @@ public class User {
     followedInstitutions.add(institution);
     institution.getFollowers().add(this);
   }
+
+  public void unfollowInstitution(Institution institution) {
+    followedInstitutions.remove(institution);
+    institution.getFollowers().remove(this);
+  }
+
 
   public Set<Institution> getFollowedInstitutions() {
     return followedInstitutions;

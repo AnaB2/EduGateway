@@ -1,5 +1,6 @@
 import {Container, Nav, Navbar} from "react-bootstrap";
 import {LogoutButton} from "../logout/LogoutButton";
+import BotonNotificacion from "../notificacion/BotonNotificacion";
 
 export function NavbarBase({contenido}) {
 
@@ -14,7 +15,10 @@ export function NavbarBase({contenido}) {
                     <Nav className="me-auto">
                         {contenido}
                     </Nav>
-                    <LogoutButton></LogoutButton>
+                    <div className={"botones-navbar"}>
+                        <BotonNotificacion/>
+                        <LogoutButton/>
+                    </div>
                 </Navbar.Collapse>
             </Container>
         </Navbar>
