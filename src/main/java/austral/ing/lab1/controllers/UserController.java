@@ -417,12 +417,25 @@ public class UserController {
                 return "{\"error\": \"Email parameter is missing\"}";
             }
 
-            List<Inscription> inscriptions = new Inscriptions(entityManager).findByUserEmail(userEmail);
+            List<Object[]> results = entityManager.createQuery(
+                            "SELECT i.opportunity, i.localidad, i.mensaje, i.estado, o.name " +
+                                    "FROM Inscription i JOIN Opportunity o ON i.opportunity = o.id " +
+                                    "WHERE i.emailParticipante = :userEmail", Object[].class)
+                    .setParameter("userEmail", userEmail)
+                    .getResultList();
 
-            // Convert the list of inscriptions to JSON
+            List<Map<String, Object>> inscriptions = results.stream()
+                    .map(result -> Map.of(
+                            "opportunity_id", result[0],
+                            "localidad", result[1],
+                            "mensaje", result[2],
+                            "estado", result[3],
+                            "opportunity_name", result[4]
+                    ))
+                    .collect(Collectors.toList());
+
             String jsonInscriptions = gson.toJson(inscriptions);
 
-            // Set the response type
             response.type("application/json");
             return jsonInscriptions;
         } catch (Exception e) {
@@ -432,5 +445,6 @@ public class UserController {
             entityManager.close();
         }
     };
+
 
 }

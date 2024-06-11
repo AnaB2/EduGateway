@@ -21,9 +21,8 @@ export function VerHistorialParticipante({ inscriptions }) {
                         {inscriptions.length > 0 ? (
                             <ul>
                                 {inscriptions.map((inscription) => (
-                                    <li key={inscription.id}>
-                                        <h3>ID de Oportunidad: {inscription.opportunity}</h3>
-                                        <p>Oportunidad: {inscription.opportunity}</p>
+                                    <li key={inscription.opportunity_name}>
+                                        <p>Nombre de la Oportunidad: {inscription.opportunity_name}</p>
                                         <p>Localidad: {inscription.localidad}</p>
                                         <p>Mensaje: {inscription.mensaje}</p>
                                         <p>Estado: {inscription.estado}</p>
