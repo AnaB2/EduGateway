@@ -17,6 +17,29 @@ const addAuthorizationHeader = (headers) => {
     };
 };
 
+export const inicializarConexionWebSocket = (alRecibirMensaje) => {
+    const notifications = new WebSocket(`${API_URL}/notifications`);
+
+    notifications.onmessage = function (event) {
+        alRecibirMensaje(event.data); // manejar el mensaje recibido
+    };
+
+    notifications.onopen = function () { // evento que se ejecuta cuando se abre la conexión
+        const message = JSON.stringify({ userId: getId() });
+        notifications.send(message);
+    };
+
+    notifications.onerror = function (error) {
+        console.error(`WebSocket error: ${error}`);
+    };
+
+    notifications.onclose = function () {
+        console.log('WebSocket connection closed');
+    };
+
+    return notifications;
+};
+
 export const addOpportunity = async (opportunityData) => {
     try {
         const headers = addAuthorizationHeader({
@@ -359,6 +382,29 @@ export async function followInstitution(userId, institutionId) {
         return await response.json();
     } catch (error) {
         console.error("Failed to follow institution:", error);
+        throw error;
+    }
+}
+
+export async function unfollowInstitution(userId, institutionId) {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const response = await fetch(`${API_URL}/unfollow-institution`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ userId, institutionId}),
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to unfollow institution:", error);
         throw error;
     }
 }

@@ -87,6 +87,65 @@ public class UserController {
         }
     };
 
+    public static Route handleUnfollowInstitution = (Request request, Response response) -> {
+        String body = request.body();
+        Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {
+        }.getType());
+
+        if (formData.get("userId").trim().isEmpty() ||
+                formData.get("institutionId").trim().isEmpty()) {
+            response.status(400);
+            return "{\"error\": \"Missing or empty fields\"}";
+        }
+
+        Long userId = Long.parseLong(formData.get("userId"));
+        Long institutionId = Long.parseLong(formData.get("institutionId"));
+
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Users users = new Users(entityManager);
+        Institutions institutions = new Institutions(entityManager);
+        EntityTransaction tx = entityManager.getTransaction();
+
+        try {
+            tx.begin();
+            // Buscar al usuario por su ID
+            User user = users.findById(userId).orElse(null);
+            if (user == null) {
+                response.status(404);
+                return "{\"error\": \"User not found\"}";
+            }
+
+            // Buscar a la institución por su ID
+            Institution institution = institutions.findById(institutionId).orElse(null);
+            if (institution == null) {
+                response.status(404);
+                return "{\"error\": \"Institution not found\"}";
+            }
+
+            // Verificar si el usuario está siguiendo a la institución
+            if (!user.getFollowedInstitutions().contains(institution)) {
+                response.status(400);
+                return "{\"error\": \"User is not following the institution\"}";
+            }
+
+            // Eliminar la institución de la lista de instituciones seguidas por el usuario
+            user.unfollowInstitution(institution);
+            users.persist(user);
+
+            tx.commit();
+            response.type("application/json");
+            return gson.toJson(Map.of("message", "User is now following the institution"));
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            response.status(500);
+            return "{\"error\": \"An error occurred while following the institution\"}";
+        } finally {
+            entityManager.close();
+        }
+    };
+
     public static Route handleGetFollowersByInstitution = (Request request, Response response) -> {
         String institutionIdParam = request.params(":institutionId");
         if (institutionIdParam == null || institutionIdParam.trim().isEmpty()) {
@@ -306,6 +365,47 @@ public class UserController {
             }
             response.status(500);
             return gson.toJson(Map.of("error", "An error occurred while deleting the user"));
+        } finally {
+            entityManager.close();
+        }
+    };
+
+    public static Route handleEditProfilePicture = (Request request, Response response) -> {
+        String body = request.body();
+        Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
+
+        String email = formData.get("email");
+
+        if (formData.get("picture").trim().isEmpty()){
+            response.status(400);
+            return "{\"error\": \"No se encontró url de imagen\"}";
+        }
+
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Users users = new Users(entityManager);
+        EntityTransaction tx = entityManager.getTransaction();
+
+        try {
+            tx.begin();
+
+            User user = users.findByEmail(email).orElse(null);
+
+            if (user == null) {
+                response.status(404);
+                return "{\"error\": \"User not found\"}";
+            }
+
+            user.setProfilePicture(formData.get("picture"));
+            users.persist(user);
+            tx.commit();
+            response.type("application/json");
+            return gson.toJson(Map.of("message", "Profile picture updated successfully"));
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            response.status(500);
+            return "{\"error\": \"An error occurred while updating the profile\"}";
         } finally {
             entityManager.close();
         }
