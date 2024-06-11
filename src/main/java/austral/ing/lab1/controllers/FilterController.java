@@ -1,6 +1,5 @@
 package austral.ing.lab1.controllers;
 
-import austral.ing.lab1.model.Institution;
 import austral.ing.lab1.model.Opportunity;
 import austral.ing.lab1.repository.Institutions;
 import austral.ing.lab1.repository.Opportunities;
@@ -16,7 +15,7 @@ import spark.Route;
 public class FilterController {
   private static final Gson gson = new Gson();
   private static final EntityManagerFactory entityManagerFactory =
-      Persistence.createEntityManagerFactory("test");
+          Persistence.createEntityManagerFactory("test");
 
   public static Route FilterByCategory = (Request request, Response response) -> {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -43,7 +42,6 @@ public class FilterController {
     }
 
   };
-
 
 
   public static Route FilterByNameOpportunity = (Request request, Response response) -> {
@@ -100,41 +98,4 @@ public class FilterController {
     }
 
   };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

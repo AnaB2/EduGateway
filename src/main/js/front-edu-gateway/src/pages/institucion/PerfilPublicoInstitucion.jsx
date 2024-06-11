@@ -2,9 +2,9 @@ import {useLocation} from "react-router";
 import {NavbarParticipante} from "../../components/navbar/NavbarParticipante";
 import {ContenedorOportunidadesParticipante} from "../../components/oportunidades/participante/ContenedorOportunidadesParticipante";
 import Button from "react-bootstrap/Button";
-import {followInstitution} from "../../services/Api";
+import {followInstitution, getFollowedInstitutions} from "../../services/Api";
 import {getId} from "../../services/storage";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 
 export function PerfilPublicoInstitucion(){
@@ -13,9 +13,18 @@ export function PerfilPublicoInstitucion(){
 
     const location = useLocation();
     const institutionData = location.state;
-    console.log(institutionData);
 
     const [siguiendo, setSiguiendo] = useState(false);
+
+    useEffect(() => {
+        async function checkFollow(){
+            const response = await getFollowedInstitutions();
+            if (response.some(institution => institution.id === institutionData.id)){
+                setSiguiendo(true);
+            }
+        }
+        checkFollow();
+    }, []);
 
     const follow = async ()=>{
         try {

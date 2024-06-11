@@ -39,7 +39,7 @@ public class UserController {
         }.getType());
 
         if (formData.get("userId").trim().isEmpty() ||
-            formData.get("institutionId").trim().isEmpty()) {
+                formData.get("institutionId").trim().isEmpty()) {
             response.status(400);
             return "{\"error\": \"Missing or empty fields\"}";
         }
@@ -118,8 +118,8 @@ public class UserController {
 
             // Convertir los seguidores a DTOs
             Set<UserDTO> followerDTOs = followers.stream()
-                .map(UserDTO::new)
-                .collect(Collectors.toSet());
+                    .map(UserDTO::new)
+                    .collect(Collectors.toSet());
 
 
 
@@ -161,19 +161,26 @@ public class UserController {
                 return "{\"error\": \"User not found\"}";
             }
 
+            //obtener todas las oportunidades
+            Opportunities opportunities = new Opportunities(entityManager);
             // Obtener las instituciones seguidas por el usuario
             Set<Institution> followedInstitutions = user.getFollowedInstitutions();
 
-            followedInstitutions.forEach(institution -> institution.setFollowers(new HashSet<>()));
+            // Crear una lista para almacenar las oportunidades de todas las instituciones seguidas
+            List<Opportunity> opportunityDTOs = new ArrayList<>();
 
-            // Convertir las instituciones a DTOs
-            Set<InstitutionDTO> followedInstitutionDTOs = followedInstitutions.stream()
-                .map(InstitutionDTO::new)
-                .collect(Collectors.toSet());
+            // Recorrer cada institución seguida y agregar sus oportunidades a la lista de DTOs
+            for (Opportunity opportunity : opportunities.listAll()) {
+                for (Institution institution : followedInstitutions) {
+                    if (opportunity.getInstitutionEmail().equals(institution.getEmail())) {
+                        opportunityDTOs.add(opportunity);
+                    }
+                }
+            }
 
             tx.commit();
             response.type("application/json");
-            return gson.toJson(followedInstitutionDTOs);
+            return gson.toJson(opportunityDTOs);
         } catch (Exception e) {
             if (tx.isActive()) {
                 tx.rollback();
@@ -184,7 +191,6 @@ public class UserController {
             entityManager.close();
         }
     };
-
     public static Route handleEditUser = (Request request, Response response) -> {
         String body = request.body();
         Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
@@ -192,9 +198,9 @@ public class UserController {
         String email = formData.get("previousEmail");
 
         if (formData.get("firstName").trim().isEmpty() ||
-            formData.get("lastName").trim().isEmpty() ||
-            formData.get("password").trim().isEmpty() ||
-            formData.get("description").trim().isEmpty()) {
+                formData.get("lastName").trim().isEmpty() ||
+                formData.get("password").trim().isEmpty() ||
+                formData.get("description").trim().isEmpty()) {
             response.status(400);
             return "{\"error\": \"Missing or empty fields\"}";
         }
@@ -245,8 +251,8 @@ public class UserController {
             }
 
             List<User> users = new Users(entityManager).findByEmail(email)
-                .map(List::of)
-                .orElseGet(ArrayList::new);
+                    .map(List::of)
+                    .orElseGet(ArrayList::new);
 
             users.forEach(user -> {
                 Set<Institution> followedInstitutions = user.getFollowedInstitutions();
@@ -305,4 +311,3 @@ public class UserController {
         }
     };
 }
-
