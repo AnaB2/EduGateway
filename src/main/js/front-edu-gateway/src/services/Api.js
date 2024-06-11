@@ -586,7 +586,6 @@ export const getUserHistory = async (email) => {
         console.error("Failed to get user history:", error);
         throw error;
     }
-
 }
 
 export const getInstitutionHistory = async (email) => {
