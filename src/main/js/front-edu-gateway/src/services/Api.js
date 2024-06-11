@@ -92,6 +92,34 @@ export const modifyOpportunity = async (opportunityData, previousName) => {
     }
 };
 
+export async function getOpportunitiesByInstitutionEmail(email) {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const queryParams = new URLSearchParams({ email }).toString();
+
+        const response = await fetch(`${API_URL}/get-opportunities-institution?${queryParams}`, {
+            method: 'GET',
+            headers,
+        });
+
+        if (response.status === 401) {
+            throw new Error('Unauthorized access');
+        }
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(`Network response was not ok: ${errorMessage}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to get opportunities by institution email:", error);
+        throw error;
+    }
+}
+
 export async function getOpportunitiesByInstitution(name) {
     try {
         const headers = addAuthorizationHeader({
@@ -486,6 +514,30 @@ export const deleteInstitution = async (email) => {
         return await response.json();
     } catch (error) {
         console.error("Failed to delete institution:", error);
+        throw error;
+    }
+};
+
+export const getInstitutionHistory = async (email) => {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const queryParams = new URLSearchParams({ email }).toString();
+
+        const response = await fetch(`${API_URL}/get-institution-history?${queryParams}`, {
+            method: 'GET',
+            headers,
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to get institution history:", error);
         throw error;
     }
 };

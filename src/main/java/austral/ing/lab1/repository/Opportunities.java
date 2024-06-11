@@ -40,10 +40,10 @@ public class Opportunities {
     }
 
 
-    public List<Opportunity> findByUserEmail(String userEmail) {
+    public List<Opportunity> findByInstitutionalEmail(String institutionalEmail) {
         TypedQuery<Opportunity> query = entityManager.createQuery(
-            "SELECT o FROM Opportunity o WHERE o.institutionEmail = :userEmail", Opportunity.class);
-        query.setParameter("userEmail", userEmail);
+            "SELECT o FROM Opportunity o WHERE o.institutionEmail = :institutionalEmail", Opportunity.class);
+        query.setParameter("institutionalEmail", institutionalEmail);
 
         return query.getResultList();
     }

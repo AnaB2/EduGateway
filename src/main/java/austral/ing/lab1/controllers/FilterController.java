@@ -82,7 +82,7 @@ public class FilterController {
 
       String emailInstitution = new Institutions(entityManager).findEmailByInstitutionName(InstitutionName);
 
-      List<Opportunity> opportunities = new Opportunities(entityManager).findByUserEmail(emailInstitution);
+      List<Opportunity> opportunities = new Opportunities(entityManager).findByInstitutionalEmail(emailInstitution);
 
       // Convertir la lista de oportunidades a JSON
       String jsonOpportunities = gson.toJson(opportunities);

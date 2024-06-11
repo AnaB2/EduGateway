@@ -2,8 +2,10 @@ package austral.ing.lab1.controllers;
 
 
 import austral.ing.lab1.model.Institution;
+import austral.ing.lab1.model.Opportunity;
 import austral.ing.lab1.model.User;
 import austral.ing.lab1.repository.Institutions;
+import austral.ing.lab1.repository.Opportunities;
 import austral.ing.lab1.repository.Users;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -153,5 +155,31 @@ public class InstitutionController {
             entityManager.close();
         }
     };
+
+    public static Route handleGetInstitutionHistory = (Request request, Response response) -> {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            String institutionEmail = request.queryParams("email");
+            if (institutionEmail == null || institutionEmail.isEmpty()) {
+                response.status(400);
+                return "{\"error\": \"Email parameter is missing\"}";
+            }
+
+            List<Opportunity> opportunities = new Opportunities(entityManager).findByInstitutionalEmail(institutionEmail);
+
+            // Transformar la lista de oportunidades a JSON
+            String jsonOpportunities = gson.toJson(opportunities);
+
+            // Renderizar el JSON en la respuesta
+            response.type("application/json");
+            return jsonOpportunities;
+        } catch (Exception e) {
+            response.status(500);
+            return "{\"error\": \"An error occurred while fetching institution history\"}";
+        } finally {
+            entityManager.close();
+        }
+    };
+
 }
 

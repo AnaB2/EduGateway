@@ -225,7 +225,7 @@ public class OpportunityController {
                 return "{\"error\": \"Email parameter is missing\"}";
             }
 
-            List<Opportunity> opportunities = new Opportunities(entityManager).findByUserEmail(userEmail);
+            List<Opportunity> opportunities = new Opportunities(entityManager).findByInstitutionalEmail(userEmail);
 
             // Transformar la lista de oportunidades a JSON
             String jsonOpportunities = gson.toJson(opportunities);
