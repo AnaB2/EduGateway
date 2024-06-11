@@ -104,7 +104,7 @@ public class InscriptionController {
     }
   };
 
-public static Route handleAcceptInscription = (Request request, Response response) -> {
+  public static Route handleAcceptInscription = (Request request, Response response) -> {
     String requestBody = request.body();
     Map<String, String> bodyMap = gson.fromJson(requestBody, new TypeToken<Map<String, String>>(){}.getType());
     String idInscription1 = bodyMap.get("inscriptionId");
@@ -114,14 +114,32 @@ public static Route handleAcceptInscription = (Request request, Response respons
     // Actualizar el estado de la inscripción a "aceptada"
     updateInscriptionStatus(idInscriptionLong, InscriptionStatus.ACCEPTED, response);
 
-  // Enviar notificación
-  NotificationService notificationService = new NotificationService(entityManagerFactory.createEntityManager());
-  String message = "Your inscription has been accepted.";
-  Notification notification = new Notification(message, idInscriptionLong, null);
-  notificationService.sendNotification(notification);
+    // Enviar notificación
+    EntityManager em = entityManagerFactory.createEntityManager();
+    NotificationService notificationService = new NotificationService(em);
+    String message = "Your inscription has been accepted.";
 
+    // Buscar la inscripción para obtener el email
+    Inscriptions inscriptions = new Inscriptions(em);
+    Inscription inscription = inscriptions.findById(idInscriptionLong);
+    if (inscription == null) {
+      em.close();
+      return gson.toJson(Map.of("error", "Inscription not found"));
+    }
 
-    return null;
+    // Buscar el usuario para obtener el userId
+    Users users = new Users(em);
+    User user = users.findByEmail(inscription.getEmailParticipante()).orElse(null);
+    if (user == null) {
+      em.close();
+      return gson.toJson(Map.of("error", "User not found"));
+    }
+
+    Notification notification = new Notification(message, user.getId(), null); // Asume que Notification tiene una relación adecuada con User para obtener el userId
+    notificationService.sendNotification(notification);
+    em.close();
+
+    return gson.toJson(Map.of("message", "Inscription accepted"));
   };
 
   public static Route handleRejectInscription = (Request request, Response response) -> {
@@ -130,21 +148,37 @@ public static Route handleAcceptInscription = (Request request, Response respons
     String idInscription1 = bodyMap.get("inscriptionId");
 
     Long idInscriptionLong = Long.parseLong(idInscription1);
+
     // Actualizar el estado de la inscripción a "rechazada"
     updateInscriptionStatus(idInscriptionLong, InscriptionStatus.REJECTED, response);
 
     // Enviar notificación
-    NotificationService notificationService = new NotificationService(entityManagerFactory.createEntityManager());
+    EntityManager em = entityManagerFactory.createEntityManager();
+    NotificationService notificationService = new NotificationService(em);
     String message = "Your inscription has been rejected.";
-    Notification notification = new Notification(message, idInscriptionLong, null);
+
+    // Buscar la inscripción para obtener el email
+    Inscriptions inscriptions = new Inscriptions(em);
+    Inscription inscription = inscriptions.findById(idInscriptionLong);
+    if (inscription == null) {
+      em.close();
+      return gson.toJson(Map.of("error", "Inscription not found"));
+    }
+
+    // Buscar el usuario para obtener el userId
+    Users users = new Users(em);
+    User user = users.findByEmail(inscription.getEmailParticipante()).orElse(null);
+    if (user == null) {
+      em.close();
+      return gson.toJson(Map.of("error", "User not found"));
+    }
+
+    Notification notification = new Notification(message, user.getId(), null); // Asume que Notification tiene una relación adecuada con User para obtener el userId
     notificationService.sendNotification(notification);
+    em.close();
 
-
-
-
-    return null;
+    return gson.toJson(Map.of("message", "Inscription rejected"));
   };
-
 
   private static void updateInscriptionStatus(Long idInscription, InscriptionStatus newStatus, Response response) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
