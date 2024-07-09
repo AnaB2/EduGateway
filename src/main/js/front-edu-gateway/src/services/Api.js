@@ -1,4 +1,4 @@
-import { getEmail, getId, getToken } from "./storage";
+import {getEmail, getId, getToken, getUserType} from "./storage";
 
 const API_URL = 'http://localhost:4321'; // Replace this with your actual backend URL
 
@@ -17,6 +17,10 @@ const addAuthorizationHeader = (headers) => {
     };
 };
 
+
+
+// Función para inicializar la conexión WebSocket
+
 export const inicializarConexionWebSocket = (alRecibirMensaje) => {
     const notifications = new WebSocket(`${API_URL}/notifications`);
 
@@ -24,8 +28,10 @@ export const inicializarConexionWebSocket = (alRecibirMensaje) => {
         alRecibirMensaje(event.data); // manejar el mensaje recibido
     };
 
-    notifications.onopen = function () { // evento que se ejecuta cuando se abre la conexión
+    notifications.onopen = function () {
+        console.log('WebSocket connection opened');
         const message = JSON.stringify({ userId: getId() });
+        console.log('Sending message:', message); // Agregar esta línea
         notifications.send(message);
     };
 
@@ -39,6 +45,8 @@ export const inicializarConexionWebSocket = (alRecibirMensaje) => {
 
     return notifications;
 };
+
+
 
 export const addOpportunity = async (opportunityData) => {
     try {

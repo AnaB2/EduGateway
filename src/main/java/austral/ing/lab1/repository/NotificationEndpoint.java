@@ -43,15 +43,17 @@ public class NotificationEndpoint {
   @OnWebSocketMessage
   public void onMessage(Session session, String message) throws IOException {
     // Assume message is JSON with userId or institutionId
-    // Example: {"userId": 123}
-    // Example: {"institutionId": 456}
+    // Example: {"userId": "123"}
+    // Example: {"institutionId": "456"}
 
     // Parse JSON
-    Map<String, Long> data = new Gson().fromJson(message, Map.class);
+    Map<String, String> data = new Gson().fromJson(message, Map.class);
     if (data.containsKey("userId")) {
-      userSessions.put(data.get("userId"), session);
+      Long userId = Long.parseLong(data.get("userId"));
+      userSessions.put(userId, session);
     } else if (data.containsKey("institutionId")) {
-      institutionSessions.put(data.get("institutionId"), session);
+      Long institutionId = Long.parseLong(data.get("institutionId"));
+      institutionSessions.put(institutionId, session);
     }
 
     session.getRemote().sendString("Session registered");

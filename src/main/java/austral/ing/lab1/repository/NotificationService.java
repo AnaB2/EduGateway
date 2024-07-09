@@ -1,7 +1,6 @@
 package austral.ing.lab1.repository;
 
 import austral.ing.lab1.model.Notification;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
