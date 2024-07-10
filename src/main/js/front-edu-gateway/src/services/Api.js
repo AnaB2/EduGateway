@@ -30,8 +30,13 @@ export const inicializarConexionWebSocket = (alRecibirMensaje) => {
 
     notifications.onopen = function () {
         console.log('WebSocket connection opened');
-        const message = JSON.stringify({ userId: getId() });
-        console.log('Sending message:', message); // Agregar esta línea
+        let message;
+        if (getUserType() === 'participant') {
+            message = JSON.stringify({ userId: getId() });
+        } else if (getUserType() === 'institution') {
+            message = JSON.stringify({ institutionId: getId() });
+        }
+        console.log('Sending message:', message);
         notifications.send(message);
     };
 
@@ -619,3 +624,26 @@ export const getInstitutionHistory = async (email) => {
         throw error;
     }
 };
+
+export async function createChat(emailDestino, id) {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const response = await fetch(`${API_URL}/create-chat`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ email:emailDestino, userId:id }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error al crear chat:", error);
+        throw error;
+    }
+}

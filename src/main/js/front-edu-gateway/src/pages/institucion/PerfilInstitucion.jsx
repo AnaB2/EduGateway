@@ -43,7 +43,7 @@ export function PerfilInstitucion() {
                         <h1>Perfil</h1>
                         <div>
                             <p>Nombre:</p>
-                            <p>{institutionData.name}</p>
+                            <p>{institutionData.institutionalName}</p>
                         </div>
                         <div>
                             <p>Correo:</p>

@@ -3,6 +3,7 @@ package austral.ing.lab1.controllers;
 import austral.ing.lab1.model.*;
 import austral.ing.lab1.repository.Chats;
 import austral.ing.lab1.repository.Institutions;
+import austral.ing.lab1.repository.NotificationService;
 import austral.ing.lab1.repository.Users;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,13 +29,13 @@ public class ChatController {
         String body = request.body();
         Map<String, Object> formData = gson.fromJson(body, new TypeToken<Map<String, Object>>() {}.getType());
 
-        if (formData.get("userId") == null || formData.get("institutionId") == null) {
+        if (formData.get("userId") == null || formData.get("email") == null) { //es el email de la institucion
             response.status(400);
             return "{\"error\": \"Missing or empty fields\"}";
         }
 
         Long userId = ((Number) formData.get("userId")).longValue();
-        Long institutionId = ((Number) formData.get("institutionId")).longValue();
+        String email = (String) formData.get("email");
 
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         Users users = new Users(entityManager);
@@ -51,19 +52,25 @@ public class ChatController {
                 return "{\"error\": \"User not found\"}";
             }
 
-            Institution institution = institutions.findById(institutionId).orElse(null);
-            if (institution == null) {
+            Institution institution1 = institutions.findByEmail(email).orElse(null);
+            if (institution1 == null) {
                 response.status(404);
                 return "{\"error\": \"Institution not found\"}";
             }
 
-            Chat chat = new Chat(user, institution);
+            Chat chat = new Chat(user, institution1);
             entityManager.persist(chat);
 
             tx.commit();
 
             response.type("application/json");
-            return gson.toJson(Map.of("message", "Chat created successfully", "chatId", chat.getId()));
+            return gson.toJson(Map.of(
+                "message", "Chat created successfully",
+                "chatId", chat.getId(),
+                "participantName", user.getFirstName(),
+                "institutionName", institution1.getInstitutionalName(),
+                "institutionEmail", institution1.getEmail()
+            ));
         } catch (Exception e) {
             e.printStackTrace();
             response.status(500);
@@ -79,15 +86,18 @@ public class ChatController {
         Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
 
         if (formData.get("chatId").trim().isEmpty() ||
-                formData.get("sender").trim().isEmpty() ||
-                formData.get("content").trim().isEmpty()) {
+            formData.get("sender").trim().isEmpty() ||
+            formData.get("content").trim().isEmpty() ||
+            formData.get("receiverType").trim().isEmpty()) {
             response.status(400);
             return "{\"error\": \"Missing or empty fields\"}";
         }
 
         Long chatId = Long.parseLong(formData.get("chatId"));
-        String sender = formData.get("sender");
+        Long receiver = Long.valueOf(formData.get("receiver"));
+        Long sender = Long.valueOf(formData.get("sender"));
         String content = formData.get("content");
+        String receiverType = formData.get("receiverType");
         Long timestamp = System.currentTimeMillis();
 
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -102,11 +112,16 @@ public class ChatController {
                 return "{\"error\": \"Chat not found\"}";
             }
 
-            Message message = new Message(sender, content, timestamp);
+            Message message = new Message(sender, content, timestamp,receiver);
             chat.addMessage(message);
             chats.persistMessage(message);
 
             tx.commit();
+
+            // Enviar notificación en tiempo real a través de WebSocket
+            NotificationService notificationService = new NotificationService(entityManager);
+            notificationService.sendMessageToOther(message, receiverType, receiver);
+
             response.type("application/json");
             return gson.toJson(Map.of("message", "Message sent successfully"));
         } catch (Exception e) {
@@ -163,7 +178,9 @@ public class ChatController {
 
     static class MessageDTO {
         private final Long id;
-        private final String sender;
+        private final Long sender;
+
+        private final Long receiver;
         private final String content;
         private final Long timestamp;
 
@@ -172,15 +189,18 @@ public class ChatController {
             this.sender = message.getSender();
             this.content = message.getContent();
             this.timestamp = message.getTimestamp();
+            this.receiver = message.getReceiver();
         }
 
         public Long getId() {
             return id;
         }
 
-        public String getSender() {
+        public Long getSender() {
             return sender;
         }
+
+        public Long getReceiver(){return receiver;}
 
         public String getContent() {
             return content;

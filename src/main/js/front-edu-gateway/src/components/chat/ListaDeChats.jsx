@@ -1,4 +1,7 @@
 import {useEffect, useState} from "react";
+import axios from 'axios';
+import {getId} from "../../services/storage";
+import {createChat} from "../../services/Api";
 
 export default function ListaDeChats({cambiarChatActual}) {
 
@@ -15,10 +18,10 @@ export default function ListaDeChats({cambiarChatActual}) {
         setChats(buscarListaDeChats());
     }, []);
 
-    const crearNuevoChat = (emailDestino) => {
+    const crearNuevoChat = async (emailDestino) => {
         // aca tiene que crear un nuevo chat y guardarlo en la lista de chats, chequeando si existe el mail de destino
         // hacer las verificaciones si el email es valido o si el chat con esa persona ya existe
-
+        var response = await createChat(emailDestino, getId());
         // luego, actualizar los chats
         setChats(buscarListaDeChats());
     }

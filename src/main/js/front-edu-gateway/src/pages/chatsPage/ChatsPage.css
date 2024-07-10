@@ -1,74 +1,77 @@
-.lista-de-chats{
+.lista-de-chats {
     background-color: rgba(0, 0, 0, 0.9);
     color: white;
-    h1{
-        padding-left: 10px;
-        padding-bottom: 5px;
-        padding-top: 5px;
-        font-family: "Freeman", sans-serif;
-        font-size: 1.5em;
-    }
 }
 
-.chats-page{
+.lista-de-chats h1 {
+    padding-left: 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    font-family: "Freeman", sans-serif;
+    font-size: 1.5em;
+}
+
+.chats-page {
     display: grid;
     grid-template-columns: 1fr 3fr;
     height: 100vh;
 }
 
-.chatsNames{
+.chatsNames {
     display: flex;
     flex-direction: column;
     border-bottom: gray 1px solid;
 }
 
-.chatName{
+.chatName {
     height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-top: gray 1px solid;
     cursor: pointer;
-
 }
-.chatName:hover{
+
+.chatName:hover {
     background-color: #8400ff;
 }
 
-.NuevoChat{
+.NuevoChat {
     padding-left: 10px;
     margin-bottom: 10px;
     display: flex;
     flex-direction: column;
     gap: 6px;
-
-    p{
-        margin: 0px;
-    }
-    button{
-        background-color: #8400ff;
-        border: none;
-        border-radius: 5px;
-        color: white;
-        width: 30%;
-        padding: 5px 20px;
-        text-align: center;
-        display: inline-block;
-        cursor: pointer;
-    }
-    input{
-        width: 90%;
-    }
 }
 
-.mensajes{
+.NuevoChat p {
+    margin: 0px;
+}
+
+.NuevoChat button {
+    background-color: #8400ff;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    width: 30%;
+    padding: 5px 20px;
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.NuevoChat input {
+    width: 90%;
+}
+
+.mensajes {
     display: flex;
     flex-direction: column;
     gap: 10px;
     padding: 10px;
 }
 
-.mensaje{
+.mensaje {
     background-color: #23a6d5;
     min-width: 10%;
     width: 30%;
@@ -77,41 +80,45 @@
     border-radius: 20px;
     margin: 10px;
 }
-.mensaje-emisor{
+
+.mensaje-emisor {
     align-self: end;
 }
-.receptor{
+
+.receptor {
     align-self: start;
     text-align: end;
 }
 
-.chat{
+.chat {
     display: grid;
     grid-direction: column;
     grid-template-rows: 0.5fr 4fr 0.5fr;
 }
 
-.enviarMensaje{
+.enviarMensaje {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
     background-color: #000000;
-    input{
-        width: 80%;
-        padding: 5px;
-        border-radius: 5px;
-        border: none;
-    }
-    button{
-        background-color: #8400ff;
-        border: none;
-        border-radius: 5px;
-        color: white;
-        width: 15%;
-        padding: 5px 20px;
-        text-align: center;
-        display: inline-block;
-        cursor: pointer;
-    }
+}
+
+.enviarMensaje input {
+    width: 80%;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+}
+
+.enviarMensaje button {
+    background-color: #8400ff;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    width: 15%;
+    padding: 5px 20px;
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
 }
