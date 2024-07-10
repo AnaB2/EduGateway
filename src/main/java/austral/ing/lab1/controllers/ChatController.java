@@ -63,14 +63,8 @@ public class ChatController {
 
             tx.commit();
 
-            response.type("application/json");
-            return gson.toJson(Map.of(
-                "message", "Chat created successfully",
-                "chatId", chat.getId(),
-                "participantName", user.getFirstName(),
-                "institutionName", institution1.getInstitutionalName(),
-                "institutionEmail", institution1.getEmail()
-            ));
+            response.status(200);
+            return "";
         } catch (Exception e) {
             e.printStackTrace();
             response.status(500);
@@ -137,13 +131,16 @@ public class ChatController {
     };
 
     public static Route handleGetChatMessages = (Request request, Response response) -> {
-        String chatIdParam = request.params(":chatId");
-        if (chatIdParam == null || chatIdParam.trim().isEmpty()) {
+        String body = request.body();
+        Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
+
+        if (formData.get("userId").trim().isEmpty() || formData.get("institutionId").trim().isEmpty()) {
             response.status(400);
-            return "{\"error\": \"Missing chat ID\"}";
+            return "{\"error\": \"Missing user ID or institution ID\"}";
         }
 
-        Long chatId = Long.parseLong(chatIdParam);
+        Long userId = formData.get("userId") != null ? Long.parseLong(formData.get("userId")) : null;
+        Long institutionId = formData.get("institutionId") != null ? Long.parseLong(formData.get("institutionId")) : null;
 
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         Chats chats = new Chats(entityManager);
@@ -151,26 +148,26 @@ public class ChatController {
 
         try {
             tx.begin();
-            Chat chat = chats.findById(chatId).orElse(null);
-            if (chat == null) {
-                response.status(404);
-                return "{\"error\": \"Chat not found\"}";
+            List<Chat> chatList;
+            if (userId != null) {
+                chatList = chats.findByUserId(userId);
+            } else {
+                chatList = chats.findByInstitutionId(institutionId);
             }
 
-            Set<Message> messages = chat.getMessages();
-            List<MessageDTO> messageDTOs = messages.stream()
-                    .map(MessageDTO::new)
-                    .collect(Collectors.toList());
+            List<ChatDTO> chatDTOs = chatList.stream()
+                .map(ChatDTO::new)
+                .collect(Collectors.toList());
 
             tx.commit();
             response.type("application/json");
-            return gson.toJson(messageDTOs);
+            return gson.toJson(chatDTOs);
         } catch (Exception e) {
             if (tx.isActive()) {
                 tx.rollback();
             }
             response.status(500);
-            return "{\"error\": \"An error occurred while fetching the messages\"}";
+            return "{\"error\": \"An error occurred while fetching the chats\"}";
         } finally {
             entityManager.close();
         }
@@ -210,5 +207,60 @@ public class ChatController {
             return timestamp;
         }
     }
+
+
+
+
+    static class ChatDTO{
+        private final Long id;
+        private final Long userId;
+        private final String userName;
+        private final String userEmail;
+        private final Long institutionId;
+        private final String institutionName;
+        private final String institutionEmail;
+
+
+        public ChatDTO(Chat chat) {
+            this.id = chat.getId();
+            this.userId = chat.getUser().getId();
+            this.userName = chat.getUser().getFirstName();
+            this.userEmail = chat.getUser().getEmail();
+            this.institutionId = chat.getInstitution().getId();
+            this.institutionName = chat.getInstitution().getInstitutionalName();
+            this.institutionEmail = chat.getInstitution().getEmail();
+        }
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 

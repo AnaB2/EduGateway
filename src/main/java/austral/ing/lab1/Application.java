@@ -101,7 +101,7 @@ public class Application {
 
         Spark.post("/send-message", ChatController.handleSendMessage);
 
-        Spark.post("/get-chat-messages/:chat-id", ChatController.handleSendMessage);
+        Spark.post("/get-chat-messages", ChatController.handleGetChatMessages);
 
         Spark.get("/get-institution-history", InstitutionController.handleGetInstitutionHistory);
 
