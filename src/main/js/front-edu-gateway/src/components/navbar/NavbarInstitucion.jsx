@@ -12,6 +12,7 @@ export function NavbarInstitucion() {
                 <Nav.Link style={{color:"white"}} onClick={()=>navigate('/inicio-institucion')} onMouseOver={(e) => e.target.style.color = 'blue'} onMouseOut={(e) => e.target.style.color = 'white'}>Inicio</Nav.Link>
                 <Nav.Link style={{color:"white"}} onClick={()=>navigate('/inicio-institucion/gestionar-oportunidades')} onMouseOver={(e) => e.target.style.color = 'blue'} onMouseOut={(e) => e.target.style.color = 'white'}>Gestionar oportunidades</Nav.Link>
                 <Nav.Link style={{color:"white"}} onClick={()=>navigate('/inicio-institucion/ver-perfil-institucion')} onMouseOver={(e) => e.target.style.color = 'blue'} onMouseOut={(e) => e.target.style.color = 'white'}>Perfil</Nav.Link>
+                <Nav.Link style={{color:"white"}} onClick={()=>navigate('/chats')} onMouseOver={(e) => e.target.style.color = 'blue'} onMouseOut={(e) => e.target.style.color = 'white'}>Chats</Nav.Link>
             </>
         )
     }
