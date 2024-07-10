@@ -84,3 +84,34 @@
     align-self: start;
     text-align: end;
 }
+
+.chat{
+    display: grid;
+    grid-direction: column;
+    grid-template-rows: 0.5fr 4fr 0.5fr;
+}
+
+.enviarMensaje{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #000000;
+    input{
+        width: 80%;
+        padding: 5px;
+        border-radius: 5px;
+        border: none;
+    }
+    button{
+        background-color: #8400ff;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        width: 15%;
+        padding: 5px 20px;
+        text-align: center;
+        display: inline-block;
+        cursor: pointer;
+    }
+}

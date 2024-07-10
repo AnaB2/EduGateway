@@ -14,13 +14,30 @@ export default function Chat({nombre, mensajesAnteriores}) {
 
     return (
         <div className="chat">
-            <h1 style={{paddingLeft:'10px'}}>{nombre}</h1>
+            <h1 style={{paddingLeft: '10px'}}>{nombre}</h1>
+
             <div className="mensajes">
                 {// Muestra los mensajes del estado "mensajes" en el chat. Compara el mail del emisor del mensaje con el actual para saber si es un mensaje enviado o recibido.
                     mensajes.map((mensaje) => {
-                    return <div key={mensaje.idMensaje}
-                                className={getEmail() === mensaje.emisor ? "mensaje mensaje-emisor" : "mensaje mensaje-receptor"}>{mensaje.mensaje}</div>
-                })}
+                        return <div key={mensaje.idMensaje}
+                                    className={getEmail() === mensaje.emisor ? "mensaje mensaje-emisor" : "mensaje mensaje-receptor"}>{mensaje.mensaje}</div>
+                    })}
+            </div>
+
+            <div className={"enviarMensaje"}>
+                <input
+                    type="text"
+                    placeholder="Escribe un mensaje..."
+                    value={mensaje}
+                    onChange={(e) => setMensaje(e.target.value)}
+                />
+                <button onClick={() => {
+                    // aca tiene que enviar el mensaje a la bd
+                    // luego, actualizar los mensajes
+                    setMensajes([...mensajes, {mensaje: mensaje, emisor: getEmail()}])
+                    setMensaje("")
+                }}>Enviar
+                </button>
             </div>
         </div>
     )
