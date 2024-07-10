@@ -9,7 +9,9 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String sender;
+    private  Long sender;
+
+    private Long receiver;
     private String content;
     private Long timestamp;
 
@@ -19,10 +21,11 @@ public class Message {
     public Message() {
     }
 
-    public Message(String sender, String content, Long timestamp) {
+    public Message(Long sender, String content, Long timestamp, Long receiver) {
         this.sender = sender;
         this.content = content;
         this.timestamp = timestamp;
+        this.receiver = receiver;
     }
 
     public Long getId() {
@@ -33,11 +36,15 @@ public class Message {
         this.id = id;
     }
 
-    public String getSender() {
+    public Long getSender() {
         return sender;
     }
 
-    public void setSender(String sender) {
+    public Long getReceiver(){return receiver;}
+
+    public void setReceiver(Long receiver){this.receiver = receiver;}
+
+    public void setSender(Long sender) {
         this.sender = sender;
     }
 

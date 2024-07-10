@@ -1,5 +1,7 @@
 package austral.ing.lab1.repository;
 
+import austral.ing.lab1.model.Chat;
+import austral.ing.lab1.model.Message;
 import austral.ing.lab1.model.Notification;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -32,6 +34,32 @@ public class NotificationService {
       throw e;
     }
   }
+
+
+  public void sendMessageToOther(Message message, String receiverType, Long receiver){
+    EntityTransaction tx = entityManager.getTransaction();
+    try {
+      tx.begin();
+      entityManager.persist(message);
+      tx.commit();
+
+      // Enviar notificación en tiempo real a través de WebSocket
+      String messageContent =  message.getContent() + " from " + message.getSender() + " to " + message.getReceiver();
+      if (message.getSender() != null && message.getReceiver() != null) {
+        if ("participant".equals(receiverType)) {
+          NotificationEndpoint.sendMessageToUser(message.getSender(), messageContent);
+        } else if ("institution".equals(receiverType)) {
+          NotificationEndpoint.sendMessageToInstitution(message.getReceiver(), messageContent);
+        }
+      }
+    } catch (Exception e) {
+      if (tx.isActive()) {
+        tx.rollback();
+      }
+      throw e;
+    }
+  }
+
 
   // Otros métodos sin cambios...
 }

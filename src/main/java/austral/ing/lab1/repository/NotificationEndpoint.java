@@ -80,4 +80,39 @@ public class NotificationEndpoint {
       }
     }
   }
+
+
+  public static void sendMessageToInstitution(Long institutionId, String message) {
+    Session session = institutionSessions.get(institutionId);
+    if (session != null && session.isOpen()) {
+      try {
+        session.getRemote().sendString(message);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+
+
+  public static void sendMessageToUser(Long userId, String message) {
+    Session session = userSessions.get(userId);
+    if (session != null && session.isOpen()) {
+      try {
+        session.getRemote().sendString(message);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+
+
+
+
+
+
 }
+
+
+

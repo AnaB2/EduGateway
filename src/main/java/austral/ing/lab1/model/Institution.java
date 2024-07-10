@@ -131,9 +131,7 @@ public class Institution {
 
 
 
-
-
-    public static class InstitutionBuilder {
+  public static class InstitutionBuilder {
         private final String email;
         private String institutionalName;
         private String password;

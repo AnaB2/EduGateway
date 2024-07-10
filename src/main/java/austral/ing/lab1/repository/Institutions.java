@@ -48,4 +48,16 @@ public class Institutions {
     public void delete(Institution institution) {
         entityManager.remove(institution);
     }
+
+
+    public Long findIdByInstitutionName(String institutionName) {
+        return entityManager
+                .createQuery("SELECT i.id FROM Institution i WHERE i.institutionalName LIKE :name", Long.class)
+                .setParameter("name", institutionName)
+                .getSingleResult();
+    }
+
+
+
+
 }
