@@ -15,9 +15,10 @@ export default function ChatsPage(){
         return [{mensaje: "Hola", emisor: "juan@gmail.com"}, {mensaje: "Hola", emisor: "fla@gmail.com"}]
     };
 
-    const cambiarChatActual = (idChat) => {
+    const cambiarChatActual = (idChat, nombre) => {
         // Ir a buscar los mensajes anteriores del chat con idChat y guardarlos en chatActual
-        setChatActual(buscarMensajesAnteriores(idChat));
+        const mensajesAnteriores = buscarMensajesAnteriores(idChat)
+        setChatActual({emisor: nombre, mensajes: mensajesAnteriores})
     };
 
     return(
@@ -25,7 +26,7 @@ export default function ChatsPage(){
             {getUserType()=="institution"? <NavbarInstitucion/> : <NavbarParticipante/>}
             <div className="chats-page">
                 <ListaDeChats cambiarChatActual={cambiarChatActual}></ListaDeChats>
-                {chatActual && <Chat mensajesAnteriores={chatActual}/>}
+                {chatActual && <Chat nombre={chatActual.emisor} mensajesAnteriores={chatActual.mensajes}/>}
             </div>
         </div>
     )

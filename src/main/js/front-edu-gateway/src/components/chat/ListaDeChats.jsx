@@ -7,7 +7,7 @@ export default function ListaDeChats({cambiarChatActual}) {
 
     const buscarListaDeChats = () => {
         // aca deberia buscar la lista de nombres de las personas con las que se ha chateado y retornarla
-        return [{ nombre: "Juan", idChat: 1 }, { nombre: "Pedro", idChat: 2 }]
+        return [{ nombre: "Juan", email:"juan@gmail.com", idChat: 1 }, { nombre: "Pedro", email:"pedro@gmail.com", idChat: 2 }]
     }
 
     useEffect(() => {
@@ -38,7 +38,7 @@ export default function ListaDeChats({cambiarChatActual}) {
             </div>
             <div className="chatsNames">
                 {chats.length !== 0 && chats.map((chat) => (
-                    <div onClick={() => cambiarChatActual(chat.idChat)} key={chat.idChat} className="chatName">
+                    <div onClick={() => cambiarChatActual(chat.idChat, chat.nombre)} key={chat.idChat} className="chatName">
                         {chat.nombre}
                     </div>
                 ))}
