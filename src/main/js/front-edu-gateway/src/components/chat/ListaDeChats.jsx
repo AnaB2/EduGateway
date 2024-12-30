@@ -1,30 +1,49 @@
 import {useEffect, useState} from "react";
 import axios from 'axios';
-import {getId} from "../../services/storage";
-import {createChat} from "../../services/Api";
+import {getId, getUserType} from "../../services/storage";
+import {createChat, getListChats} from "../../services/Api";
 
 export default function ListaDeChats({cambiarChatActual}) {
 
     var [chats, setChats] = useState([])
     const [email, setEmail] = useState("");
 
-    const buscarListaDeChats = () => {
-        // aca deberia buscar la lista de nombres de las personas con las que se ha chateado y retornarla
-        return [{ nombre: "Juan", email:"juan@gmail.com", idChat: 1 }, { nombre: "Pedro", email:"pedro@gmail.com", idChat: 2 }]
-    }
+    const buscarListaDeChats = async () => {
+        try {
+            const response = await getListChats(getId(), getUserType());
+            console.log(response)
+            setChats(response);
+            return response;
+        } catch (error) {
+            console.error("Error al obtener la lista de chats:", error);
+            return [];
+        }
+    };
 
     useEffect(() => {
         // Aquí deberías reemplazar el contenido estático por una llamada a tu API para obtener las personas con las que se ha chateado reales
-        setChats(buscarListaDeChats());
+        buscarListaDeChats().then((chats)=>{
+            setChats(chats)
+
+        })
     }, []);
 
     const crearNuevoChat = async (emailDestino) => {
-        // aca tiene que crear un nuevo chat y guardarlo en la lista de chats, chequeando si existe el mail de destino
-        // hacer las verificaciones si el email es valido o si el chat con esa persona ya existe
-        var response = await createChat(emailDestino, getId());
-        // luego, actualizar los chats
-        setChats(buscarListaDeChats());
-    }
+        try {
+            const userId = getId();
+            const response = await createChat(emailDestino, userId);
+            //setChats((prevChats) => [...prevChats, newChat]);
+            console.log(response)
+
+            // Va a buscar lista de chats actual y actualiza
+            buscarListaDeChats().then((chats)=>{
+                setChats(chats)
+
+            })        } catch (error) {
+            console.error("Error al crear nuevo chat:", error);
+        }
+    };
+
 
     return (
         <div className="lista-de-chats">
@@ -41,8 +60,8 @@ export default function ListaDeChats({cambiarChatActual}) {
             </div>
             <div className="chatsNames">
                 {chats.length !== 0 && chats.map((chat) => (
-                    <div onClick={() => cambiarChatActual(chat.idChat, chat.nombre)} key={chat.idChat} className="chatName">
-                        {chat.nombre}
+                    <div onClick={() => cambiarChatActual(chat)} key={chat.idChat} className="chatName">
+                        {(getUserType() == "institution") ? chat.userName : chat.institutionName}
                     </div>
                 ))}
             </div>

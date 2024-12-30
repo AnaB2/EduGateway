@@ -1,5 +1,5 @@
 import './ChatsPage.css'
-import {getUserType} from "../../services/storage";
+import {getName, getUserType} from "../../services/storage";
 import {NavbarInstitucion} from "../../components/navbar/NavbarInstitucion";
 import {NavbarParticipante} from "../../components/navbar/NavbarParticipante";
 import ListaDeChats from "../../components/chat/ListaDeChats";
@@ -15,10 +15,11 @@ export default function ChatsPage(){
         return [{mensaje: "Hola", emisor: "juan@gmail.com"}, {mensaje: "Hola", emisor: "fla@gmail.com"}]
     };
 
-    const cambiarChatActual = (idChat, nombre) => {
+    const cambiarChatActual = (chat) => {
         // Ir a buscar los mensajes anteriores del chat con idChat y guardarlos en chatActual
-        const mensajesAnteriores = buscarMensajesAnteriores(idChat)
-        setChatActual({emisor: nombre, mensajes: mensajesAnteriores})
+        const mensajesAnteriores = buscarMensajesAnteriores(chat.id)
+        const emisor = (getUserType()=="institution")? chat.userName : chat.institutionName
+        setChatActual({emisor: emisor, mensajes: mensajesAnteriores})
     };
 
     return(

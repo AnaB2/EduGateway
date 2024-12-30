@@ -34,7 +34,13 @@ public class ChatController {
             return "{\"error\": \"Missing or empty fields\"}";
         }
 
-        Long userId = ((Number) formData.get("userId")).longValue();
+        Long userId;
+        try {
+            userId = Long.parseLong((String) formData.get("userId"));
+        } catch (NumberFormatException e) {
+            response.status(400);
+            return "{\"error\": \"Invalid format for userId\"}";
+        }
         String email = (String) formData.get("email");
 
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -133,11 +139,6 @@ public class ChatController {
     public static Route handleGetChatMessages = (Request request, Response response) -> {
         String body = request.body();
         Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
-
-        if (formData.get("userId").trim().isEmpty() || formData.get("institutionId").trim().isEmpty()) {
-            response.status(400);
-            return "{\"error\": \"Missing user ID or institution ID\"}";
-        }
 
         Long userId = formData.get("userId") != null ? Long.parseLong(formData.get("userId")) : null;
         Long institutionId = formData.get("institutionId") != null ? Long.parseLong(formData.get("institutionId")) : null;
