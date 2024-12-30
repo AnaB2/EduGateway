@@ -1,57 +1,74 @@
 import {getEmail, getId, getToken, getUserType} from "./storage";
 
-const API_URL = 'http://localhost:4321'; // Replace this with your actual backend URL
+const API_URL = 'http://localhost:4321'; // Backend base URL
 
+// Add authorization headers to API requests
 const addAuthorizationHeader = (headers) => {
     const token = getToken();
     const email = getEmail();
 
     if (!token || !email) {
-        throw new Error('Token o correo no encontrados.');
+        throw new Error('Token or email not found.');
     }
 
-    return {
-        ...headers,
-        Authorization: token,
-        Email: email,
-    };
+    return {...headers, Authorization: token, Email: email,};
 };
 
+// Initialize WebSocket connection
+export const initializeWebSocket = (onMessageReceived) => {
+    let reconnectAttempts = 0;
+    const MAX_RECONNECT_ATTEMPTS = 5;
+    const RECONNECT_DELAY = 5000;
+    const PING_INTERVAL = 25000;
+    let pingInterval;
 
+    const connect = () => {
+        const socket = new WebSocket(`${API_URL}/notifications`);
 
-// Función para inicializar la conexión WebSocket
+        socket.onopen = () => {
+            console.log("WebSocket connection opened");
+            reconnectAttempts = 0;
 
-export const inicializarConexionWebSocket = (alRecibirMensaje) => {
-    const notifications = new WebSocket(`${API_URL}/notifications`);
+            // Send initial message based on user type
+            const message = JSON.stringify(
+                getUserType() === "participant"
+                    ? { userId: getId() }
+                    : { institutionId: getId() }
+            );
+            socket.send(message);
 
-    notifications.onmessage = function (event) {
-        alRecibirMensaje(event.data); // manejar el mensaje recibido
+            // Start heartbeat
+            pingInterval = setInterval(() => {
+                if (socket.readyState === WebSocket.OPEN) {
+                    socket.send(JSON.stringify({ type: "ping" }));
+                }
+            }, PING_INTERVAL);
+        };
+
+        socket.onmessage = (event) => {
+            if (onMessageReceived) onMessageReceived(event.data);
+        };
+
+        socket.onclose = () => {
+            console.log("WebSocket connection closed");
+            clearInterval(pingInterval);
+            if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+                setTimeout(() => {
+                    reconnectAttempts++;
+                    connect();
+                }, RECONNECT_DELAY);
+            } else {
+                console.error("Max WebSocket reconnect attempts reached.");
+            }
+        };
+
+        socket.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
     };
 
-    notifications.onopen = function () {
-        console.log('WebSocket connection opened');
-        let message;
-        if (getUserType() === 'participant') {
-            message = JSON.stringify({ userId: getId() });
-        } else if (getUserType() === 'institution') {
-            message = JSON.stringify({ institutionId: getId() });
-        }
-        console.log('Sending message:', message);
-        notifications.send(message);
-    };
-
-    notifications.onerror = function (error) {
-        console.error(`WebSocket error: ${error}`);
-    };
-
-    notifications.onclose = function () {
-        console.log('WebSocket connection closed');
-    };
-
-    return notifications;
+    connect();
 };
-
-
 
 export const addOpportunity = async (opportunityData) => {
     try {
@@ -634,7 +651,33 @@ export async function createChat(emailDestino, id) {
         const response = await fetch(`${API_URL}/create-chat`, {
             method: 'POST',
             headers,
-            body: JSON.stringify({ email:emailDestino, userId:id }),
+            body: JSON.stringify({ email: emailDestino, userId: id }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return "OK";
+    } catch (error) {
+        console.error("Error al crear chat:", error);
+        throw error;
+    }
+}
+
+export const getListChats = async (id, userType) => {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+
+        const body = userType === 'participant' ? JSON.stringify({ userId: id }) : JSON.stringify({ institutionId: id });
+
+        const response = await fetch(`${API_URL}/get-chat-messages`, {
+            method: 'POST',
+            headers,
+            body
         });
 
         if (!response.ok) {
@@ -643,7 +686,7 @@ export async function createChat(emailDestino, id) {
 
         return await response.json();
     } catch (error) {
-        console.error("Error al crear chat:", error);
+        console.error("Fallo obtener lista de chats", error);
         throw error;
     }
-}
+};
