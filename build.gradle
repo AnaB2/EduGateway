@@ -27,30 +27,33 @@ dependencies {
     implementation 'com.sparkjava:spark-template-freemarker:2.7.1'
     implementation 'com.google.code.gson:gson:2.9.0'
 
-
     implementation 'ch.qos.logback:logback-classic:1.4.14'
-
 
     // Agrega la dependencia para servlet API
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
 
-
-
     // Use JUnit test framework
     testImplementation 'junit:junit:4.13.2'
 
-    //Implementacion JWT
+    // Implementacion JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
-
-    //Implementacion de WebSocket
+    // Implementacion de WebSocket
     implementation 'javax.websocket:javax.websocket-api:1.1'
 
-
-    //Implementacion de JAPA
+    // Implementacion de JAPA
     implementation 'org.hibernate:hibernate-core:5.4.32.Final'
     implementation 'javax.persistence:javax.persistence-api:2.2'
     implementation 'com.h2database:h2:1.4.200'
+
+    // Mercado pago
+    implementation ('com.mercadopago:sdk-java:2.1.+') {
+        exclude group: 'com.google.guava', module: 'guava'
+        exclude group: 'com.google.collections', module: 'google-collections'
+    }
+
+    // Incluye una versión compatible de Guava
+    implementation 'com.google.guava:guava:32.0.1-jre'
 }
