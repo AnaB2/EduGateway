@@ -1,22 +1,17 @@
 package austral.ing.lab1;
-
 import static austral.ing.lab1.controllers.OpportunityController.handleGetOpportunities;
 import static austral.ing.lab1.controllers.OpportunityController.handleGetOpportunitiesByEmail;
-
 import austral.ing.lab1.controllers.*;
 import austral.ing.lab1.repository.NotificationEndpoint;
 import com.google.gson.Gson;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import spark.Spark;
 import static spark.Spark.webSocket;
-
 
 public class Application {
 
     private static final Gson gson = new Gson();
-    //
     private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
 
     public static void main(String[] args) {
@@ -24,7 +19,6 @@ public class Application {
 
         // Configurar el endpoint de WebSocket antes de las rutas HTTP
         webSocket("/notifications", NotificationEndpoint.class);
-
 
         Spark.options("/*", (request, response) -> {
             String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
@@ -106,5 +100,7 @@ public class Application {
         Spark.get("/get-institution-history", InstitutionController.handleGetInstitutionHistory);
 
         Spark.get("/get-user-history", UserController.handleGetUserHistory);
+
+        Spark.post("/create-preference", MercadoPagoController.handleCreatePreference);
     }
 }

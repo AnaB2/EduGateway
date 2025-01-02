@@ -1,6 +1,21 @@
 import {getEmail, getId, getToken, getUserType} from "./storage";
+import axios from "axios";
 
 const API_URL = 'http://localhost:4321'; // Backend base URL
+
+// Mercado pago create preference
+export const createPreference = async (price, name) => {
+    try {
+        const response = await axios.post(API_URL + "/create-preference",
+            {
+                title: name,
+                price: price
+            })
+        return response.data // retorna preference id
+    } catch (e) {
+        console.log(e)
+    }
+}
 
 // Add authorization headers to API requests
 const addAuthorizationHeader = (headers) => {

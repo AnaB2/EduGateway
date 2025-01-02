@@ -2,12 +2,17 @@ import {useLocation} from "react-router";
 import {NavbarParticipante} from "../../components/navbar/NavbarParticipante";
 import {ContenedorOportunidadesParticipante} from "../../components/oportunidades/participante/ContenedorOportunidadesParticipante";
 import Button from "react-bootstrap/Button";
-import {followInstitution, getFollowedInstitutions, unfollowInstitution} from "../../services/Api";
+import {createPreference, followInstitution, getFollowedInstitutions, unfollowInstitution} from "../../services/Api";
 import {getId} from "../../services/storage";
 import {useEffect, useState} from "react";
-
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
+import axios from "axios";
 
 export function PerfilPublicoInstitucion(){
+
+    useEffect(() => {
+        initMercadoPago('APP_USR-10f2b763-dca0-47a5-b329-78a3e3a2ec9a', { locale: 'es-AR' });
+    }, []);
 
     // PERFIL DE INSTITUCIÓN QUE VAN A VER LOS PARTICIPANTES
 
@@ -15,6 +20,7 @@ export function PerfilPublicoInstitucion(){
     const institutionData = location.state;
 
     const [siguiendo, setSiguiendo] = useState(false);
+    const [preferenceId, setPreferenceId] = useState(null);
 
     async function checkFollow(){
         const response = await getFollowedInstitutions();
@@ -49,6 +55,11 @@ export function PerfilPublicoInstitucion(){
         }
     }
 
+    const handleDonation = async () => {
+        const id = await createPreference(1000, institutionData.institutionalName)
+        if(id) setPreferenceId(id.preferenceId)
+    }
+
     return(
         <>
             <NavbarParticipante/>
@@ -61,7 +72,15 @@ export function PerfilPublicoInstitucion(){
                                 <p>Correo:</p>
                                 <p>{institutionData.email}</p>
                             </div>
-                            {siguiendo ? <Button variant="dark" onClick={unfollow}>dejar de seguir</Button> : <Button variant="dark" onClick={follow}>seguir</Button>}
+                            <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
+                                {siguiendo ? <Button variant="dark" onClick={unfollow}>dejar de seguir</Button> : <Button variant="dark" onClick={follow}>seguir</Button>}
+                                {!preferenceId && <Button variant="success" onClick={handleDonation}>donar</Button>}
+                                {preferenceId && (
+                                    <Wallet
+                                        initialization={{ preferenceId, redirectMode: 'blank' }}
+                                        customization={{ texts: { valueProp: 'smart_option' } }}
+                                    />
+                                )}                            </div>
                         </div>
                         <div>
                             <ContenedorOportunidadesParticipante institutionEmail={institutionData.email}/>
