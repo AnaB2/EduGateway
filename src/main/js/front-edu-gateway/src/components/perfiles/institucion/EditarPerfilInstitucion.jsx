@@ -9,6 +9,7 @@ export function EditarPerfilInstitucion({ actualizarInstitucion, datosAnteriores
     const [addSuccess, setAddSuccess] = useState(false);
     const [addError, setAddError] = useState('');
     const [visible, setVisible] = useState(false);
+
     const abrir = () => setVisible(true);
     const cerrar = () => {
         setVisible(false);
@@ -27,7 +28,7 @@ export function EditarPerfilInstitucion({ actualizarInstitucion, datosAnteriores
                 password: password,
                 description: description
             };
-            console.log("Sending institution data: ", institutionData); // Log the data being sent
+            console.log("Sending institution data: ", institutionData);
             await editInstitution(institutionData, datosAnteriores.email);
             setAddSuccess(true);
             setAddError('');
@@ -45,19 +46,34 @@ export function EditarPerfilInstitucion({ actualizarInstitucion, datosAnteriores
 
             <Modal show={visible} onHide={cerrar} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Editar Perfil</Modal.Title>
+                    <Modal.Title>Editar Perfil Institucional</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
                     <div className="form-perfil">
                         <FloatingLabel controlId="floatingInstitutionalName" label="Nombre Institucional" className="mb-3">
-                            <Form.Control defaultValue={datosAnteriores.institutionalName} type="text" placeholder="Nombre Intitucional" onChange={(event) => setInstitutionalName(event.target.value)} />
+                            <Form.Control
+                                value={institutionalName} // Valor actual del estado
+                                type="text"
+                                placeholder="Nombre Institucional"
+                                onChange={(event) => setInstitutionalName(event.target.value)} // Sincronizar cambios con el estado
+                            />
                         </FloatingLabel>
                         <FloatingLabel controlId="floatingPassword" label="Contraseña" className="mb-3">
-                            <Form.Control type="password" placeholder="Contraseña" onChange={(event) => setPassword(event.target.value)} />
+                            <Form.Control
+                                value={password} // La contraseña no se precarga por seguridad
+                                type="password"
+                                placeholder="Contraseña"
+                                onChange={(event) => setPassword(event.target.value)} // Sincronizar cambios con el estado
+                            />
                         </FloatingLabel>
                         <FloatingLabel controlId="floatingDescription" label="Descripción" className="mb-3">
-                            <Form.Control defaultValue={datosAnteriores.description} as="textarea" placeholder="Descripción" onChange={(event) => setDescription(event.target.value)} />
+                            <Form.Control
+                                value={description} // Valor actual del estado
+                                as="textarea"
+                                placeholder="Descripción"
+                                onChange={(event) => setDescription(event.target.value)} // Sincronizar cambios con el estado
+                            />
                         </FloatingLabel>
                     </div>
                 </Modal.Body>
@@ -70,5 +86,5 @@ export function EditarPerfilInstitucion({ actualizarInstitucion, datosAnteriores
                 </Modal.Footer>
             </Modal>
         </>
-    )
+    );
 }

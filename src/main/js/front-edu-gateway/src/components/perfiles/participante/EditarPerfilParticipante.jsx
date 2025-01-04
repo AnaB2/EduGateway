@@ -18,9 +18,8 @@ export function EditarPerfilParticipante({ actualizarParticipante, datosAnterior
     }
     //const navigate = useNavigate()
 
-    const [firstName, setFirstName] = useState(datosAnteriores.firstname);
-    const [lastName, setLastName] = useState(datosAnteriores.lastname);
-    //const [email, setEmail] = useState(datosAnteriores.email);
+    const [firstName, setFirstName] = useState(datosAnteriores.firstName);
+    const [lastName, setLastName] = useState(datosAnteriores.lastName);
     const [password, setPassword] = useState(datosAnteriores.password);
     const [description, setDescription] = useState(datosAnteriores.description);
 
@@ -57,19 +56,40 @@ export function EditarPerfilParticipante({ actualizarParticipante, datosAnterior
                 <Modal.Body>
                     <div className="form-perfil">
                         <FloatingLabel controlId="floatingFirstName" label="Nombre" className="mb-3">
-                            <Form.Control defaultValue={datosAnteriores.firstname} type="text" placeholder="Nombre" onChange={(event) => setFirstName(event.target.value)} />
+                            <Form.Control
+                                value={firstName} // Valor actual del estado
+                                type="text"
+                                placeholder="Nombre"
+                                onChange={(event) => setFirstName(event.target.value)} // Sincronizar cambios con el estado
+                            />
                         </FloatingLabel>
                         <FloatingLabel controlId="floatingLastName" label="Apellido" className="mb-3">
-                            <Form.Control defaultValue={datosAnteriores.lastname} type="text" placeholder="Apellido" onChange={(event) => setLastName(event.target.value)} />
+                            <Form.Control
+                                value={lastName} // Valor actual del estado
+                                type="text"
+                                placeholder="Apellido"
+                                onChange={(event) => setLastName(event.target.value)} // Sincronizar cambios con el estado
+                            />
                         </FloatingLabel>
                         <FloatingLabel controlId="floatingPassword" label="Contraseña" className="mb-3">
-                            <Form.Control type="password" placeholder="Contraseña" onChange={(event) => setPassword(event.target.value)} />
+                            <Form.Control
+                                value={password} // La contraseña no se precarga por seguridad
+                                type="password"
+                                placeholder="Contraseña"
+                                onChange={(event) => setPassword(event.target.value)} // Sincronizar cambios con el estado
+                            />
                         </FloatingLabel>
                         <FloatingLabel controlId="floatingDescription" label="Descripción" className="mb-3">
-                            <Form.Control defaultValue={datosAnteriores.description} as="textarea" placeholder="Descripción" onChange={(event) => setDescription(event.target.value)} />
+                            <Form.Control
+                                value={description} // Valor actual del estado
+                                as="textarea"
+                                placeholder="Descripción"
+                                onChange={(event) => setDescription(event.target.value)} // Sincronizar cambios con el estado
+                            />
                         </FloatingLabel>
                     </div>
                 </Modal.Body>
+
 
                 <Modal.Footer>
                     {addError !== '' && <p style={{ color: 'red', marginTop: 10 }}>{addError}</p>}
