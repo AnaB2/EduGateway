@@ -49,6 +49,10 @@ export function PerfilInstitucion() {
                             <p>Correo:</p>
                             <p>{institutionData.email}</p>
                         </div>
+                        <div>
+                            <p>Descripción:</p>
+                            <p>{institutionData.description}</p>
+                        </div>
                         <EditarPerfilInstitucion
                             actualizarInstitucion={() => {
                                 getInstitutionData(getEmail()).then(data => {

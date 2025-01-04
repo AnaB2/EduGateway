@@ -53,6 +53,10 @@ export function PerfilParticipante() {
                             <p>Correo:</p>
                             <p>{userData.email}</p>
                         </div>
+                        <div>
+                            <p>Descripción:</p>
+                            <p>{userData.description}</p>
+                        </div>
                         <EditarPerfilParticipante
                             actualizarParticipante={() => {
                                 getUserData(getEmail()).then(data => {
