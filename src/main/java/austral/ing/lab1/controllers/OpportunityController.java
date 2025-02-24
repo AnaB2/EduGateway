@@ -7,7 +7,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -201,40 +200,14 @@ public class OpportunityController {
     public static Route handleGetOpportunities = (Request request, Response response) -> {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            int page = Integer.parseInt(request.queryParams("page") != null ? request.queryParams("page") : "1");
-            int pageSize = Integer.parseInt(request.queryParams("pageSize") != null ? request.queryParams("pageSize") : "10");
+            List<Opportunity> opportunities = new ArrayList<>(new Opportunities(entityManager).listAll());
 
-            if (page < 1 || pageSize < 1) {
-                response.status(400);
-                return "{\"error\": \"Page and pageSize must be positive integers\"}";
-            }
+            // Transforma la lista de oportunidades a JSON
+            String jsonOpportunities = gson.toJson(opportunities);
 
-            Opportunities opportunitiesRepo = new Opportunities(entityManager);
-            List<Opportunity> allOpportunities = new ArrayList<>(opportunitiesRepo.listAll());
-
-            int totalItems = allOpportunities.size();
-            int fromIndex = (page - 1) * pageSize;
-            int toIndex = Math.min(fromIndex + pageSize, totalItems);
-
-            if (fromIndex >= totalItems) {
-                response.status(404);
-                return "{\"error\": \"No opportunities found for the given page\"}";
-            }
-
-            List<Opportunity> paginatedOpportunities = allOpportunities.subList(fromIndex, toIndex);
-
-            // Wrap response in pagination metadata
-            Map<String, Object> responseData = new HashMap<>();
-            responseData.put("opportunities", paginatedOpportunities);
-            responseData.put("totalItems", totalItems);
-            responseData.put("currentPage", page);
-            responseData.put("totalPages", (int) Math.ceil((double) totalItems / pageSize));
-
+            // Renderiza el JSON en la respuesta
             response.type("application/json");
-            return gson.toJson(responseData);
-        } catch (NumberFormatException e) {
-            response.status(400);
-            return "{\"error\": \"Invalid page or pageSize parameter\"}";
+            return jsonOpportunities;
         } catch (Exception e) {
             response.status(500);
             return "{\"error\": \"An error occurred while fetching opportunities\"}";
@@ -242,7 +215,6 @@ public class OpportunityController {
             entityManager.close();
         }
     };
-
 
     public static Route handleGetOpportunitiesByEmail = (Request request, Response response) -> {
         EntityManager entityManager = entityManagerFactory.createEntityManager();

@@ -263,13 +263,13 @@ export async function getOpportunitiesByName(name) {
     }
 }
 
-export async function getOpportunities(page = 1, pageSize = 10) {
+export async function getOpportunities() {
     try {
         const headers = addAuthorizationHeader({
             'Content-Type': 'application/json',
         });
 
-        const response = await fetch(`${API_URL}/get-opportunities?page=${page}&pageSize=${pageSize}`, {
+        const response = await fetch(`${API_URL}/get-opportunities`, {
             method: 'GET',
             headers,
         });
@@ -278,13 +278,12 @@ export async function getOpportunities(page = 1, pageSize = 10) {
             throw new Error('Network response was not ok');
         }
 
-        return await response.json(); // Response will include pagination metadata
+        return await response.json();
     } catch (error) {
         console.error("Failed to get opportunities:", error);
         throw error;
     }
 }
-
 
 export async function getFollowedInstitutions() {
     try {
