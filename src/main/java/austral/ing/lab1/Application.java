@@ -81,7 +81,7 @@ public class Application {
 
         Spark.get("/filter-by-nameOpportunity", FilterController.FilterByNameOpportunity);
 
-        Spark.get("/filter-by-InstitutionName", FilterController.FilterByNameInstituon);
+        Spark.get("/filter-by-InstitutionName", FilterController.FilterByNameInstitution);
 
         Spark.post("/delete-user", UserController.handleDeleteUser);
 

@@ -35,7 +35,7 @@ export function CardOportunidadParticipante({ oportunidad, actualizarOportunidad
                         {
                             mostrarLink ? (
                                     <Nav.Link onClick={() => navigate(`/ver-perfil-institucion/${institutionName}`, { state: institutionData })} onMouseOver={(e) => e.target.style.color = 'blue'} onMouseOut={(e) => e.target.style.color = '#212529BF'}>
-                                        {institutionName.toUpperCase()} (ver perfil)
+                                        {institutionName.toUpperCase()}
                                     </Nav.Link>
                                 ) :
                                 institutionName.toUpperCase()
