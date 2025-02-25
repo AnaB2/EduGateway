@@ -10,7 +10,8 @@ import {
     getFollowedInstitutions,
     getOpportunities,
     getOpportunitiesByCategory,
-    getOpportunitiesByInstitution, getOpportunitiesByName
+    getOpportunitiesByInstitution,
+    getOpportunitiesByName
 } from "../../services/Api";
 
 const filterOptions = [
@@ -31,19 +32,26 @@ export function VerOportunidades (){
     const [searchValue, setSearchValue] = useState('');
     const [oportunidades, setOportunidades] = useState([]);
 
-    useEffect(() => {
-        const fetchOpportunities = async () => {
-            try {
-                const response = await getOpportunities();
-                setOportunidades(response);
-            } catch (error) {
-                console.error('Error al obtener las oportunidades:', error);
-            }
-        };
-        fetchOpportunities();
-    }, []);
+    // Paginación
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 9; // Tamaño de página
 
-    if (!getToken() || getUserType() !== "participant"){
+    useEffect(() => {
+        fetchOpportunities();
+    }, [currentPage]); // Se ejecuta cuando cambia la página
+
+    const fetchOpportunities = async () => {
+        try {
+            if (selectedFilterOption === "Todos") {
+                const response = await getOpportunities(currentPage, pageSize);
+                setOportunidades(response);
+            }
+        } catch (error) {
+            console.error('Error al obtener las oportunidades:', error);
+        }
+    };
+
+    if (!getToken() || getUserType() !== "participant") {
         return (
             <>
                 {mostrarAlertaAutenticacion(navigate, "/")}
@@ -54,13 +62,13 @@ export function VerOportunidades (){
     const handleFilterOptionChange = async (option) => {
         setSelectedFilterOption(option);
         setSearchValue('');
+        setCurrentPage(1); // Resetear la página cuando cambia el filtro
         if (option === 'Todos') {
-            const response1 = await getOpportunities();
-            setOportunidades(response1 ? response1 : []);
+            fetchOpportunities();
         }
         if (option === 'Seguidos') {
-            const response2 = await getFollowedInstitutions();
-            setOportunidades(response2 ? response2 : []);
+            const response = await getFollowedInstitutions();
+            setOportunidades(response ? response : []);
         }
     };
 
@@ -71,8 +79,7 @@ export function VerOportunidades (){
     const handleClick = async () => {
         switch (selectedFilterOption) {
             case 'Todos':
-                const response1 = await getOpportunities();
-                setOportunidades(response1 ? response1 : []);
+                fetchOpportunities();
                 break;
             case 'Seguidos':
                 const response2 = await getFollowedInstitutions();
@@ -93,12 +100,12 @@ export function VerOportunidades (){
         }
     };
 
-    return(
+    return (
         <>
             <NavbarParticipante />
             <div className="contenido-pagina-oportunidades">
                 <h1>Ver oportunidades</h1>
-                <div style={{display: 'flex', gap: '16px', alignItems: 'center'}}>
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
                     <Dropdown>
                         <Dropdown.Toggle variant="primary" id="dropdown-basic">
                             {selectedFilterOption}
@@ -142,7 +149,7 @@ export function VerOportunidades (){
                     )}
                 </div>
                 {selectedFilterOption !== 'Todos' && selectedFilterOption !== 'Seguidos' && (
-                    <div style={{marginTop: '16px'}}>
+                    <div style={{ marginTop: '16px' }}>
                         <Button
                             onClick={handleClick}
                             variant="outline-success"
@@ -154,6 +161,32 @@ export function VerOportunidades (){
                 <ContenedorOportunidadesParticipante
                     oportunidades={oportunidades}
                 />
+
+                {/* Paginación solo para "Todos" */}
+                {selectedFilterOption === "Todos" && (
+                    <div style={{ display: "flex", justifyContent: "center", marginTop: "20px", alignItems: "center", gap: "10px" }}>
+                        <Button
+                            variant="outline-primary"
+                            disabled={currentPage === 1}
+                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                        >
+                            {"<"}
+                        </Button>
+
+                        <Dropdown>
+                            <Dropdown variant="outline-primary">
+                                {`${currentPage}`}
+                            </Dropdown>
+                        </Dropdown>
+
+                        <Button
+                            variant="outline-primary"
+                            onClick={() => setCurrentPage(prev => prev + 1)}
+                        >
+                            {">"}
+                        </Button>
+                    </div>
+                )}
             </div>
         </>
     );

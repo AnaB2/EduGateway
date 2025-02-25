@@ -263,13 +263,13 @@ export async function getOpportunitiesByName(name) {
     }
 }
 
-export async function getOpportunities() {
+export async function getOpportunities(page = 1, size = 10) {
     try {
         const headers = addAuthorizationHeader({
             'Content-Type': 'application/json',
         });
 
-        const response = await fetch(`${API_URL}/get-opportunities`, {
+        const response = await fetch(`${API_URL}/get-opportunities?page=${page}&size=${size}`, {
             method: 'GET',
             headers,
         });
@@ -284,6 +284,7 @@ export async function getOpportunities() {
         throw error;
     }
 }
+
 
 export async function getFollowedInstitutions() {
     try {
