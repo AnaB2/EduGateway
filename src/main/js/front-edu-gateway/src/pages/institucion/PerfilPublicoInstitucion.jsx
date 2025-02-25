@@ -12,7 +12,6 @@ import {
 import { getId } from "../../services/storage";
 import { useEffect, useState } from "react";
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
-import axios from "axios";
 
 export function PerfilPublicoInstitucion() {
 
@@ -39,10 +38,13 @@ export function PerfilPublicoInstitucion() {
     }
 
     useEffect(() => {
-        checkFollow();
-    }, []);
+        if (institutionData) {
+            checkFollow();
+        }
+    }, [institutionData]);
 
     const follow = async () => {
+        if (!institutionData) return;
         try {
             await followInstitution(getId(), institutionData.id);
             await checkFollow();
@@ -52,6 +54,7 @@ export function PerfilPublicoInstitucion() {
     }
 
     const unfollow = async () => {
+        if (!institutionData) return;
         try {
             await unfollowInstitution(getId(), institutionData.id);
             await checkFollow();
@@ -119,6 +122,7 @@ export function PerfilPublicoInstitucion() {
                             <ContenedorOportunidadesParticipante institutionEmail={institutionData.email} />
                         </div>
                     </div>
+
                 ) : (
                     <p>Cargando datos del perfil...</p>
                 )}

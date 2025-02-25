@@ -223,13 +223,13 @@ export async function getOpportunitiesByInstitutionEmail(email) {
     }
 }
 
-export async function getOpportunitiesByInstitution(name) {
+export async function getOpportunitiesByInstitution(name, page = 1, size = 10) {
     try {
         const headers = addAuthorizationHeader({
             'Content-Type': 'application/json',
         });
 
-        const queryParams = new URLSearchParams({ InstitutionName: name }).toString();
+        const queryParams = new URLSearchParams({ InstitutionName: name, page, size }).toString();
 
         const response = await fetch(`${API_URL}/filter-by-InstitutionName?${queryParams}`, {
             method: 'GET',
@@ -250,13 +250,13 @@ export async function getOpportunitiesByInstitution(name) {
     }
 }
 
-export async function getOpportunitiesByCategory(category) {
+export async function getOpportunitiesByCategory(category, page = 1, size = 10) {
     try {
         const headers = addAuthorizationHeader({
             'Content-Type': 'application/json',
         });
 
-        const queryParams = new URLSearchParams({ category }).toString();
+        const queryParams = new URLSearchParams({ category, page, size }).toString();
 
         const response = await fetch(`${API_URL}/filter-by-category?${queryParams}`, {
             method: 'GET',
@@ -274,13 +274,13 @@ export async function getOpportunitiesByCategory(category) {
     }
 }
 
-export async function getOpportunitiesByName(name) {
+export async function getOpportunitiesByName(name, page = 1, size = 10) {
     try {
         const headers = addAuthorizationHeader({
             'Content-Type': 'application/json',
         });
 
-        const queryParams = new URLSearchParams({ name }).toString();
+        const queryParams = new URLSearchParams({ name, page, size }).toString();
 
         const response = await fetch(`${API_URL}/filter-by-nameOpportunity?${queryParams}`, {
             method: 'GET',
@@ -298,13 +298,14 @@ export async function getOpportunitiesByName(name) {
     }
 }
 
-export async function getOpportunities() {
+
+export async function getOpportunities(page = 1, size = 10) {
     try {
         const headers = addAuthorizationHeader({
             'Content-Type': 'application/json',
         });
 
-        const response = await fetch(`${API_URL}/get-opportunities`, {
+        const response = await fetch(`${API_URL}/get-opportunities?page=${page}&size=${size}`, {
             method: 'GET',
             headers,
         });
@@ -320,7 +321,8 @@ export async function getOpportunities() {
     }
 }
 
-export async function getFollowedInstitutions() {
+
+export async function getFollowedInstitutions(page = 1, size = 10) {
     try {
         const headers = addAuthorizationHeader({
             'Content-Type': 'application/json',
@@ -328,7 +330,7 @@ export async function getFollowedInstitutions() {
 
         const userId = getId();
 
-        const response = await fetch(`${API_URL}/get-followed-institutions-by-user/${userId}`, {
+        const response = await fetch(`${API_URL}/get-followed-institutions-by-user/${userId}?page=${page}&size=${size}`, {
             method: 'GET',
             headers,
         });
@@ -340,6 +342,37 @@ export async function getFollowedInstitutions() {
         return await response.json();
     } catch (error) {
         console.error("Failed to get followed institutions:", error);
+        throw error;
+    }
+}
+
+export async function getOpportunitiesFiltered(filters, page = 1, size = 10) {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const queryParams = new URLSearchParams();
+        if (filters.category) queryParams.append("category", filters.category);
+        if (filters.institution) queryParams.append("InstitutionName", filters.institution);
+        if (filters.name) queryParams.append("name", filters.name);
+        queryParams.append("followed", filters.followed);
+        queryParams.append("userId", filters.userId || ""); // Si no hay usuario, enviamos vacío
+        queryParams.append("page", page);
+        queryParams.append("size", size);
+
+        const response = await fetch(`${API_URL}/filter-opportunities?${queryParams.toString()}`, {
+            method: 'GET',
+            headers,
+        });
+
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        return await response.json(); // Retorna un objeto con opportunities, totalResults y totalPages
+    } catch (error) {
+        console.error("Failed to get filtered opportunities:", error);
         throw error;
     }
 }

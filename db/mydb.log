@@ -1,1139 +1,255 @@
-/*C19*/SET SCHEMA PUBLIC
+/*C2*/SET SCHEMA PUBLIC
+create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
+create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
+create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
+create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
+create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
+create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
+create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
+create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
+alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
+alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
+create sequence hibernate_sequence start with 1 increment by 1
+alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
+alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
+alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
+alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
+alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
+/*C11*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C20*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C21*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C22*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C23*/SET SCHEMA PUBLIC
-DISCONNECT
+/*C3*/SET SCHEMA PUBLIC
+INSERT INTO INSTITUTION VALUES(1,'123',NULL,'austral@gmail.com','AUSTRAL','123',NULL)
+COMMIT
+INSERT INTO USER VALUES(1,NULL,'talcazar@mail.austral.edu.ar','Tom\u00e1s','Alc\u00e1zar','123',NULL)
+COMMIT
+/*C5*/SET SCHEMA PUBLIC
+INSERT INTO OPPORTUNITY VALUES(1,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(2,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(3,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(4,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(5,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(6,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(7,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(8,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(9,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(10,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(11,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(12,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(13,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(14,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(15,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(16,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(17,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(18,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(19,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(20,50,'Voluntariado','Pilar','Avanzado','austral@gmail.com','Espa\u00f1ol','Presencial','Lab 1')
+COMMIT
+/*C3*/INSERT INTO INSTITUTION VALUES(2,'123',NULL,'utn@gmail.com','UTN','123',NULL)
+COMMIT
+INSERT INTO INSTITUTION VALUES(3,'123',NULL,'up@gmail.com','UP','123',NULL)
+COMMIT
+/*C5*/INSERT INTO OPPORTUNITY VALUES(21,70,'Curso','CABA','Avanzado','utn@gmail.com','Espa\u00f1ol','Virtual','Prog 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(22,70,'Curso','CABA','Avanzado','utn@gmail.com','Espa\u00f1ol','Virtual','Prog 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(23,70,'Curso','CABA','Avanzado','utn@gmail.com','Espa\u00f1ol','Virtual','Prog 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(24,70,'Curso','CABA','Avanzado','utn@gmail.com','Espa\u00f1ol','Virtual','Prog 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(25,70,'Curso','CABA','Avanzado','utn@gmail.com','Espa\u00f1ol','Virtual','Prog 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(26,70,'Curso','CABA','Avanzado','utn@gmail.com','Espa\u00f1ol','Virtual','Prog 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(27,70,'Curso','CABA','Avanzado','utn@gmail.com','Espa\u00f1ol','Virtual','Prog 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(28,70,'Curso','CABA','Avanzado','utn@gmail.com','Espa\u00f1ol','Virtual','Prog 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(29,70,'Curso','CABA','Avanzado','utn@gmail.com','Espa\u00f1ol','Virtual','Prog 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(30,70,'Curso','CABA','Avanzado','utn@gmail.com','Espa\u00f1ol','Virtual','Prog 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(31,70,'Curso','CABA','Avanzado','utn@gmail.com','Espa\u00f1ol','Virtual','Prog 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(32,70,'Curso','CABA','Avanzado','utn@gmail.com','Espa\u00f1ol','Virtual','Prog 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(33,70,'Curso','CABA','Avanzado','utn@gmail.com','Espa\u00f1ol','Virtual','Prog 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(34,70,'Curso','CABA','Avanzado','utn@gmail.com','Espa\u00f1ol','Virtual','Prog 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(35,70,'Curso','CABA','Avanzado','utn@gmail.com','Espa\u00f1ol','Virtual','Prog 1')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(36,100,'Programa','CABA','Avanzado','up@gmail.com','Ingl\u00e9s','Presencial','AI')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(37,100,'Programa','CABA','Avanzado','up@gmail.com','Ingl\u00e9s','Presencial','AI')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(38,100,'Programa','CABA','Avanzado','up@gmail.com','Ingl\u00e9s','Presencial','AI')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(39,100,'Programa','CABA','Avanzado','up@gmail.com','Ingl\u00e9s','Presencial','AI')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(40,100,'Programa','CABA','Avanzado','up@gmail.com','Ingl\u00e9s','Presencial','AI')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(41,100,'Programa','CABA','Avanzado','up@gmail.com','Ingl\u00e9s','Presencial','AI')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(42,100,'Programa','CABA','Avanzado','up@gmail.com','Ingl\u00e9s','Presencial','AI')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(43,100,'Programa','CABA','Avanzado','up@gmail.com','Ingl\u00e9s','Presencial','AI')
+COMMIT
+INSERT INTO OPPORTUNITY VALUES(44,100,'Programa','CABA','Avanzado','up@gmail.com','Ingl\u00e9s','Presencial','AI')
+COMMIT
+/*C7*/SET SCHEMA PUBLIC
+INSERT INTO USER_FOLLOWED_INSTITUTIONS VALUES(1,1)
+COMMIT
+DELETE FROM USER_FOLLOWED_INSTITUTIONS WHERE USER_ID=1 AND INSTITUTION_ID=1
+COMMIT
+INSERT INTO USER_FOLLOWED_INSTITUTIONS VALUES(1,2)
+COMMIT
+INSERT INTO USER_FOLLOWED_INSTITUTIONS VALUES(1,1)
+COMMIT
+/*C5*/DISCONNECT
 /*C12*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C9*/SET SCHEMA PUBLIC
+/*C7*/DISCONNECT
+/*C6*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C11*/SET SCHEMA PUBLIC
+/*C4*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C3*/DISCONNECT
+/*C10*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C8*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C2*/DISCONNECT
+/*C9*/SET SCHEMA PUBLIC
 DISCONNECT
 /*C18*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C10*/SET SCHEMA PUBLIC
+/*C22*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C21*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C20*/SET SCHEMA PUBLIC
 DISCONNECT
 /*C15*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C14*/SET SCHEMA PUBLIC
-DISCONNECT
 /*C13*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C16*/SET SCHEMA PUBLIC
 DISCONNECT
 /*C17*/SET SCHEMA PUBLIC
 DISCONNECT
+/*C19*/SET SCHEMA PUBLIC
+DISCONNECT
 /*C24*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
+DISCONNECT
+/*C14*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C23*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C16*/SET SCHEMA PUBLIC
+DISCONNECT
 /*C25*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C26*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C27*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C28*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C29*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C30*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C31*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C32*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
+DISCONNECT
 /*C33*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
+DISCONNECT
+/*C32*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C28*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C31*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C26*/SET SCHEMA PUBLIC
+DISCONNECT
 /*C34*/SET SCHEMA PUBLIC
 DISCONNECT
+/*C30*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C29*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C27*/SET SCHEMA PUBLIC
+DISCONNECT
 /*C35*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C41*/SET SCHEMA PUBLIC
+DELETE FROM USER_FOLLOWED_INSTITUTIONS WHERE USER_ID=1 AND INSTITUTION_ID=1
+COMMIT
+INSERT INTO USER_FOLLOWED_INSTITUTIONS VALUES(1,1)
+COMMIT
+/*C40*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C44*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C38*/SET SCHEMA PUBLIC
 DISCONNECT
 /*C36*/SET SCHEMA PUBLIC
 DISCONNECT
 /*C37*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C25*/DISCONNECT
-/*C24*/DISCONNECT
-/*C26*/DISCONNECT
-/*C27*/DISCONNECT
-/*C28*/DISCONNECT
-/*C29*/DISCONNECT
-/*C30*/DISCONNECT
-/*C32*/DISCONNECT
-/*C31*/DISCONNECT
-/*C33*/DISCONNECT
-/*C38*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C39*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C40*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C41*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C42*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C43*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C44*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
 /*C45*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C46*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C47*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C48*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C39*/INSERT INTO INSTITUTION VALUES(1,'1',NULL,'cet@gmail.com','cet','123',NULL)
-COMMIT
-INSERT INTO USER VALUES(1,NULL,'mar@gmail.com','mar','de jesus','123',NULL)
-COMMIT
-/*C41*/INSERT INTO OPPORTUNITY VALUES(1,10,'Curso','buenos aires','secundario completo','cet@gmail.com','espa\u00f1ol','virtual','react')
-COMMIT
-/*C47*/INSERT INTO DONATION VALUES(1,1000.00,'2025-02-25 09:41:22.760758',1,1)
-COMMIT
-/*C49*/SET SCHEMA PUBLIC
+/*C39*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C43*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C41*/DISCONNECT
+/*C42*/SET SCHEMA PUBLIC
 DISCONNECT
 /*C50*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C39*/DISCONNECT
-/*C40*/DISCONNECT
-/*C42*/DISCONNECT
-/*C46*/DISCONNECT
-/*C38*/DISCONNECT
-/*C41*/DISCONNECT
-/*C45*/DISCONNECT
-/*C47*/DISCONNECT
-/*C44*/DISCONNECT
-/*C43*/DISCONNECT
-/*C57*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C55*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C51*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C52*/SET SCHEMA PUBLIC
 DISCONNECT
 /*C53*/SET SCHEMA PUBLIC
 DISCONNECT
 /*C54*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C56*/SET SCHEMA PUBLIC
+/*C52*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C60*/SET SCHEMA PUBLIC
+/*C51*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C46*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C47*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C48*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C49*/SET SCHEMA PUBLIC
 DISCONNECT
 /*C58*/SET SCHEMA PUBLIC
 DISCONNECT
 /*C59*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C63*/SET SCHEMA PUBLIC
+/*C55*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C61*/SET SCHEMA PUBLIC
+/*C57*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C67*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C69*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C68*/SET SCHEMA PUBLIC
+/*C60*/SET SCHEMA PUBLIC
 DISCONNECT
 /*C62*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C70*/SET SCHEMA PUBLIC
+/*C56*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C64*/SET SCHEMA PUBLIC
+/*C61*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C65*/SET SCHEMA PUBLIC
+/*C63*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C66*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C74*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C81*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C72*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C80*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C75*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C77*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C73*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C79*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C76*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C78*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C82*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C83*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C84*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C89*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C85*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C86*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C87*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C90*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C88*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C91*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C96*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C94*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C98*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C101*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C100*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C95*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C92*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C97*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C93*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C99*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C107*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C106*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C102*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C104*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C105*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C109*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C111*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C108*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C110*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C103*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C113*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C119*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C115*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C121*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C117*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C112*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C116*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C114*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C120*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C118*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C125*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C130*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C124*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C126*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C128*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C127*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C129*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C131*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C132*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C122*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C123*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C133*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C134*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C135*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C136*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C137*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C138*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C139*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C140*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C141*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C142*/SET SCHEMA PUBLIC
-drop table if exists Chat CASCADE 
-drop table if exists Donation CASCADE 
-drop table if exists Inscription CASCADE 
-drop table if exists Institution CASCADE 
-drop table if exists Message CASCADE 
-drop table if exists Notification CASCADE 
-drop table if exists Opportunity CASCADE 
-drop table if exists User CASCADE 
-drop table if exists user_followed_institutions CASCADE 
-drop sequence hibernate_sequence if exists
-create sequence hibernate_sequence start with 1 increment by 1
-create table Chat (id bigint not null, institution_id bigint, user_id bigint, primary key (id))
-create table Donation (id bigint not null, amount numeric(19,2) not null, donationDate timestamp not null, institution_id bigint, user_id bigint, primary key (id))
-create table Inscription (id bigint not null, apellido varchar(255), email_participante varchar(255), estado varchar(255), localidad varchar(255), mensaje varchar(255), nombre varchar(255), opportunity_id bigint, primary key (id))
-create table Institution (id bigint not null, CREDENTIAL varchar(255), DESCRIPTION varchar(255), EMAIL varchar(255) not null, INSTITUTIONAL_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table Message (id bigint not null, content varchar(255), receiver bigint, sender bigint, timestamp bigint, chat_id bigint, primary key (id))
-create table Notification (id bigint not null, institutionId bigint, message varchar(255), read boolean not null, userId bigint, primary key (id))
-create table Opportunity (id bigint not null, CAPACITY integer, CATEGORY varchar(255), CITY varchar(255), EDUCATIONAL_LEVEL varchar(255), INSTITUTION_EMAIL varchar(255), LANGUAGE varchar(255), MODALITY varchar(255), NAME varchar(255), primary key (id))
-create table User (id bigint not null, DESCRIPTION varchar(255), EMAIL varchar(255) not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), PASSWORD varchar(255), PROFILE_PICTURE varchar(255), primary key (id))
-create table user_followed_institutions (user_id bigint not null, institution_id bigint not null, primary key (user_id, institution_id))
-alter table Institution add constraint UK_j2ven1q59ix5um4yb76b6t0us unique (EMAIL)
-alter table User add constraint UK_gmrrm359qu7ogusdu9r2qr637 unique (EMAIL)
-alter table Chat add constraint FKk6mo74brvb7jykvryerx2r6j3 foreign key (institution_id) references Institution
-alter table Chat add constraint FKpb5egrko83onidbv43t8ehgil foreign key (user_id) references User
-alter table Donation add constraint FKag6eoqar5b0gds9s5w38qcvhq foreign key (institution_id) references Institution
-alter table Donation add constraint FKemqkouhxxkdqqv6x6muxs1ea6 foreign key (user_id) references User
-alter table Message add constraint FKop87o5ckvvdufsgvsho5pgj94 foreign key (chat_id) references Chat
-alter table user_followed_institutions add constraint FKjmyk6en8e1gujoilg4n5xc4re foreign key (institution_id) references Institution
-alter table user_followed_institutions add constraint FKtby02h812e5w1q9no85bytkmc foreign key (user_id) references User
-/*C143*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C134*/INSERT INTO INSTITUTION VALUES(1,'1',NULL,'cet@gmail.com','cet','123',NULL)
+/*C69*/SET SCHEMA PUBLIC
+DELETE FROM USER_FOLLOWED_INSTITUTIONS WHERE USER_ID=1 AND INSTITUTION_ID=1
 COMMIT
-INSERT INTO USER VALUES(1,NULL,'mar@gmail.com','mar','de jesus','123',NULL)
+INSERT INTO USER_FOLLOWED_INSTITUTIONS VALUES(1,1)
 COMMIT
-/*C136*/INSERT INTO OPPORTUNITY VALUES(1,10,'Curso','argentina','secundario completo','cet@gmail.com','espa\u00f1ol','virtual','react')
-COMMIT
-/*C142*/INSERT INTO DONATION VALUES(1,100.00,'2025-02-25 11:18:16.340444',1,1)
-COMMIT
-/*C137*/DISCONNECT
-/*C134*/DISCONNECT
-/*C136*/DISCONNECT
-/*C142*/DISCONNECT
-/*C135*/DISCONNECT
-/*C141*/DISCONNECT
-/*C140*/DISCONNECT
-/*C139*/DISCONNECT
-/*C138*/DISCONNECT
-/*C133*/DISCONNECT
-/*C153*/SET SCHEMA PUBLIC
-INSERT INTO DONATION VALUES(2,1000.00,'2025-02-25 11:22:31.434132',1,1)
-COMMIT
-/*C148*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C145*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C153*/DISCONNECT
-/*C152*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C151*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C146*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C150*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C147*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C149*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C144*/SET SCHEMA PUBLIC
-DISCONNECT
-/*C163*/SET SCHEMA PUBLIC
-INSERT INTO DONATION VALUES(3,9000.00,'2025-02-25 11:43:17.850363',1,1)
+DELETE FROM USER_FOLLOWED_INSTITUTIONS WHERE USER_ID=1 AND INSTITUTION_ID=1
 COMMIT

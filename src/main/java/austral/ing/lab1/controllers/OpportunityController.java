@@ -200,12 +200,25 @@ public class OpportunityController {
     public static Route handleGetOpportunities = (Request request, Response response) -> {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            List<Opportunity> opportunities = new ArrayList<>(new Opportunities(entityManager).listAll());
+            // Get page and size parameters from request, with default values
+            int page = Integer.parseInt(request.queryParams("page") != null ? request.queryParams("page") : "1");
+            int size = Integer.parseInt(request.queryParams("size") != null ? request.queryParams("size") : "10");
 
-            // Transforma la lista de oportunidades a JSON
+            if (page < 1 || size < 1) {
+                response.status(400);
+                return "{\"error\": \"Invalid pagination parameters\"}";
+            }
+
+            // Fetch paginated results
+            List<Opportunity> opportunities = entityManager.createQuery("SELECT o FROM Opportunity o", Opportunity.class)
+                    .setFirstResult((page - 1) * size)
+                    .setMaxResults(size)
+                    .getResultList();
+
+            // Convert list to JSON
             String jsonOpportunities = gson.toJson(opportunities);
 
-            // Renderiza el JSON en la respuesta
+            // Render JSON response
             response.type("application/json");
             return jsonOpportunities;
         } catch (Exception e) {
