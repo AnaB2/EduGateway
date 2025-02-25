@@ -6,96 +6,48 @@ import { ContenedorOportunidadesParticipante } from "../../components/oportunida
 import { Dropdown, Form } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
-import {
-    getFollowedInstitutions,
-    getOpportunities,
-    getOpportunitiesByCategory,
-    getOpportunitiesByInstitution,
-    getOpportunitiesByName
-} from "../../services/Api";
+import { getOpportunitiesFiltered } from "../../services/Api";
 
-const filterOptions = [
-    "Todos",
-    "Seguidos",
-    "Categoria",
-    "Institucion",
-    "Nombre",
-];
+const categoryOptions = ["", "Voluntariado", "Curso", "Programa", "Evento"];
 
-const categoryOptions = ["Voluntariado", "Curso", "Programa", "Evento"];
-
-export function VerOportunidades (){
-
+export function VerOportunidades() {
     const navigate = useNavigate();
-    const [selectedFilterOption, setSelectedFilterOption] = useState(filterOptions[0]);
-    const [selectedCategory, setSelectedCategory] = useState(categoryOptions[0]);
-    const [searchValue, setSearchValue] = useState('');
+    const [category, setCategory] = useState(""); // Ahora incluye "Seguidos"
+    const [institution, setInstitution] = useState("");
+    const [name, setName] = useState("");
+    const [followed, setFollowed] = useState(false);
     const [oportunidades, setOportunidades] = useState([]);
-
-    // Estado para saber si hay más oportunidades en la siguiente página
-    const [hasMore, setHasMore] = useState(true);
-
-    // Paginación
+    const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 9; // Tamaño de página
+    const pageSize = 9;
 
     useEffect(() => {
         fetchOpportunities();
-    }, [currentPage, selectedFilterOption]);
+    }, [currentPage]);
 
     const fetchOpportunities = async () => {
         try {
-            let response;
-            switch (selectedFilterOption) {
-                case "Todos":
-                    response = await getOpportunities(currentPage, pageSize);
-                    break;
-                case "Seguidos":
-                    response = await getFollowedInstitutions(currentPage, pageSize);
-                    break;
-                case "Categoria":
-                    response = await getOpportunitiesByCategory(selectedCategory, currentPage, pageSize);
-                    break;
-                case "Institucion":
-                    response = await getOpportunitiesByInstitution(searchValue, currentPage, pageSize);
-                    break;
-                case "Nombre":
-                    response = await getOpportunitiesByName(searchValue, currentPage, pageSize);
-                    break;
-                default:
-                    response = [];
-            }
-
-            setOportunidades(response || []);
-
-            // Si la cantidad de resultados es menor al pageSize, ya no hay más páginas
-            setHasMore(response.length === pageSize);
-
+            const filters = { category: followed ? "" : category, institution, name, followed, userId: getToken() };
+            const response = await getOpportunitiesFiltered(filters, currentPage, pageSize);
+            setOportunidades(response.opportunities || []);
+            setTotalPages(response.totalPages);
         } catch (error) {
-            console.error('Error al obtener las oportunidades:', error);
+            console.error("Error fetching opportunities:", error);
         }
     };
 
-    if (!getToken() || getUserType() !== "participant") {
-        return (
-            <>
-                {mostrarAlertaAutenticacion(navigate, "/")}
-            </>
-        );
-    }
-
-    const handleFilterOptionChange = (option) => {
-        setSelectedFilterOption(option);
-        setSearchValue('');
-        setCurrentPage(1); // Resetear la página cuando cambia el filtro
-        fetchOpportunities();
+    const handleCategoryChange = (selectedCategory) => {
+        if (selectedCategory === "Seguidos") {
+            setFollowed(true);
+            setCategory(""); // Evitar conflictos con otras categorías
+        } else {
+            setFollowed(false);
+            setCategory(selectedCategory);
+        }
     };
 
-    const handleCategoryChange = (category) => {
-        setSelectedCategory(category);
-    };
-
-    const handleClick = () => {
+    const handleSearch = () => {
+        setCurrentPage(1);
         fetchOpportunities();
     };
 
@@ -104,83 +56,55 @@ export function VerOportunidades (){
             <NavbarParticipante />
             <div className="contenido-pagina-oportunidades">
                 <h1>Ver oportunidades</h1>
-                <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                <div style={{ display: "flex", gap: "16px", alignItems: "center", flexWrap: "wrap" }}>
+                    {/* Dropdown de Categoría (incluye "Seguidos") */}
                     <Dropdown>
-                        <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                            {selectedFilterOption}
+                        <Dropdown.Toggle variant="primary">
+                            {followed ? "Seguidos" : category || "Categoría"}
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                            {filterOptions.map((option, index) => (
-                                <Dropdown.Item
-                                    onClick={() => handleFilterOptionChange(option)}
-                                    key={index}
-                                >
-                                    {option}
+                            {["", "Voluntariado", "Curso", "Programa", "Evento", "Seguidos"].map((cat, index) => (
+                                <Dropdown.Item key={index} onClick={() => handleCategoryChange(cat)}>
+                                    {cat || "Todas"}
                                 </Dropdown.Item>
                             ))}
                         </Dropdown.Menu>
                     </Dropdown>
-                    {selectedFilterOption === 'Categoria' && (
-                        <Dropdown>
-                            <Dropdown.Toggle variant="secondary" id="dropdown-category">
-                                {selectedCategory}
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                {categoryOptions.map((category, index) => (
-                                    <Dropdown.Item
-                                        onClick={() => handleCategoryChange(category)}
-                                        key={index}
-                                    >
-                                        {category}
-                                    </Dropdown.Item>
-                                ))}
-                            </Dropdown.Menu>
-                        </Dropdown>
-                    )}
-                    {selectedFilterOption !== 'Todos' && selectedFilterOption !== 'Seguidos' && selectedFilterOption !== 'Categoria' && (
-                        <Form.Group>
-                            <Form.Control
-                                value={searchValue}
-                                onChange={(e) => setSearchValue(e.target.value)}
-                                placeholder={`Buscar por ${selectedFilterOption}`}
-                            />
-                        </Form.Group>
-                    )}
-                </div>
-                {selectedFilterOption !== 'Todos' && selectedFilterOption !== 'Seguidos' && (
-                    <div style={{ marginTop: '16px' }}>
-                        <Button
-                            onClick={handleClick}
-                            variant="outline-success"
-                        >
-                            Buscar
-                        </Button>
-                    </div>
-                )}
-                <ContenedorOportunidadesParticipante
-                    oportunidades={oportunidades}
-                />
 
-                {/* Paginación mejorada */}
-                <div style={{ display: "flex", justifyContent: "center", marginTop: "20px", alignItems: "center", gap: "10px" }}>
+                    <Form.Control
+                        placeholder="Institución"
+                        value={institution}
+                        onChange={(e) => setInstitution(e.target.value)}
+                        disabled={followed} // Deshabilita cuando "Seguidos" está activado
+                    />
+                    <Form.Control
+                        placeholder="Nombre de oportunidad"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        disabled={followed} // Deshabilita cuando "Seguidos" está activado
+                    />
+
+                    <Button variant="outline-success" onClick={handleSearch}>
+                        Buscar
+                    </Button>
+                </div>
+
+                <ContenedorOportunidadesParticipante oportunidades={oportunidades} />
+
+                {/* Paginación */}
+                <div style={{ display: "flex", justifyContent: "center", marginTop: "20px", gap: "10px" }}>
                     <Button
                         variant="outline-primary"
                         disabled={currentPage === 1}
-                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                     >
                         {"<"}
                     </Button>
-
-                    <Dropdown>
-                        <Dropdown variant="outline-primary">
-                            {`${currentPage}`}
-                        </Dropdown>
-                    </Dropdown>
-
+                    <span>Página {currentPage} de {totalPages}</span>
                     <Button
                         variant="outline-primary"
-                        disabled={!hasMore} // Deshabilita si no hay más páginas
-                        onClick={() => setCurrentPage(prev => prev + 1)}
+                        disabled={currentPage >= totalPages}
+                        onClick={() => setCurrentPage((prev) => prev + 1)}
                     >
                         {">"}
                     </Button>
@@ -189,4 +113,5 @@ export function VerOportunidades (){
         </>
     );
 }
+
 
