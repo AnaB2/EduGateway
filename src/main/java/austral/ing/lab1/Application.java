@@ -102,5 +102,17 @@ public class Application {
         Spark.get("/get-user-history", UserController.handleGetUserHistory);
 
         Spark.post("/create-preference", MercadoPagoController.handleCreatePreference);
+
+        Spark.post("/donations", DonationController.handleCreateDonation);
+
+        Spark.get("/donations/:id", DonationController.handleGetDonationById);
+
+        Spark.get("/donations", DonationController.handleGetAllDonations);
+
+        Spark.get("/donations/user/:userId", DonationController.handleGetDonationsByUser);
+
+        Spark.get("/donations/institution/:institutionId", DonationController.handleGetDonationsByInstitution);
+
+        Spark.delete("/donations/:id", DonationController.handleDeleteDonation);
     }
 }
