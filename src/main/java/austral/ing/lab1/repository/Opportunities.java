@@ -4,6 +4,7 @@ import austral.ing.lab1.model.Opportunity;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Set;
 
 public class Opportunities {
     private final EntityManager entityManager;
@@ -65,5 +66,14 @@ public class Opportunities {
 
         return query.getResultList();
     }
+
+    public List<Opportunity> findByTags(Set<String> tags) {
+        TypedQuery<Opportunity> query = entityManager.createQuery(
+                "SELECT o FROM Opportunity o WHERE EXISTS (" +
+                        "SELECT tag FROM o.tags tag WHERE tag IN :tags)", Opportunity.class);
+        query.setParameter("tags", tags);
+        return query.getResultList();
+    }
+
 
 }

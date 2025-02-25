@@ -176,6 +176,23 @@ public class User {
     public User build() {
       return new User(this);
     }
-
   }
+
+    @ElementCollection
+    @CollectionTable(name = "user_preferences", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "tag")
+    private Set<String> preferredTags = new HashSet<>();
+
+    public Set<String> getPreferredTags() {
+        return preferredTags;
+    }
+
+    public void addPreferredTag(String tag) {
+        preferredTags.add(tag);
+    }
+
+    public void removePreferredTag(String tag) {
+        preferredTags.remove(tag);
+    }
+
 }

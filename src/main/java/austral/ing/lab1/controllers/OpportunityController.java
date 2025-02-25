@@ -2,13 +2,12 @@ package austral.ing.lab1.controllers;
 
 import austral.ing.lab1.TokenManager;
 import austral.ing.lab1.model.Opportunity;
+import austral.ing.lab1.model.User;
 import austral.ing.lab1.repository.Opportunities;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -249,6 +248,40 @@ public class OpportunityController {
         } catch (Exception e) {
             response.status(500);
             return "{\"error\": \"An error occurred while fetching opportunities by email\"}";
+        } finally {
+            entityManager.close();
+        }
+    };
+
+    public static Route getRecommendedOpportunities = (Request request, Response response) -> {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            String userIdParam = request.queryParams("userId");
+            if (userIdParam == null || userIdParam.trim().isEmpty()) {
+                response.status(400);
+                return "{\"error\": \"Missing user ID\"}";
+            }
+            Long userId = Long.parseLong(userIdParam);
+
+            User user = entityManager.find(User.class, userId);
+            if (user == null) {
+                response.status(404);
+                return "{\"error\": \"User not found\"}";
+            }
+
+            Set<String> preferredTags = user.getPreferredTags();
+            if (preferredTags.isEmpty()) {
+                response.status(200);
+                return gson.toJson(Collections.emptyList());
+            }
+
+            List<Opportunity> recommendedOpportunities = new Opportunities(entityManager).findByTags(preferredTags);
+
+            response.type("application/json");
+            return gson.toJson(recommendedOpportunities);
+        } catch (Exception e) {
+            response.status(500);
+            return "{\"error\": \"An error occurred while fetching recommendations\"}";
         } finally {
             entityManager.close();
         }
