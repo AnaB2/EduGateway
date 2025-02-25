@@ -38,14 +38,31 @@ export function VerOportunidades (){
 
     useEffect(() => {
         fetchOpportunities();
-    }, [currentPage]); // Se ejecuta cuando cambia la página
+    }, [currentPage, selectedFilterOption]); // Se ejecuta al cambiar la página o el filtro
 
     const fetchOpportunities = async () => {
         try {
-            if (selectedFilterOption === "Todos") {
-                const response = await getOpportunities(currentPage, pageSize);
-                setOportunidades(response);
+            let response;
+            switch (selectedFilterOption) {
+                case "Todos":
+                    response = await getOpportunities(currentPage, pageSize);
+                    break;
+                case "Seguidos":
+                    response = await getFollowedInstitutions(currentPage, pageSize);
+                    break;
+                case "Categoria":
+                    response = await getOpportunitiesByCategory(selectedCategory, currentPage, pageSize);
+                    break;
+                case "Institucion":
+                    response = await getOpportunitiesByInstitution(searchValue, currentPage, pageSize);
+                    break;
+                case "Nombre":
+                    response = await getOpportunitiesByName(searchValue, currentPage, pageSize);
+                    break;
+                default:
+                    response = [];
             }
+            setOportunidades(response || []);
         } catch (error) {
             console.error('Error al obtener las oportunidades:', error);
         }
@@ -59,45 +76,19 @@ export function VerOportunidades (){
         );
     }
 
-    const handleFilterOptionChange = async (option) => {
+    const handleFilterOptionChange = (option) => {
         setSelectedFilterOption(option);
         setSearchValue('');
         setCurrentPage(1); // Resetear la página cuando cambia el filtro
-        if (option === 'Todos') {
-            fetchOpportunities();
-        }
-        if (option === 'Seguidos') {
-            const response = await getFollowedInstitutions();
-            setOportunidades(response ? response : []);
-        }
+        fetchOpportunities();
     };
 
     const handleCategoryChange = (category) => {
         setSelectedCategory(category);
     };
 
-    const handleClick = async () => {
-        switch (selectedFilterOption) {
-            case 'Todos':
-                fetchOpportunities();
-                break;
-            case 'Seguidos':
-                const response2 = await getFollowedInstitutions();
-                setOportunidades(response2 ? response2 : []);
-                break;
-            case 'Categoria':
-                const response3 = await getOpportunitiesByCategory(selectedCategory);
-                setOportunidades(response3 ? response3 : []);
-                break;
-            case 'Institucion':
-                const response4 = await getOpportunitiesByInstitution(searchValue);
-                setOportunidades(response4 ? response4 : []);
-                break;
-            case 'Nombre':
-                const response5 = await getOpportunitiesByName(searchValue);
-                setOportunidades(response5 ? response5 : []);
-                break;
-        }
+    const handleClick = () => {
+        fetchOpportunities();
     };
 
     return (
@@ -162,32 +153,31 @@ export function VerOportunidades (){
                     oportunidades={oportunidades}
                 />
 
-                {/* Paginación solo para "Todos" */}
-                {selectedFilterOption === "Todos" && (
-                    <div style={{ display: "flex", justifyContent: "center", marginTop: "20px", alignItems: "center", gap: "10px" }}>
-                        <Button
-                            variant="outline-primary"
-                            disabled={currentPage === 1}
-                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                        >
-                            {"<"}
-                        </Button>
+                {/* Paginación para todos los filtros */}
+                <div style={{ display: "flex", justifyContent: "center", marginTop: "20px", alignItems: "center", gap: "10px" }}>
+                    <Button
+                        variant="outline-primary"
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    >
+                        {"<"}
+                    </Button>
 
-                        <Dropdown>
-                            <Dropdown variant="outline-primary">
-                                {`${currentPage}`}
-                            </Dropdown>
+                    <Dropdown>
+                        <Dropdown variant="outline-primary">
+                            {`${currentPage}`}
                         </Dropdown>
+                    </Dropdown>
 
-                        <Button
-                            variant="outline-primary"
-                            onClick={() => setCurrentPage(prev => prev + 1)}
-                        >
-                            {">"}
-                        </Button>
-                    </div>
-                )}
+                    <Button
+                        variant="outline-primary"
+                        onClick={() => setCurrentPage(prev => prev + 1)}
+                    >
+                        {">"}
+                    </Button>
+                </div>
             </div>
         </>
     );
 }
+

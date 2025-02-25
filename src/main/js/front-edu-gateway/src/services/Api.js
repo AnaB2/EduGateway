@@ -188,13 +188,13 @@ export async function getOpportunitiesByInstitutionEmail(email) {
     }
 }
 
-export async function getOpportunitiesByInstitution(name) {
+export async function getOpportunitiesByInstitution(name, page = 1, size = 10) {
     try {
         const headers = addAuthorizationHeader({
             'Content-Type': 'application/json',
         });
 
-        const queryParams = new URLSearchParams({ InstitutionName: name }).toString();
+        const queryParams = new URLSearchParams({ InstitutionName: name, page, size }).toString();
 
         const response = await fetch(`${API_URL}/filter-by-InstitutionName?${queryParams}`, {
             method: 'GET',
@@ -215,13 +215,13 @@ export async function getOpportunitiesByInstitution(name) {
     }
 }
 
-export async function getOpportunitiesByCategory(category) {
+export async function getOpportunitiesByCategory(category, page = 1, size = 10) {
     try {
         const headers = addAuthorizationHeader({
             'Content-Type': 'application/json',
         });
 
-        const queryParams = new URLSearchParams({ category }).toString();
+        const queryParams = new URLSearchParams({ category, page, size }).toString();
 
         const response = await fetch(`${API_URL}/filter-by-category?${queryParams}`, {
             method: 'GET',
@@ -239,13 +239,13 @@ export async function getOpportunitiesByCategory(category) {
     }
 }
 
-export async function getOpportunitiesByName(name) {
+export async function getOpportunitiesByName(name, page = 1, size = 10) {
     try {
         const headers = addAuthorizationHeader({
             'Content-Type': 'application/json',
         });
 
-        const queryParams = new URLSearchParams({ name }).toString();
+        const queryParams = new URLSearchParams({ name, page, size }).toString();
 
         const response = await fetch(`${API_URL}/filter-by-nameOpportunity?${queryParams}`, {
             method: 'GET',
@@ -262,6 +262,7 @@ export async function getOpportunitiesByName(name) {
         throw error;
     }
 }
+
 
 export async function getOpportunities(page = 1, size = 10) {
     try {
@@ -286,7 +287,7 @@ export async function getOpportunities(page = 1, size = 10) {
 }
 
 
-export async function getFollowedInstitutions() {
+export async function getFollowedInstitutions(page = 1, size = 10) {
     try {
         const headers = addAuthorizationHeader({
             'Content-Type': 'application/json',
@@ -294,7 +295,7 @@ export async function getFollowedInstitutions() {
 
         const userId = getId();
 
-        const response = await fetch(`${API_URL}/get-followed-institutions-by-user/${userId}`, {
+        const response = await fetch(`${API_URL}/get-followed-institutions-by-user/${userId}?page=${page}&size=${size}`, {
             method: 'GET',
             headers,
         });
@@ -309,6 +310,7 @@ export async function getFollowedInstitutions() {
         throw error;
     }
 }
+
 
 export async function addInscription(email, opportunityId, formData) {
     try {

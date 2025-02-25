@@ -193,7 +193,6 @@ public class UserController {
         }
     };
 
-
     public static Route handleGetFollowedInstitutionsByUser = (Request request, Response response) -> {
         String userIdParam = request.params(":userId");
         if (userIdParam == null || userIdParam.trim().isEmpty()) {
@@ -203,6 +202,15 @@ public class UserController {
 
         Long userId = Long.parseLong(userIdParam);
 
+        // Get pagination parameters
+        int page = Integer.parseInt(request.queryParams("page") != null ? request.queryParams("page") : "1");
+        int size = Integer.parseInt(request.queryParams("size") != null ? request.queryParams("size") : "10");
+
+        if (page < 1 || size < 1) {
+            response.status(400);
+            return "{\"error\": \"Invalid pagination parameters\"}";
+        }
+
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         Users users = new Users(entityManager);
         EntityTransaction tx = entityManager.getTransaction();
@@ -210,33 +218,35 @@ public class UserController {
         try {
             tx.begin();
 
-            // Buscar al usuario por su ID
+            // Fetch user
             User user = users.findById(userId).orElse(null);
             if (user == null) {
                 response.status(404);
                 return "{\"error\": \"User not found\"}";
             }
 
-            //obtener todas las oportunidades
+            // Get followed institutions
             Opportunities opportunities = new Opportunities(entityManager);
-            // Obtener las instituciones seguidas por el usuario
             Set<Institution> followedInstitutions = user.getFollowedInstitutions();
 
-            // Crear una lista para almacenar las oportunidades de todas las instituciones seguidas
-            List<Opportunity> opportunityDTOs = new ArrayList<>();
-
-            // Recorrer cada institución seguida y agregar sus oportunidades a la lista de DTOs
+            // Get opportunities from followed institutions
+            List<Opportunity> allOpportunities = new ArrayList<>();
             for (Opportunity opportunity : opportunities.listAll()) {
                 for (Institution institution : followedInstitutions) {
                     if (opportunity.getInstitutionEmail().equals(institution.getEmail())) {
-                        opportunityDTOs.add(opportunity);
+                        allOpportunities.add(opportunity);
                     }
                 }
             }
 
+            // Apply pagination
+            int fromIndex = (page - 1) * size;
+            int toIndex = Math.min(fromIndex + size, allOpportunities.size());
+            List<Opportunity> paginatedOpportunities = allOpportunities.subList(fromIndex, toIndex);
+
             tx.commit();
             response.type("application/json");
-            return gson.toJson(opportunityDTOs);
+            return gson.toJson(paginatedOpportunities);
         } catch (Exception e) {
             if (tx.isActive()) {
                 tx.rollback();
@@ -247,6 +257,7 @@ public class UserController {
             entityManager.close();
         }
     };
+
     public static Route handleEditUser = (Request request, Response response) -> {
         String body = request.body();
         Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
