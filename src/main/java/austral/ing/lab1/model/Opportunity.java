@@ -2,10 +2,9 @@ package austral.ing.lab1.model;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Opportunity {
@@ -120,4 +119,22 @@ public class Opportunity {
         this.institutionEmail = institutionEmail;
 
     }
+
+    @ElementCollection
+    @CollectionTable(name = "opportunity_tags", joinColumns = @JoinColumn(name = "opportunity_id"))
+    @Column(name = "tag")
+    private Set<String> tags = new HashSet<>();
+
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void addTag(String tag) {
+        tags.add(tag);
+    }
+
+    public void removeTag(String tag) {
+        tags.remove(tag);
+    }
+
 }

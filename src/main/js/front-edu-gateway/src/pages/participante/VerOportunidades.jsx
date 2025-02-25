@@ -55,7 +55,7 @@ export function VerOportunidades() {
         <>
             <NavbarParticipante />
             <div className="contenido-pagina-oportunidades">
-                <h1>Ver oportunidades</h1>
+                <h1>Oportunidades</h1>
                 <div style={{ display: "flex", gap: "16px", alignItems: "center", flexWrap: "wrap" }}>
                     {/* Dropdown de Categoría (incluye "Seguidos") */}
                     <Dropdown>

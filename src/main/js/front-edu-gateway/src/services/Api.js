@@ -773,3 +773,23 @@ export const getListChats = async (id, userType) => {
         throw error;
     }
 };
+
+export async function getRecommendedOpportunities(userId) {
+    try {
+        const headers = addAuthorizationHeader({ 'Content-Type': 'application/json' });
+
+        const response = await fetch(`${API_URL}/recommended-opportunities?userId=${userId}`, {
+            method: 'GET',
+            headers,
+        });
+
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to get recommended opportunities:", error);
+        throw error;
+    }
+}

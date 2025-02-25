@@ -11,9 +11,9 @@ export function NavbarParticipante() {
             <>
                 <Nav.Link style={{color:"white"}} onMouseOver={(e) => e.target.style.color = 'blue'} onMouseOut={(e) => e.target.style.color = 'white'} href="/inicio-participante" >Inicio</Nav.Link>
                 <Nav.Link style={{color:"white"}} onMouseOver={(e) => e.target.style.color = 'blue'} onMouseOut={(e) => e.target.style.color = 'white'} href="/inicio-participante/ver-oportunidades">Oportunidades</Nav.Link>
-                <Nav.Link style={{color:"white"}} onMouseOver={(e) => e.target.style.color = 'blue'} onMouseOut={(e) => e.target.style.color = 'white'} href="/inicio-participante/ver-perfil">Perfil</Nav.Link>
                 <Nav.Link style={{color:"white"}} onClick={()=>navigate('/donaciones')} onMouseOver={(e) => e.target.style.color = 'blue'} onMouseOut={(e) => e.target.style.color = 'white'}>Donaciones</Nav.Link>
                 <Nav.Link style={{color:"white"}} onClick={()=>navigate('/chats')} onMouseOver={(e) => e.target.style.color = 'blue'} onMouseOut={(e) => e.target.style.color = 'white'}>Chats</Nav.Link>
+                <Nav.Link style={{color:"white"}} onMouseOver={(e) => e.target.style.color = 'blue'} onMouseOut={(e) => e.target.style.color = 'white'} href="/inicio-participante/ver-perfil">Perfil</Nav.Link>
             </>
         )
     }

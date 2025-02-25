@@ -117,5 +117,6 @@ public class Application {
 
         Spark.delete("/donations/:id", DonationController.handleDeleteDonation);
 
+        Spark.get("/recommended-opportunities", OpportunityController.getRecommendedOpportunities);
     }
 }
