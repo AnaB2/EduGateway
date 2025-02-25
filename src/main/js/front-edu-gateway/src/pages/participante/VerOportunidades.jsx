@@ -32,13 +32,16 @@ export function VerOportunidades (){
     const [searchValue, setSearchValue] = useState('');
     const [oportunidades, setOportunidades] = useState([]);
 
+    // Estado para saber si hay más oportunidades en la siguiente página
+    const [hasMore, setHasMore] = useState(true);
+
     // Paginación
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 9; // Tamaño de página
 
     useEffect(() => {
         fetchOpportunities();
-    }, [currentPage, selectedFilterOption]); // Se ejecuta al cambiar la página o el filtro
+    }, [currentPage, selectedFilterOption]);
 
     const fetchOpportunities = async () => {
         try {
@@ -62,7 +65,12 @@ export function VerOportunidades (){
                 default:
                     response = [];
             }
+
             setOportunidades(response || []);
+
+            // Si la cantidad de resultados es menor al pageSize, ya no hay más páginas
+            setHasMore(response.length === pageSize);
+
         } catch (error) {
             console.error('Error al obtener las oportunidades:', error);
         }
@@ -153,7 +161,7 @@ export function VerOportunidades (){
                     oportunidades={oportunidades}
                 />
 
-                {/* Paginación para todos los filtros */}
+                {/* Paginación mejorada */}
                 <div style={{ display: "flex", justifyContent: "center", marginTop: "20px", alignItems: "center", gap: "10px" }}>
                     <Button
                         variant="outline-primary"
@@ -171,6 +179,7 @@ export function VerOportunidades (){
 
                     <Button
                         variant="outline-primary"
+                        disabled={!hasMore} // Deshabilita si no hay más páginas
                         onClick={() => setCurrentPage(prev => prev + 1)}
                     >
                         {">"}
