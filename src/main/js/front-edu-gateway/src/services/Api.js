@@ -17,6 +17,41 @@ export const createPreference = async (price, name) => {
     }
 }
 
+export const saveDonation = async (userId, institutionId, amount) => {
+    try {
+        const response = await axios.post(`${API_URL}/donations`, {
+            userId,
+            institutionId,
+            amount: Number(amount)
+        });
+
+        return response.data; // Retorna la respuesta si es necesario
+    } catch (error) {
+        console.error("Error al registrar la donación:", error);
+        throw error;
+    }
+};
+
+export const getSentDonations = async (userId) => {
+    try {
+        const response = await axios.get(`${API_URL}/donations/user/${userId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error al obtener donaciones enviadas:", error);
+        throw error;
+    }
+};
+
+export const getReceivedDonations = async (institutionId) => {
+    try {
+        const response = await axios.get(`${API_URL}/donations/institution/${institutionId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error al obtener donaciones recibidas:", error);
+        throw error;
+    }
+};
+
 // Add authorization headers to API requests
 const addAuthorizationHeader = (headers) => {
     const token = getToken();

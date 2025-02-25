@@ -14,7 +14,7 @@
         <class>austral.ing.lab1.model.Notification</class>
         <class>austral.ing.lab1.model.Chat</class>
         <class>austral.ing.lab1.model.Message</class>
-
+        <class>austral.ing.lab1.model.Donation</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbc.JDBCDriver"/>

@@ -11,6 +11,7 @@ import {PerfilParticipante} from "./pages/participante/PerfilParticipante";
 import {PerfilInstitucion} from "./pages/institucion/PerfilInstitucion";
 import {PerfilPublicoInstitucion} from "./pages/institucion/PerfilPublicoInstitucion";
 import ChatsPage from "./pages/chatsPage/ChatsPage";
+import Donaciones from "./pages/donaciones/Donaciones";
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
             <Route path="/inicio-institucion/ver-perfil-institucion" element={<PerfilInstitucion/>}></Route>
             <Route path="/ver-perfil-institucion/:nombre" element={<PerfilPublicoInstitucion/>}></Route>
             <Route path="/chats" element={<ChatsPage/>}></Route>
+            <Route path="/donaciones" element={<Donaciones/>}></Route>
         </Routes>
     </BrowserRouter>
   );

@@ -31,14 +31,9 @@ export function getId() {
 
 
 export function removeToken() {
-    // Elimina el token del almacenamiento local
     localStorage.removeItem('token');
-    // Elimina el tipo de usuario del almacenamiento local
     localStorage.removeItem('userType');
-    // Elimina el correo electrónico del almacenamiento local
     localStorage.removeItem('email');
-    // Elimina el nombre del almacenamiento local
     localStorage.removeItem('name');
-    // Elimina el id del almacenamiento local
     localStorage.removeItem('id');
 }
