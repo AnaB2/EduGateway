@@ -83,6 +83,8 @@ public class Application {
 
         Spark.get("/filter-by-InstitutionName", FilterController.FilterByNameInstitution);
 
+        Spark.get("/filter-opportunities", FilterController.FilterOpportunities);
+
         Spark.post("/delete-user", UserController.handleDeleteUser);
 
         Spark.post("/delete-institution", InstitutionController.handleDeleteInstitution);
@@ -102,5 +104,6 @@ public class Application {
         Spark.get("/get-user-history", UserController.handleGetUserHistory);
 
         Spark.post("/create-preference", MercadoPagoController.handleCreatePreference);
+
     }
 }

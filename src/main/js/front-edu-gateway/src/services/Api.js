@@ -311,6 +311,36 @@ export async function getFollowedInstitutions(page = 1, size = 10) {
     }
 }
 
+export async function getOpportunitiesFiltered(filters, page = 1, size = 10) {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const queryParams = new URLSearchParams();
+        if (filters.category) queryParams.append("category", filters.category);
+        if (filters.institution) queryParams.append("InstitutionName", filters.institution);
+        if (filters.name) queryParams.append("name", filters.name);
+        queryParams.append("followed", filters.followed);
+        queryParams.append("userId", filters.userId || ""); // Si no hay usuario, enviamos vacío
+        queryParams.append("page", page);
+        queryParams.append("size", size);
+
+        const response = await fetch(`${API_URL}/filter-opportunities?${queryParams.toString()}`, {
+            method: 'GET',
+            headers,
+        });
+
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        return await response.json(); // Retorna un objeto con opportunities, totalResults y totalPages
+    } catch (error) {
+        console.error("Failed to get filtered opportunities:", error);
+        throw error;
+    }
+}
 
 export async function addInscription(email, opportunityId, formData) {
     try {
