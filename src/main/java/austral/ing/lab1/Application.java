@@ -81,7 +81,9 @@ public class Application {
 
         Spark.get("/filter-by-nameOpportunity", FilterController.FilterByNameOpportunity);
 
-        Spark.get("/filter-by-InstitutionName", FilterController.FilterByNameInstituon);
+        Spark.get("/filter-by-InstitutionName", FilterController.FilterByNameInstitution);
+
+        Spark.get("/filter-opportunities", FilterController.FilterOpportunities);
 
         Spark.post("/delete-user", UserController.handleDeleteUser);
 
@@ -114,5 +116,6 @@ public class Application {
         Spark.get("/donations/institution/:institutionId", DonationController.handleGetDonationsByInstitution);
 
         Spark.delete("/donations/:id", DonationController.handleDeleteDonation);
+
     }
 }
