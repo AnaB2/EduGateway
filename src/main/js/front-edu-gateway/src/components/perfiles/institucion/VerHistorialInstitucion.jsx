@@ -9,7 +9,7 @@ export function VerHistorialInstitucion({ opportunities }) {
 
     return (
         <>
-            <Button variant="dark" onClick={abrir}>Ver Historial</Button>
+            <Button variant="dark" onClick={abrir}>Historial de Oportunidades</Button>
 
             <Modal show={visible} onHide={cerrar} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
