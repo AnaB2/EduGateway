@@ -1,4 +1,4 @@
-import { getToken, getUserType } from "../../services/storage";
+import { getToken, getUserType, getId } from "../../services/storage";
 import { mostrarAlertaAutenticacion } from "../../components/AlertaAutenticacion";
 import { NavbarParticipante } from "../../components/navbar/NavbarParticipante";
 import { useNavigate } from "react-router";
@@ -8,11 +8,9 @@ import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { getOpportunitiesFiltered } from "../../services/Api";
 
-const categoryOptions = ["", "Voluntariado", "Curso", "Programa", "Evento"];
-
 export function VerOportunidades() {
     const navigate = useNavigate();
-    const [category, setCategory] = useState(""); // Ahora incluye "Seguidos"
+    const [category, setCategory] = useState("");
     const [institution, setInstitution] = useState("");
     const [name, setName] = useState("");
     const [followed, setFollowed] = useState(false);
@@ -27,7 +25,14 @@ export function VerOportunidades() {
 
     const fetchOpportunities = async () => {
         try {
-            const filters = { category: followed ? "" : category, institution, name, followed, userId: getToken() };
+            const filters = {
+                category: followed ? "" : category, // Si "Seguidos" está activado, no filtrar por categoría
+                institution,
+                name,
+                followed,
+                userId: followed ? getId() : "", // Enviar userId solo si "Seguidos" está activado
+            };
+
             const response = await getOpportunitiesFiltered(filters, currentPage, pageSize);
             setOportunidades(response.opportunities || []);
             setTotalPages(response.totalPages);
@@ -39,11 +44,15 @@ export function VerOportunidades() {
     const handleCategoryChange = (selectedCategory) => {
         if (selectedCategory === "Seguidos") {
             setFollowed(true);
-            setCategory(""); // Evitar conflictos con otras categorías
+            setCategory("");
+            setInstitution("");
+            setName("");
         } else {
             setFollowed(false);
             setCategory(selectedCategory);
         }
+        setCurrentPage(1); // Reiniciar a la página 1 al cambiar categoría
+        fetchOpportunities();
     };
 
     const handleSearch = () => {
@@ -113,5 +122,3 @@ export function VerOportunidades() {
         </>
     );
 }
-
-
