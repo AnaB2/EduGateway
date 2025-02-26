@@ -778,16 +778,26 @@ export async function getRecommendedOpportunities(userId) {
     try {
         const headers = addAuthorizationHeader({ 'Content-Type': 'application/json' });
 
-        const response = await fetch(`${API_URL}/recommended-opportunities?userId=${userId}`, {
+        // ✅ Convertir userId a número para evitar errores en el backend
+        const parsedUserId = parseInt(userId);
+        if (isNaN(parsedUserId)) {
+            throw new Error("User ID is not a valid number");
+        }
+
+        const response = await fetch(`${API_URL}/recommended-opportunities?userId=${parsedUserId}`, {
             method: 'GET',
             headers,
         });
 
         if (!response.ok) {
-            throw new Error("Network response was not ok");
+            const errorMessage = await response.text();
+            console.error("Server Error:", errorMessage);
+            throw new Error("Network response was not ok: " + errorMessage);
         }
 
-        return await response.json();
+        const data = await response.json();
+        console.log("Oportunidades obtenidas del backend:", data); // ✅ Verifica si el frontend recibe los datos
+        return data;
     } catch (error) {
         console.error("Failed to get recommended opportunities:", error);
         throw error;
