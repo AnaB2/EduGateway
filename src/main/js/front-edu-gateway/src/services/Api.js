@@ -485,11 +485,11 @@ export async function followInstitution(userId, institutionId) {
         const response = await fetch(`${API_URL}/follow-institution`, {
             method: 'POST',
             headers,
-            body: JSON.stringify({ userId, institutionId }),
+            body: JSON.stringify({ userId: userId.toString(), institutionId: institutionId.toString() }),
         });
 
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error(await response.text());
         }
 
         return await response.json();
@@ -508,11 +508,11 @@ export async function unfollowInstitution(userId, institutionId) {
         const response = await fetch(`${API_URL}/unfollow-institution`, {
             method: 'POST',
             headers,
-            body: JSON.stringify({ userId, institutionId}),
+            body: JSON.stringify({ userId: userId.toString(), institutionId: institutionId.toString() }),
         });
 
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error(await response.text());
         }
 
         return await response.json();

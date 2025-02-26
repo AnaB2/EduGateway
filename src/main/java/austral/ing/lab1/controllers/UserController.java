@@ -28,52 +28,37 @@ public class UserController {
     private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
 
     public static Route handleFollowInstitution = (Request request, Response response) -> {
-        String body = request.body();
-        Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {
-        }.getType());
-
-        if (formData.get("userId").trim().isEmpty() ||
-                formData.get("institutionId").trim().isEmpty()) {
-            response.status(400);
-            return "{\"error\": \"Missing or empty fields\"}";
-        }
-
-        Long userId = Long.parseLong(formData.get("userId"));
-        Long institutionId = Long.parseLong(formData.get("institutionId"));
-
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Users users = new Users(entityManager);
-        Institutions institutions = new Institutions(entityManager);
         EntityTransaction tx = entityManager.getTransaction();
 
         try {
+            String body = request.body();
+            Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
+
+            Long userId = Long.parseLong(formData.get("userId"));
+            Long institutionId = Long.parseLong(formData.get("institutionId"));
+
+            User user = entityManager.find(User.class, userId);
+            Institution institution = entityManager.find(Institution.class, institutionId);
+
+            if (user == null || institution == null) {
+                response.status(404);
+                return "{\"error\": \"User or Institution not found\"}";
+            }
+
+            // 🔥 Forzar la carga de followedInstitutions para evitar sobrescribir
+            user.getFollowedInstitutions().size();
+
             tx.begin();
-            // Buscar al usuario por su ID
-            User user = users.findById(userId).orElse(null);
-            if (user == null) {
-                response.status(404);
-                return "{\"error\": \"User not found\"}";
-            }
-
-            // Buscar a la institución por su ID
-            Institution institution = institutions.findById(institutionId).orElse(null);
-            if (institution == null) {
-                response.status(404);
-                return "{\"error\": \"Institution not found\"}";
-            }
-
-
-            // Agregar la institución a la lista de instituciones seguidas por el usuario
             user.followInstitution(institution);
-            users.persist(user);
-
+            entityManager.merge(user); // 🔥 Persistir correctamente
             tx.commit();
+
             response.type("application/json");
             return gson.toJson(Map.of("message", "User is now following the institution"));
+
         } catch (Exception e) {
-            if (tx.isActive()) {
-                tx.rollback();
-            }
+            if (tx.isActive()) tx.rollback();
             response.status(500);
             return "{\"error\": \"An error occurred while following the institution\"}";
         } finally {
@@ -83,60 +68,59 @@ public class UserController {
 
     public static Route handleUnfollowInstitution = (Request request, Response response) -> {
         String body = request.body();
-        Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {
-        }.getType());
+        Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
 
-        if (formData.get("userId").trim().isEmpty() ||
-                formData.get("institutionId").trim().isEmpty()) {
+        if (formData == null || !formData.containsKey("userId") || !formData.containsKey("institutionId") ||
+                formData.get("userId").trim().isEmpty() || formData.get("institutionId").trim().isEmpty()) {
             response.status(400);
             return "{\"error\": \"Missing or empty fields\"}";
         }
 
-        Long userId = Long.parseLong(formData.get("userId"));
-        Long institutionId = Long.parseLong(formData.get("institutionId"));
-
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Users users = new Users(entityManager);
-        Institutions institutions = new Institutions(entityManager);
-        EntityTransaction tx = entityManager.getTransaction();
-
         try {
-            tx.begin();
-            // Buscar al usuario por su ID
-            User user = users.findById(userId).orElse(null);
-            if (user == null) {
-                response.status(404);
-                return "{\"error\": \"User not found\"}";
-            }
+            Long userId = Long.parseLong(formData.get("userId"));
+            Long institutionId = Long.parseLong(formData.get("institutionId"));
 
-            // Buscar a la institución por su ID
-            Institution institution = institutions.findById(institutionId).orElse(null);
-            if (institution == null) {
-                response.status(404);
-                return "{\"error\": \"Institution not found\"}";
-            }
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
+            Users users = new Users(entityManager);
+            Institutions institutions = new Institutions(entityManager);
+            EntityTransaction tx = entityManager.getTransaction();
 
-            // Verificar si el usuario está siguiendo a la institución
-            if (!user.getFollowedInstitutions().contains(institution)) {
-                response.status(400);
-                return "{\"error\": \"User is not following the institution\"}";
-            }
+            try {
+                tx.begin();
+                User user = users.findById(userId).orElse(null);
+                if (user == null) {
+                    response.status(404);
+                    return "{\"error\": \"User not found\"}";
+                }
 
-            // Eliminar la institución de la lista de instituciones seguidas por el usuario
-            user.unfollowInstitution(institution);
-            users.persist(user);
+                Institution institution = institutions.findById(institutionId).orElse(null);
+                if (institution == null) {
+                    response.status(404);
+                    return "{\"error\": \"Institution not found\"}";
+                }
 
-            tx.commit();
-            response.type("application/json");
-            return gson.toJson(Map.of("message", "User is now following the institution"));
-        } catch (Exception e) {
-            if (tx.isActive()) {
-                tx.rollback();
+                if (!user.getFollowedInstitutions().contains(institution)) {
+                    response.status(400);
+                    return "{\"error\": \"User is not following the institution\"}";
+                }
+
+                user.unfollowInstitution(institution);
+                users.persist(user);
+
+                tx.commit();
+                response.type("application/json");
+                return gson.toJson(Map.of("message", "User has unfollowed the institution\""));
+
+            } catch (Exception e) {
+                if (tx.isActive()) tx.rollback();
+                response.status(500);
+                return "{\"error\": \"An error occurred while unfollowing the institution\"}";
+            } finally {
+                entityManager.close();
             }
-            response.status(500);
-            return "{\"error\": \"An error occurred while following the institution\"}";
-        } finally {
-            entityManager.close();
+        } catch (NumberFormatException e) {
+            response.status(400);
+            return "{\"error\": \"Invalid user or institution ID format\"}";
         }
     };
 
