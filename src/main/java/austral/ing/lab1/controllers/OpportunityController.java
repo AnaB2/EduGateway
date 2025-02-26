@@ -299,7 +299,14 @@ public class OpportunityController {
                 return "{\"error\": \"Missing user ID\"}";
             }
 
-            Long userId = Long.parseLong(userIdParam);
+            Long userId;
+            try {
+                userId = Long.parseLong(userIdParam);
+            } catch (NumberFormatException e) {
+                response.status(400);
+                return "{\"error\": \"Invalid user ID format\"}";
+            }
+
             User user = entityManager.find(User.class, userId);
             if (user == null) {
                 response.status(404);
@@ -312,10 +319,9 @@ public class OpportunityController {
                 return gson.toJson(Collections.emptyList());
             }
 
-            // Buscar oportunidades que coincidan con los tags preferidos
+            // ✅ Verificar si las oportunidades tienen tags en común con el usuario
             List<Opportunity> recommendedOpportunities = entityManager.createQuery(
-                            "SELECT o FROM Opportunity o WHERE EXISTS (" +
-                                    "SELECT tag FROM o.tags tag WHERE tag IN :preferredTags)", Opportunity.class)
+                            "SELECT DISTINCT o FROM Opportunity o JOIN o.tags tag WHERE tag IN :preferredTags", Opportunity.class)
                     .setParameter("preferredTags", preferredTags)
                     .getResultList();
 
@@ -323,6 +329,7 @@ public class OpportunityController {
             return gson.toJson(recommendedOpportunities);
 
         } catch (Exception e) {
+            e.printStackTrace();  // ✅ Imprime el error en la consola del backend
             response.status(500);
             return "{\"error\": \"An error occurred while fetching recommendations\"}";
         } finally {

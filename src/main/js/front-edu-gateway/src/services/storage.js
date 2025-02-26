@@ -26,8 +26,10 @@ export function getName() {
 }
 
 export function getId() {
-    return localStorage.getItem('id');
+    const id = localStorage.getItem('id');
+    return id ? Number(id) : null; // ✅ Convertir a número
 }
+
 
 
 export function removeToken() {
