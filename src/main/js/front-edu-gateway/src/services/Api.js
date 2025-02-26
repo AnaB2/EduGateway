@@ -793,3 +793,24 @@ export async function getRecommendedOpportunities(userId) {
         throw error;
     }
 }
+
+export async function updateUserTags(email, tags) {
+    try {
+        const headers = addAuthorizationHeader({ 'Content-Type': 'application/json' });
+
+        const response = await fetch(`${API_URL}/update-user-tags?email=${email}`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ tags }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to update tags");
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error updating user tags:", error);
+        throw error;
+    }
+}

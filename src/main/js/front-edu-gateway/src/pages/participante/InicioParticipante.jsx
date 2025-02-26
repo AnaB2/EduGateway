@@ -4,7 +4,7 @@ import { mostrarAlertaAutenticacion } from "../../components/AlertaAutenticacion
 import { useNavigate } from "react-router";
 import Portada from "../../components/inicio/Portada";
 import { useEffect, useState } from "react";
-import { getOpportunitiesFiltered } from "../../services/Api";
+import { getRecommendedOpportunities } from "../../services/Api";  // ✅ Obtiene oportunidades según tags
 import { ContenedorOportunidadesParticipante } from "../../components/oportunidades/participante/ContenedorOportunidadesParticipante";
 import { Button } from "react-bootstrap";
 
@@ -21,8 +21,8 @@ export function InicioParticipante() {
 
     const fetchRecommendedOpportunities = async () => {
         try {
-            const filters = { recommended: true, userId: getToken() }; // Filtra solo por tags del usuario
-            const response = await getOpportunitiesFiltered(filters, currentPage, pageSize);
+            const userId = getToken();
+            const response = await getRecommendedOpportunities(userId, currentPage, pageSize);
             setOportunidades(response.opportunities || []);
             setTotalPages(response.totalPages);
         } catch (error) {

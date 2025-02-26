@@ -178,8 +178,8 @@ public class User {
     }
   }
 
-    @ElementCollection
-    @CollectionTable(name = "user_preferences", joinColumns = @JoinColumn(name = "user_id"))
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_tags", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "tag")
     private Set<String> preferredTags = new HashSet<>();
 
@@ -187,12 +187,20 @@ public class User {
         return preferredTags;
     }
 
-    public void addPreferredTag(String tag) {
-        preferredTags.add(tag);
+    public void setPreferredTags(Set<String> preferredTags) {
+        this.preferredTags = preferredTags;
     }
 
-    public void removePreferredTag(String tag) {
-        preferredTags.remove(tag);
+    public void addTag(String tag) {
+        this.preferredTags.add(tag);
+    }
+
+    public void removeTag(String tag) {
+        this.preferredTags.remove(tag);
+    }
+
+    public void clearTags() {
+        this.preferredTags.clear();
     }
 
 }

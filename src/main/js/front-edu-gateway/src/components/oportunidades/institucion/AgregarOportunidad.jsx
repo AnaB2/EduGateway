@@ -6,12 +6,13 @@ import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { addOpportunity } from "../../../services/Api";
 
+const allTags = ["Programación", "Matemáticas", "Ciencia", "Literatura", "Idiomas", "Arte", "Música", "Negocios", "Salud", "Deportes", "Tecnología", "Universidad"];  // ✅ Lista de tags predeterminados
+
 export function AgregarOportunidad({ actualizarOportunidades }) {
 
-    const [addSuccess, setAddSuccess] = useState(false); // true o false
-    const [addError, setAddError] = useState(''); // indica error en caso de error
+    const [addSuccess, setAddSuccess] = useState(false);
+    const [addError, setAddError] = useState('');
 
-    // Controles del modal
     const [visible, setVisible] = useState(false);
     const abrir = () => setVisible(true);
     const cerrar = () => {
@@ -20,10 +21,8 @@ export function AgregarOportunidad({ actualizarOportunidades }) {
         setAddSuccess(false);
     }
 
-    // Objeto navegación
     const navigate = useNavigate();
 
-    // Controles de respuesta de form
     const [name, setName] = useState('');
     const [language, setLanguage] = useState('');
     const [educationalLevel, setEducationalLevel] = useState('');
@@ -31,8 +30,16 @@ export function AgregarOportunidad({ actualizarOportunidades }) {
     const [city, setCity] = useState('');
     const [category, setCategory] = useState('');
     const [capacity, setCapacity] = useState(0);
+    const [selectedTags, setSelectedTags] = useState([]);  // ✅ Estado para los tags seleccionados
 
-    // Función que se ejecuta al presionar botón de envío, y que llama a función addOpportunity en Api.js
+    const handleTagSelection = (tag) => {
+        if (selectedTags.includes(tag)) {
+            setSelectedTags(selectedTags.filter(t => t !== tag));  // ✅ Quitar tag si ya está seleccionado
+        } else {
+            setSelectedTags([...selectedTags, tag]);  // ✅ Agregar tag si no está seleccionado
+        }
+    };
+
     async function enviarForm() {
         try {
             const opportunityData = {
@@ -42,7 +49,8 @@ export function AgregarOportunidad({ actualizarOportunidades }) {
                 modality: modality,
                 city: city,
                 category: category,
-                capacity: capacity
+                capacity: capacity,
+                tags: selectedTags  // ✅ Enviar los tags al backend
             }
             await addOpportunity(opportunityData);
             setAddSuccess(true);
@@ -72,6 +80,7 @@ export function AgregarOportunidad({ actualizarOportunidades }) {
                         <option value="Programa">Programa</option>
                         <option value="Evento">Evento</option>
                     </Form.Select>
+
                     <div className="form-oportunidad">
                         <FloatingLabel controlId="floatingName" label="Nombre" className="mb-3">
                             <Form.Control type="text" placeholder="Nombre de la oportunidad" onChange={(event) => { setName(event.target.value) }} />
@@ -92,6 +101,20 @@ export function AgregarOportunidad({ actualizarOportunidades }) {
                             <Form.Control type="number" placeholder="Capacidad" min="0" onChange={(event) => { setCapacity(parseInt(event.target.value)) }} />
                         </FloatingLabel>
                     </div>
+
+                    {/* Selección de Tags */}
+                    <h5>Seleccionar etiquetas</h5>
+                    <Form>
+                        {allTags.map(tag => (
+                            <Form.Check
+                                key={tag}
+                                type="checkbox"
+                                label={tag}
+                                checked={selectedTags.includes(tag)}
+                                onChange={() => handleTagSelection(tag)}
+                            />
+                        ))}
+                    </Form>
                 </Modal.Body>
 
                 <Modal.Footer>

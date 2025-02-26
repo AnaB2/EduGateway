@@ -39,30 +39,42 @@ public class OpportunityController {
 
         // Obtener los datos de la oportunidad del cuerpo de la solicitud
         String body = request.body();
-        Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
+        Map<String, Object> formData = gson.fromJson(body, new TypeToken<Map<String, Object>>() {}.getType());
 
-        // Verificar que los campos requeridos no estén vacíos o en blanco
-        if (formData.get("name").trim().isEmpty() || formData.get("category").trim().isEmpty() ||
-                formData.get("city").trim().isEmpty() || formData.get("educationalLevel").trim().isEmpty() ||
-                formData.get("modality").trim().isEmpty() || formData.get("language").trim().isEmpty() ||
-                formData.get("capacity").trim().isEmpty()) {
+        // Mostrar los datos recibidos para depuración
+        System.out.println("Datos recibidos en el request: " + formData);
+
+        // Validación de campos requeridos
+        if (!formData.containsKey("name") || !formData.containsKey("category") ||
+                !formData.containsKey("city") || !formData.containsKey("educationalLevel") ||
+                !formData.containsKey("modality") || !formData.containsKey("language") ||
+                !formData.containsKey("capacity")) {
             response.status(400);
-            return "{\"error\": \"Missing or empty fields\"}";
+            return "{\"error\": \"Missing required fields\"}";
         }
 
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         Opportunities opportunities = new Opportunities(entityManager);
         EntityTransaction tx = entityManager.getTransaction();
+
         try {
             tx.begin();
 
-            String name = formData.get("name");
-            String category = formData.get("category");
-            String city = formData.get("city");
-            String educationalLevel = formData.get("educationalLevel");
-            String modality = formData.get("modality");
-            String language = formData.get("language");
-            int capacity = Integer.parseInt(formData.get("capacity"));
+            String name = formData.get("name").toString();
+            String category = formData.get("category").toString();
+            String city = formData.get("city").toString();
+            String educationalLevel = formData.get("educationalLevel").toString();
+            String modality = formData.get("modality").toString();
+            String language = formData.get("language").toString();
+
+            // ✅ Fix: Handle `capacity` correctly (handles both 50 and 50.0)
+            Object capacityObj = formData.get("capacity");
+            int capacity;
+            if (capacityObj instanceof Number) {
+                capacity = ((Number) capacityObj).intValue(); // Converts Integer or Double safely
+            } else {
+                capacity = Integer.parseInt(capacityObj.toString().split("\\.")[0]); // Removes decimals
+            }
 
             // Verificar que la capacidad no sea negativa
             if (capacity < 0) {
@@ -78,25 +90,49 @@ public class OpportunityController {
             opportunity.setModality(modality);
             opportunity.setLanguage(language);
             opportunity.setCapacity(capacity);
-
             opportunity.setInstitutionEmail(requestedUserEmail);
 
-            opportunities.persist(opportunity);
+            // ✅ Fix: Handle `tags` field correctly to prevent ClassCastException
+            Set<String> tagsSet = new HashSet<>();
+            if (formData.containsKey("tags")) {
+                Object tagsObject = formData.get("tags");
 
+                // Debugging logs
+                System.out.println("Tags received: " + tagsObject);
+                System.out.println("Tags class: " + tagsObject.getClass().getName());
+
+                if (tagsObject instanceof List<?>) {
+                    List<?> tagsList = (List<?>) tagsObject;
+                    for (Object tag : tagsList) {
+                        if (tag instanceof String) {
+                            tagsSet.add((String) tag);
+                        } else {
+                            System.out.println("Invalid tag type: " + tag.getClass().getName());
+                        }
+                    }
+                } else {
+                    System.out.println("Tags are not a List: " + tagsObject.getClass().getName());
+                }
+            }
+            opportunity.setTags(tagsSet);
+
+            opportunities.persist(opportunity);
             tx.commit();
+
             response.type("application/json");
             return gson.toJson(Map.of("message", "Opportunity added successfully"));
+
         } catch (Exception e) {
             if (tx.isActive()) {
                 tx.rollback();
             }
+            e.printStackTrace(); // Mostrar el error en la terminal para depuración
             response.status(500);
-            return "{\"error\": \"An error occurred while adding the opportunity\"}";
+            return "{\"error\": \"An error occurred: " + e.getMessage() + "\"}";
         } finally {
             entityManager.close();
         }
     };
-
 
     public static Route handleDeleteOpportunity = (Request request, Response response) -> {
         // Obtener el nombre de la oportunidad a eliminar
@@ -189,6 +225,7 @@ public class OpportunityController {
             if (tx.isActive()) {
                 tx.rollback();
             }
+            e.printStackTrace();
             response.status(500);
             return "{\"error\": \"An error occurred while updating the opportunity\"}";
         } finally {
@@ -261,8 +298,8 @@ public class OpportunityController {
                 response.status(400);
                 return "{\"error\": \"Missing user ID\"}";
             }
-            Long userId = Long.parseLong(userIdParam);
 
+            Long userId = Long.parseLong(userIdParam);
             User user = entityManager.find(User.class, userId);
             if (user == null) {
                 response.status(404);
@@ -275,10 +312,16 @@ public class OpportunityController {
                 return gson.toJson(Collections.emptyList());
             }
 
-            List<Opportunity> recommendedOpportunities = new Opportunities(entityManager).findByTags(preferredTags);
+            // Buscar oportunidades que coincidan con los tags preferidos
+            List<Opportunity> recommendedOpportunities = entityManager.createQuery(
+                            "SELECT o FROM Opportunity o WHERE EXISTS (" +
+                                    "SELECT tag FROM o.tags tag WHERE tag IN :preferredTags)", Opportunity.class)
+                    .setParameter("preferredTags", preferredTags)
+                    .getResultList();
 
             response.type("application/json");
             return gson.toJson(recommendedOpportunities);
+
         } catch (Exception e) {
             response.status(500);
             return "{\"error\": \"An error occurred while fetching recommendations\"}";

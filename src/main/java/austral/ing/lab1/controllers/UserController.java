@@ -457,5 +457,49 @@ public class UserController {
         }
     };
 
+    public static Route updateUserTags = (Request request, Response response) -> {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            String email = request.queryParams("email");
+            if (email == null || email.trim().isEmpty()) {
+                response.status(400);
+                return "{\"error\": \"Missing email parameter\"}";
+            }
+
+            User user = entityManager.find(User.class, email);
+            if (user == null) {
+                response.status(404);
+                return "{\"error\": \"User not found\"}";
+            }
+
+            Map<String, Set<String>> requestBody = gson.fromJson(request.body(), Map.class);
+            Set<String> newTags = requestBody.get("tags");
+
+            if (newTags == null) {
+                response.status(400);
+                return "{\"error\": \"Missing tags in request body\"}";
+            }
+
+            EntityTransaction tx = entityManager.getTransaction();
+            try {
+                tx.begin();
+                user.setPreferredTags(newTags);
+                tx.commit();
+            } catch (Exception e) {
+                if (tx.isActive()) {
+                    tx.rollback();
+                }
+                response.status(500);
+                return "{\"error\": \"Failed to update tags\"}";
+            }
+
+            response.type("application/json");
+            return gson.toJson(user.getPreferredTags());
+
+        } finally {
+            entityManager.close();
+        }
+    };
+
 
 }

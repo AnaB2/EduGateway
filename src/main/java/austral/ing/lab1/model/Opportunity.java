@@ -14,7 +14,6 @@ public class Opportunity {
     @GenericGenerator(name = "increment", strategy = "increment")
     private Long id;
 
-
     @Column(name = "INSTITUTION_EMAIL")
     private String institutionEmail;
 
@@ -39,10 +38,13 @@ public class Opportunity {
     @Column(name = "CAPACITY")
     private int capacity;
 
-
-
+    @ElementCollection
+    @CollectionTable(name = "opportunity_tags", joinColumns = @JoinColumn(name = "opportunity_id"))
+    @Column(name = "tag")
+    private Set<String> tags = new HashSet<>(); // Ensure initialization
 
     public Opportunity() {
+        this.tags = new HashSet<>();
     }
 
     public Long getId() {
@@ -109,32 +111,19 @@ public class Opportunity {
         this.capacity = capacity;
     }
 
-
     public String getInstitutionEmail() {
         return institutionEmail;
     }
 
-
     public void setInstitutionEmail(String institutionEmail) {
         this.institutionEmail = institutionEmail;
-
     }
-
-    @ElementCollection
-    @CollectionTable(name = "opportunity_tags", joinColumns = @JoinColumn(name = "opportunity_id"))
-    @Column(name = "tag")
-    private Set<String> tags = new HashSet<>();
 
     public Set<String> getTags() {
         return tags;
     }
 
-    public void addTag(String tag) {
-        tags.add(tag);
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
     }
-
-    public void removeTag(String tag) {
-        tags.remove(tag);
-    }
-
 }
