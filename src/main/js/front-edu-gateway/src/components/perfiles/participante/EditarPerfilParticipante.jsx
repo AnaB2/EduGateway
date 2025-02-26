@@ -46,7 +46,7 @@ export function EditarPerfilParticipante({ actualizarParticipante, datosAnterior
 
     return (
         <>
-            <Button variant="dark" onClick={abrir}>Editar</Button>
+            <Button variant="dark" onClick={abrir}>Editar Perfil</Button>
 
             <Modal show={visible} onHide={cerrar} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>

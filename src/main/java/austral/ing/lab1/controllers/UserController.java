@@ -14,10 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.persistence.*;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -461,25 +458,48 @@ public class UserController {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             String email = request.queryParams("email");
+
             if (email == null || email.trim().isEmpty()) {
                 response.status(400);
                 return "{\"error\": \"Missing email parameter\"}";
             }
 
-            User user = entityManager.find(User.class, email);
-            if (user == null) {
+            // ✅ Correct way to fetch user by email using JPQL
+            TypedQuery<User> query = entityManager.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class);
+            query.setParameter("email", email);
+
+            User user;
+            try {
+                user = query.getSingleResult();
+            } catch (NoResultException e) {
                 response.status(404);
                 return "{\"error\": \"User not found\"}";
             }
 
-            Map<String, Set<String>> requestBody = gson.fromJson(request.body(), Map.class);
-            Set<String> newTags = requestBody.get("tags");
+            // ✅ Debugging logs
+            System.out.println("User found: " + user.getEmail());
 
-            if (newTags == null) {
+            // ✅ Parse tags from request
+            Map<String, Object> requestBody = gson.fromJson(request.body(), Map.class);
+            System.out.println("Received request body: " + requestBody);
+
+            Object tagsObj = requestBody.get("tags");
+            System.out.println("Received tags object: " + tagsObj);
+
+            Set<String> newTags = new HashSet<>();
+            if (tagsObj instanceof List<?>) {
+                for (Object tag : (List<?>) tagsObj) {
+                    if (tag instanceof String) {
+                        newTags.add((String) tag);
+                    }
+                }
+            } else {
+                System.out.println("Invalid tags format: " + tagsObj);
                 response.status(400);
-                return "{\"error\": \"Missing tags in request body\"}";
+                return "{\"error\": \"Invalid tags format\"}";
             }
 
+            // ✅ Update user tags inside a transaction
             EntityTransaction tx = entityManager.getTransaction();
             try {
                 tx.begin();
@@ -489,8 +509,9 @@ public class UserController {
                 if (tx.isActive()) {
                     tx.rollback();
                 }
+                e.printStackTrace();
                 response.status(500);
-                return "{\"error\": \"Failed to update tags\"}";
+                return "{\"error\": \"Failed to update tags: " + e.getMessage() + "\"}";
             }
 
             response.type("application/json");

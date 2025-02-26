@@ -9,7 +9,7 @@ export function VerHistorialParticipante({ inscriptions }) {
 
     return (
         <>
-            <Button variant="dark" onClick={abrir}>Ver Historial de Inscripciones</Button>
+            <Button variant="dark" onClick={abrir}>Historial de Inscripciones</Button>
 
             <Modal show={visible} onHide={cerrar} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>

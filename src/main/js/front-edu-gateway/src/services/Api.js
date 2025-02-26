@@ -801,7 +801,7 @@ export async function updateUserTags(email, tags) {
         const response = await fetch(`${API_URL}/update-user-tags?email=${email}`, {
             method: 'POST',
             headers,
-            body: JSON.stringify({ tags }),
+            body: JSON.stringify({ tags: Array.isArray(tags) ? tags : [] }), // ✅ Ensuring tags is always an array
         });
 
         if (!response.ok) {
