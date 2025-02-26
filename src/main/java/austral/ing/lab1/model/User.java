@@ -126,12 +126,16 @@ public class User {
   public void setActive(boolean b) {
   }
 
-  public void followInstitution(Institution institution) {
-    followedInstitutions.add(institution);
-    institution.getFollowers().add(this);
-  }
+    public void followInstitution(Institution institution) {
+        if (followedInstitutions == null) {
+            followedInstitutions = new HashSet<>();
+        }
+        followedInstitutions.add(institution);
+        institution.getFollowers().add(this); // Asegurar bidireccionalidad
+    }
 
-  public void unfollowInstitution(Institution institution) {
+
+    public void unfollowInstitution(Institution institution) {
     followedInstitutions.remove(institution);
     institution.getFollowers().remove(this);
   }
