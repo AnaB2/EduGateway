@@ -141,35 +141,71 @@ public class InscriptionController {
 
     Long idInscriptionLong = Long.parseLong(idInscription1);
 
-    // Actualizar el estado de la inscripción a "aceptada"
-    updateInscriptionStatus(idInscriptionLong, InscriptionStatus.ACCEPTED, response);
-
-    // Enviar notificación
     EntityManager em = entityManagerFactory.createEntityManager();
-    NotificationService notificationService = new NotificationService(em);
-    String message = "Your inscription has been accepted.";
+    EntityTransaction tx = em.getTransaction();
+    
+    try {
+      tx.begin();
+      
+      // Actualizar el estado de la inscripción a "aceptada"
+      Inscriptions inscriptions = new Inscriptions(em);
+      Inscription inscription = inscriptions.findById(idInscriptionLong);
+      
+      if (inscription == null) {
+        tx.rollback();
+        response.status(404);
+        return gson.toJson(Map.of("error", "Inscription not found"));
+      }
+      
+      inscription.setEstado(InscriptionStatus.ACCEPTED);
+      em.merge(inscription); // Persistir los cambios
+      
+      // Obtener la oportunidad para decrementar la capacidad
+      Opportunity opportunity = em.find(Opportunity.class, inscription.getOpportunityID());
+      if (opportunity == null) {
+        tx.rollback();
+        response.status(404);
+        return gson.toJson(Map.of("error", "Opportunity not found"));
+      }
 
-    // Buscar la inscripción para obtener el email
-    Inscriptions inscriptions = new Inscriptions(em);
-    Inscription inscription = inscriptions.findById(idInscriptionLong);
-    if (inscription == null) {
+      // DECREMENTAR LA CAPACIDAD DE LA OPORTUNIDAD
+      int currentCapacity = opportunity.getCapacity();
+      if (currentCapacity > 0) {
+        opportunity.setCapacity(currentCapacity - 1);
+        em.merge(opportunity); // Persistir el cambio de capacidad
+      }
+
+      tx.commit();
+
+      // Enviar notificación después del commit
+      NotificationService notificationService = new NotificationService(em);
+      String message = "Your inscription has been accepted.";
+
+      // Buscar el usuario para obtener el userId
+      Users users = new Users(em);
+      User user = users.findByEmail(inscription.getEmailParticipante()).orElse(null);
+      if (user != null) {
+        Notification notification = new Notification(message, user.getId(), null);
+        notificationService.sendNotification(notification);
+      }
+      
+      // Devolver información actualizada incluyendo los cupos actuales
+      response.type("application/json");
+      return gson.toJson(Map.of(
+        "message", "Inscription accepted",
+        "opportunityId", opportunity.getId(),
+        "currentCapacity", opportunity.getCapacity()
+      ));
+      
+    } catch (Exception e) {
+      if (tx.isActive()) {
+        tx.rollback();
+      }
+      response.status(500);
+      return gson.toJson(Map.of("error", "An error occurred while accepting inscription: " + e.getMessage()));
+    } finally {
       em.close();
-      return gson.toJson(Map.of("error", "Inscription not found"));
     }
-
-    // Buscar el usuario para obtener el userId
-    Users users = new Users(em);
-    User user = users.findByEmail(inscription.getEmailParticipante()).orElse(null);
-    if (user == null) {
-      em.close();
-      return gson.toJson(Map.of("error", "User not found"));
-    }
-
-    Notification notification = new Notification(message, user.getId(), null); // Asume que Notification tiene una relación adecuada con User para obtener el userId
-    notificationService.sendNotification(notification);
-    em.close();
-
-    return gson.toJson(Map.of("message", "Inscription accepted"));
   };
 
   public static Route handleRejectInscription = (Request request, Response response) -> {
@@ -179,35 +215,64 @@ public class InscriptionController {
 
     Long idInscriptionLong = Long.parseLong(idInscription1);
 
-    // Actualizar el estado de la inscripción a "rechazada"
-    updateInscriptionStatus(idInscriptionLong, InscriptionStatus.REJECTED, response);
-
-    // Enviar notificación
     EntityManager em = entityManagerFactory.createEntityManager();
-    NotificationService notificationService = new NotificationService(em);
-    String message = "Your inscription has been rejected.";
+    EntityTransaction tx = em.getTransaction();
+    
+    try {
+      tx.begin();
+      
+      // Actualizar el estado de la inscripción a "rechazada"
+      Inscriptions inscriptions = new Inscriptions(em);
+      Inscription inscription = inscriptions.findById(idInscriptionLong);
+      
+      if (inscription == null) {
+        tx.rollback();
+        response.status(404);
+        return gson.toJson(Map.of("error", "Inscription not found"));
+      }
+      
+      inscription.setEstado(InscriptionStatus.REJECTED);
+      em.merge(inscription); // Persistir los cambios
+      
+      // Obtener la oportunidad para devolver información actualizada
+      Opportunity opportunity = em.find(Opportunity.class, inscription.getOpportunityID());
+      if (opportunity == null) {
+        tx.rollback();
+        response.status(404);
+        return gson.toJson(Map.of("error", "Opportunity not found"));
+      }
 
-    // Buscar la inscripción para obtener el email
-    Inscriptions inscriptions = new Inscriptions(em);
-    Inscription inscription = inscriptions.findById(idInscriptionLong);
-    if (inscription == null) {
+      tx.commit();
+
+      // Enviar notificación después del commit
+      NotificationService notificationService = new NotificationService(em);
+      String message = "Your inscription has been rejected.";
+
+      // Buscar el usuario para obtener el userId
+      Users users = new Users(em);
+      User user = users.findByEmail(inscription.getEmailParticipante()).orElse(null);
+      if (user != null) {
+        Notification notification = new Notification(message, user.getId(), null);
+        notificationService.sendNotification(notification);
+      }
+      
+      // Devolver información actualizada incluyendo los cupos actuales
+      response.type("application/json");
+      return gson.toJson(Map.of(
+        "message", "Inscription rejected",
+        "opportunityId", opportunity.getId(),
+        "currentCapacity", opportunity.getCapacity()
+      ));
+      
+    } catch (Exception e) {
+      if (tx.isActive()) {
+        tx.rollback();
+      }
+      response.status(500);
+      return gson.toJson(Map.of("error", "An error occurred while rejecting inscription: " + e.getMessage()));
+    } finally {
       em.close();
-      return gson.toJson(Map.of("error", "Inscription not found"));
     }
-
-    // Buscar el usuario para obtener el userId
-    Users users = new Users(em);
-    User user = users.findByEmail(inscription.getEmailParticipante()).orElse(null);
-    if (user == null) {
-      em.close();
-      return gson.toJson(Map.of("error", "User not found"));
-    }
-
-    Notification notification = new Notification(message, user.getId(), null); // Asume que Notification tiene una relación adecuada con User para obtener el userId
-    notificationService.sendNotification(notification);
-    em.close();
-
-    return gson.toJson(Map.of("message", "Inscription rejected"));
   };
 
   private static void updateInscriptionStatus(Long idInscription, InscriptionStatus newStatus, Response response) {

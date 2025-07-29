@@ -36,15 +36,24 @@ public class OpportunityController {
     public static Route handleAddOpportunity = (Request request, Response response) -> {
         // Obtener el token del encabezado de la solicitud
         String token = request.headers("Authorization");
-
+        
         // Obtener los datos del usuario que realiza la solicitud
         String requestedUserEmail = request.headers("Email");
 
+        System.out.println("🔐 Headers received - Authorization: " + token);
+        System.out.println("🔐 Headers received - Email: " + requestedUserEmail);
+
         // Verificar si el usuario está autorizado
-        if (!TokenManager.isAuthorized(token, requestedUserEmail)) {
+        boolean isAuthorized = TokenManager.isAuthorized(token, requestedUserEmail);
+        System.out.println("🔐 Authorization result: " + isAuthorized);
+        
+        if (!isAuthorized) {
+            System.out.println("❌ Authorization failed - returning 401");
             response.status(401);
             return "{\"error\": \"Unauthorized\"}";
         }
+
+        System.out.println("✅ Authorization successful - proceeding with opportunity creation");
 
         // Obtener los datos de la oportunidad del cuerpo de la solicitud
         String body = request.body();

@@ -57,11 +57,19 @@ const addAuthorizationHeader = (headers) => {
     const token = getToken();
     const email = getEmail();
 
+    console.log("🔐 Debug authorization - Token:", token ? "Present" : "Missing");
+    console.log("🔐 Debug authorization - Email:", email);
+
     if (!token || !email) {
+        console.error("❌ Authorization failed - Token or email missing");
         throw new Error('Token or email not found.');
     }
 
-    return {...headers, Authorization: token, Email: email,};
+    // Agregar "Bearer " al token si no lo tiene ya
+    const formattedToken = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
+    console.log("🔐 Formatted token:", formattedToken.substring(0, 20) + "...");
+
+    return {...headers, Authorization: formattedToken, Email: email,};
 };
 
 // WebSocket singleton management
@@ -190,9 +198,13 @@ export const getWebSocketStatus = () => {
 
 export const addOpportunity = async (opportunityData) => {
     try {
+        console.log("🚀 Attempting to add opportunity:", opportunityData);
+        
         const headers = addAuthorizationHeader({
             'Content-Type': 'application/json',
         });
+
+        console.log("🔐 Headers being sent:", headers);
 
         const response = await fetch(`${API_URL}/add-opportunity`, {
             method: 'POST',
@@ -200,17 +212,26 @@ export const addOpportunity = async (opportunityData) => {
             body: JSON.stringify(opportunityData),
         });
 
+        console.log("📡 Response status:", response.status);
+        console.log("📡 Response statusText:", response.statusText);
+
         if (response.status === 401) {
+            const errorText = await response.text();
+            console.error("❌ 401 Unauthorized - Backend response:", errorText);
             throw new Error('Unauthorized access');
         }
 
         if (!response.ok) {
+            const errorText = await response.text();
+            console.error("❌ Network error - Backend response:", errorText);
             throw new Error('Network response was not ok');
         }
 
-        return await response.json();
+        const result = await response.json();
+        console.log("✅ Success - Backend response:", result);
+        return result;
     } catch (error) {
-        console.error("Failed to add opportunity:", error);
+        console.error("💥 Failed to add opportunity:", error);
         throw error;
     }
 };
