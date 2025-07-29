@@ -40,20 +40,20 @@ public class OpportunityController {
         // Obtener los datos del usuario que realiza la solicitud
         String requestedUserEmail = request.headers("Email");
 
-        System.out.println("🔐 Headers received - Authorization: " + token);
-        System.out.println("🔐 Headers received - Email: " + requestedUserEmail);
+        System.out.println("Headers received - Authorization: " + token);
+        System.out.println("Headers received - Email: " + requestedUserEmail);
 
         // Verificar si el usuario está autorizado
         boolean isAuthorized = TokenManager.isAuthorized(token, requestedUserEmail);
-        System.out.println("🔐 Authorization result: " + isAuthorized);
+        System.out.println("Authorization result: " + isAuthorized);
         
         if (!isAuthorized) {
-            System.out.println("❌ Authorization failed - returning 401");
+            System.out.println("Authorization failed - returning 401");
             response.status(401);
             return "{\"error\": \"Unauthorized\"}";
         }
 
-        System.out.println("✅ Authorization successful - proceeding with opportunity creation");
+        System.out.println("Authorization successful - proceeding with opportunity creation");
 
         // Obtener los datos de la oportunidad del cuerpo de la solicitud
         String body = request.body();
@@ -85,13 +85,12 @@ public class OpportunityController {
             String modality = formData.get("modality").toString();
             String language = formData.get("language").toString();
 
-            // ✅ Fix: Handle `capacity` correctly (handles both 50 and 50.0)
-            Object capacityObj = formData.get("capacity");
+            // Fix: Handle `capacity` correctly (handles both 50 and 50.0)
             int capacity;
-            if (capacityObj instanceof Number) {
-                capacity = ((Number) capacityObj).intValue(); // Converts Integer or Double safely
+            if (formData.get("capacity") instanceof Double) {
+                capacity = ((Double) formData.get("capacity")).intValue();
             } else {
-                capacity = Integer.parseInt(capacityObj.toString().split("\\.")[0]); // Removes decimals
+                capacity = Integer.parseInt(formData.get("capacity").toString());
             }
 
             // Verificar que la capacidad no sea negativa
@@ -100,75 +99,73 @@ public class OpportunityController {
                 return "{\"error\": \"Capacity cannot be negative\"}";
             }
 
+            // Fix: Handle `tags` field correctly to prevent ClassCastException
+            Set<String> tagsSet = new HashSet<>();
+            if (formData.get("tags") != null) {
+                Object tagsObject = formData.get("tags");
+                if (tagsObject instanceof String && !((String) tagsObject).trim().isEmpty()) {
+                    tagsSet.add((String) tagsObject);
+                }
+            }
+
+            // Create a new opportunity instance
             Opportunity opportunity = new Opportunity();
             opportunity.setName(name);
-            opportunity.setCategory(category);
-            opportunity.setCity(city);
+            opportunity.setLanguage(language);
             opportunity.setEducationalLevel(educationalLevel);
             opportunity.setModality(modality);
-            opportunity.setLanguage(language);
+            opportunity.setCity(city);
+            opportunity.setCategory(category);
             opportunity.setCapacity(capacity);
+            opportunity.setTags(tagsSet);
             opportunity.setInstitutionEmail(requestedUserEmail);
 
-            // ✅ Fix: Handle `tags` field correctly to prevent ClassCastException
-            Set<String> tagsSet = new HashSet<>();
-            if (formData.containsKey("tags")) {
-                Object tagsObject = formData.get("tags");
+            try {
+                tx.begin();
+                opportunities.persist(opportunity);
 
-                // Debugging logs
-                System.out.println("Tags received: " + tagsObject);
-                System.out.println("Tags class: " + tagsObject.getClass().getName());
-
-                if (tagsObject instanceof List<?>) {
-                    List<?> tagsList = (List<?>) tagsObject;
-                    for (Object tag : tagsList) {
-                        if (tag instanceof String) {
-                            tagsSet.add((String) tag);
-                        } else {
-                            System.out.println("Invalid tag type: " + tag.getClass().getName());
+                // NUEVA FUNCIONALIDAD: Notificar a los seguidores
+                try {
+                    // Buscar la institución por email para obtener sus seguidores
+                    Institutions institutions = new Institutions(entityManager);
+                    Institution institution = institutions.findByEmail(requestedUserEmail).orElse(null);
+                    
+                    if (institution != null) {
+                        Set<User> followers = institution.getFollowers();
+                        followers.size(); // Trigger lazy loading
+                        
+                        System.out.println("Sending notifications to " + followers.size() + " followers");
+                        
+                        // Crear servicio de notificaciones
+                        NotificationService notificationService = new NotificationService(entityManager);
+                        
+                        // Notificar a cada seguidor
+                        for (User follower : followers) {
+                            String notificationMessage = "Nueva oportunidad disponible: '" + opportunity.getName() + 
+                                                   "' de " + institution.getInstitutionalName() + ". Revisa los detalles.";
+                            Notification notification = new Notification(notificationMessage, follower.getId(), null);
+                            notificationService.sendNotification(notification);
+                            System.out.println("Notification sent to user: " + follower.getId());
                         }
                     }
-                } else {
-                    System.out.println("Tags are not a List: " + tagsObject.getClass().getName());
+                } catch (Exception e) {
+                    System.err.println("Error sending notifications to followers: " + e.getMessage());
+                    // No fallar la operación principal por un error de notificación
                 }
-            }
-            opportunity.setTags(tagsSet);
 
-            opportunities.persist(opportunity);
-            tx.commit();
+                tx.commit();
+                response.type("application/json");
+                return gson.toJson(Map.of("message", "Opportunity added successfully", "opportunityId", opportunity.getId()));
 
-            // 🔔 NUEVA FUNCIONALIDAD: Notificar a los seguidores
-            try {
-                // Buscar la institución por email para obtener sus seguidores
-                Institutions institutions = new Institutions(entityManager);
-                Institution institution = institutions.findByEmail(requestedUserEmail).orElse(null);
-                
-                if (institution != null) {
-                    // Forzar la carga de seguidores
-                    Set<User> followers = institution.getFollowers();
-                    followers.size(); // Trigger lazy loading
-                    
-                    System.out.println("🔔 Sending notifications to " + followers.size() + " followers");
-                    
-                    // Crear servicio de notificaciones
-                    NotificationService notificationService = new NotificationService(entityManager);
-                    
-                    // Enviar notificación a cada seguidor
-                    for (User follower : followers) {
-                        String message = "Nueva oportunidad disponible: " + name + " en " + institution.getInstitutionalName();
-                        Notification notification = new Notification(message, follower.getId(), null);
-                        notificationService.sendNotification(notification);
-                        System.out.println("✅ Notification sent to user: " + follower.getId());
-                    }
+            } catch (Exception e) {
+                if (tx.isActive()) {
+                    tx.rollback();
                 }
-            } catch (Exception notificationError) {
-                // No fallar la creación de oportunidad si las notificaciones fallan
-                System.err.println("⚠️ Error sending notifications: " + notificationError.getMessage());
-                notificationError.printStackTrace();
+                response.status(500);
+                return "{\"error\": \"An error occurred while adding the opportunity\"}";
+            } finally {
+                entityManager.close();
             }
-
-            response.type("application/json");
-            return gson.toJson(Map.of("message", "Opportunity added successfully"));
 
         } catch (Exception e) {
             if (tx.isActive()) {

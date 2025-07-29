@@ -5,6 +5,7 @@ import austral.ing.lab1.repository.Inscriptions;
 import austral.ing.lab1.repository.Institutions;
 import austral.ing.lab1.repository.Opportunities;
 import austral.ing.lab1.repository.Users;
+import austral.ing.lab1.repository.NotificationService;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
@@ -53,6 +54,19 @@ public class UserController {
             user.followInstitution(institution);
             entityManager.merge(user); // 🔥 Persistir correctamente
             tx.commit();
+
+            // Notificar a la institución sobre el nuevo seguidor
+            try {
+                NotificationService notificationService = new NotificationService(entityManager);
+                String message = "Tienes un nuevo seguidor. " + user.getFirstName() + " " + user.getLastName() + " ahora te sigue.";
+                
+                Notification notification = new Notification(message, institution.getId(), null);
+                notificationService.sendNotification(notification);
+                System.out.println("Notificación enviada a institución: " + institution.getInstitutionalName());
+            } catch (Exception e) {
+                System.err.println("Error enviando notificación de nuevo seguidor: " + e.getMessage());
+                // No fallar la operación principal por un error de notificación
+            }
 
             response.type("application/json");
             return gson.toJson(Map.of("message", "User is now following the institution"));

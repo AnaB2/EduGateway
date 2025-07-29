@@ -26,37 +26,32 @@ public class ChatController {
     private static final Gson gson = new Gson();
 
     public static Route handleCreateChat = (Request request, Response response) -> {
-        System.out.println("🔍 Starting chat creation process...");
+        System.out.println("Starting chat creation process...");
         
         String body = request.body();
-        System.out.println("📝 Request body: " + body);
+        System.out.println("Request body: " + body);
         
         Map<String, Object> formData = gson.fromJson(body, new TypeToken<Map<String, Object>>() {}.getType());
 
-        if (formData.get("userId") == null || formData.get("email") == null) { //es el email de la institucion
-            System.err.println("❌ Missing fields in request");
+        // Verificar que los campos requeridos no estén vacíos
+        if (formData.get("userId") == null || formData.get("email") == null ||
+            formData.get("userId").toString().trim().isEmpty() || formData.get("email").toString().trim().isEmpty()) {
+                
+            System.err.println("Missing fields in request");
             response.status(400);
-            return "{\"error\": \"Missing or empty fields\"}";
+            return "{\"error\": \"Missing required fields: userId and email\"}";
         }
 
         Long userId;
         try {
-            Object userIdObj = formData.get("userId");
-            if (userIdObj instanceof Number) {
-                userId = ((Number) userIdObj).longValue();
-            } else if (userIdObj instanceof String) {
-                userId = Long.parseLong((String) userIdObj);
-            } else {
-                throw new IllegalArgumentException("Invalid userId type: " + userIdObj.getClass());
-            }
-            System.out.println("👤 User ID: " + userId);
-        } catch (Exception e) {
-            System.err.println("❌ Invalid userId format: " + formData.get("userId") + " - " + e.getMessage());
+            userId = Long.parseLong(formData.get("userId").toString());
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid userId format: " + formData.get("userId") + " - " + e.getMessage());
             response.status(400);
-            return "{\"error\": \"Invalid format for userId: " + e.getMessage() + "\"}";
+            return "{\"error\": \"Invalid userId format\"}";
         }
-        String email = (String) formData.get("email");
-        System.out.println("🏢 Institution email: " + email);
+
+        String email = formData.get("email").toString();
 
         EntityManager entityManager = EntityManagers.currentEntityManager();
         Users users = new Users(entityManager);
@@ -66,7 +61,7 @@ public class ChatController {
         try {
             EntityTransaction tx = entityManager.getTransaction();
             tx.begin();
-            System.out.println("🔄 Transaction started");
+            System.out.println("Transaction started");
 
             User user = users.findById(userId).orElse(null);
             if (user == null) {
@@ -87,7 +82,7 @@ public class ChatController {
             System.out.println("✅ Institution found: " + institution1.getInstitutionalName());
 
             // 🔍 Verificar si ya existe un chat entre el usuario y la institución
-            System.out.println("🔍 Checking for existing chat...");
+            System.out.println("Checking for existing chat...");
             Optional<Chat> existingChatOpt = chats.findChatByUserAndInstitution(user, institution1);
             
             if (existingChatOpt.isPresent()) {
@@ -95,7 +90,7 @@ public class ChatController {
                 // Chat ya existe, devolver el ID del chat existente
                 tx.commit();
                 response.type("application/json");
-                System.out.println("✅ Chat already exists with ID: " + existingChat.getId());
+                System.out.println("Chat already exists with ID: " + existingChat.getId());
                 return gson.toJson(Map.of(
                     "message", "Chat already exists", 
                     "chatId", existingChat.getId(),
@@ -104,12 +99,12 @@ public class ChatController {
             }
 
             // 🆕 Crear nuevo chat si no existe
-            System.out.println("🆕 Creating new chat...");
+            System.out.println("Creating new chat...");
             Chat chat = new Chat(user, institution1);
             entityManager.persist(chat);
             tx.commit();
 
-            System.out.println("🆕 New chat created with ID: " + chat.getId());
+            System.out.println("New chat created with ID: " + chat.getId());
             response.type("application/json");
             return gson.toJson(Map.of(
                 "message", "Chat created successfully", 
@@ -118,7 +113,7 @@ public class ChatController {
             ));
             
         } catch (Exception e) {
-            System.err.println("💥 Exception in chat creation: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+            System.err.println("Exception in chat creation: " + e.getClass().getSimpleName() + " - " + e.getMessage());
             e.printStackTrace();
             
             // Rollback transaction if it's still active
@@ -126,10 +121,10 @@ public class ChatController {
                 EntityTransaction tx = entityManager.getTransaction();
                 if (tx != null && tx.isActive()) {
                     tx.rollback();
-                    System.out.println("🔄 Transaction rolled back");
+                    System.out.println("Transaction rolled back");
                 }
             } catch (Exception rollbackException) {
-                System.err.println("❌ Error during rollback: " + rollbackException.getMessage());
+                System.err.println("Error during rollback: " + rollbackException.getMessage());
             }
             
             response.status(500);
@@ -141,10 +136,10 @@ public class ChatController {
 
 
     public static Route handleSendMessage = (Request request, Response response) -> {
-        System.out.println("💬 Starting message sending process...");
+        System.out.println("Starting message sending process...");
         
         String body = request.body();
-        System.out.println("📝 Request body: " + body);
+        System.out.println("Request body: " + body);
         
         Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
 
@@ -164,10 +159,10 @@ public class ChatController {
         String receiverType = formData.get("receiverType");
         Long timestamp = System.currentTimeMillis();
 
-        System.out.println("💬 Chat ID: " + chatId);
-        System.out.println("👤 Sender: " + sender);
-        System.out.println("👥 Receiver: " + receiver + " (type: " + receiverType + ")");
-        System.out.println("📄 Content: " + content);
+        System.out.println("Chat ID: " + chatId);
+        System.out.println("Sender: " + sender);
+        System.out.println("Receiver: " + receiver + " (type: " + receiverType + ")");
+        System.out.println("Content: " + content);
 
         EntityManager entityManager = EntityManagers.currentEntityManager();
         Chats chats = new Chats(entityManager);
@@ -175,7 +170,7 @@ public class ChatController {
 
         try {
             tx.begin();
-            System.out.println("🔄 Transaction started");
+            System.out.println("Transaction started");
             
             Chat chat = chats.findById(chatId).orElse(null);
             if (chat == null) {
@@ -189,24 +184,24 @@ public class ChatController {
             message.setChat(chat);  // 🔗 Establecer la relación con el chat
             chat.addMessage(message);
             chats.persistMessage(message);
-            System.out.println("💾 Message persisted to database");
+            System.out.println("Message persisted to database");
 
             tx.commit();
-            System.out.println("✅ Transaction committed");
+            System.out.println("Transaction committed");
 
             // Enviar notificación en tiempo real a través de WebSocket
-            System.out.println("📡 Sending WebSocket message...");
+            System.out.println("Sending WebSocket message...");
             NotificationService notificationService = new NotificationService(entityManager);
             notificationService.sendMessageToOther(message, receiverType, receiver);
 
             response.type("application/json");
             return gson.toJson(Map.of("message", "Message sent successfully"));
         } catch (Exception e) {
-            System.err.println("💥 Exception in message sending: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+            System.err.println("Exception in message sending: " + e.getClass().getSimpleName() + " - " + e.getMessage());
             e.printStackTrace();
             if (tx.isActive()) {
                 tx.rollback();
-                System.out.println("🔄 Transaction rolled back");
+                System.out.println("Transaction rolled back");
             }
             response.status(500);
             return "{\"error\": \"An error occurred while sending the message: " + e.getMessage() + "\"}";
@@ -254,15 +249,15 @@ public class ChatController {
     };
 
     public static Route handleGetMessagesByChat = (Request request, Response response) -> {
-        System.out.println("📨 Starting get messages by chat process...");
+        System.out.println("Starting get messages by chat process...");
         
         String body = request.body();
-        System.out.println("📝 Request body: " + body);
+        System.out.println("Request body: " + body);
         
         Map<String, Object> formData = gson.fromJson(body, new TypeToken<Map<String, Object>>() {}.getType());
 
         if (formData.get("chatId") == null) {
-            System.err.println("❌ Missing chatId in request");
+            System.err.println("Missing chatId in request");
             response.status(400);
             return "{\"error\": \"Missing chatId field\"}";
         }
@@ -277,9 +272,9 @@ public class ChatController {
             } else {
                 throw new IllegalArgumentException("Invalid chatId type: " + chatIdObj.getClass());
             }
-            System.out.println("💬 Chat ID: " + chatId);
+            System.out.println("Chat ID: " + chatId);
         } catch (Exception e) {
-            System.err.println("❌ Invalid chatId format: " + formData.get("chatId") + " - " + e.getMessage());
+            System.err.println("Invalid chatId format: " + formData.get("chatId") + " - " + e.getMessage());
             response.status(400);
             return "{\"error\": \"Invalid format for chatId: " + e.getMessage() + "\"}";
         }
@@ -290,7 +285,7 @@ public class ChatController {
 
         try {
             tx.begin();
-            System.out.println("🔄 Transaction started");
+            System.out.println("Transaction started");
             
             Chat chat = chats.findById(chatId).orElse(null);
             if (chat == null) {
@@ -303,7 +298,7 @@ public class ChatController {
 
             // Obtener mensajes del chat y ordenarlos por timestamp
             Set<Message> messages = chat.getMessages();
-            System.out.println("📨 Found " + messages.size() + " messages");
+            System.out.println("Found " + messages.size() + " messages");
 
             // Convertir a DTOs y ordenar por timestamp (más antiguos primero)
             List<Map<String, Object>> messageDTOs = messages.stream()
@@ -320,22 +315,22 @@ public class ChatController {
                 .collect(Collectors.toList());
 
             tx.commit();
-            System.out.println("✅ Transaction committed");
+            System.out.println("Transaction committed");
 
             response.type("application/json");
             return gson.toJson(messageDTOs);
             
         } catch (Exception e) {
-            System.err.println("💥 Exception in get messages: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+            System.err.println("Exception in get messages: " + e.getClass().getSimpleName() + " - " + e.getMessage());
             e.printStackTrace();
             
             try {
                 if (tx != null && tx.isActive()) {
                     tx.rollback();
-                    System.out.println("🔄 Transaction rolled back");
+                    System.out.println("Transaction rolled back");
                 }
             } catch (Exception rollbackException) {
-                System.err.println("❌ Error during rollback: " + rollbackException.getMessage());
+                System.err.println("Error during rollback: " + rollbackException.getMessage());
             }
             
             response.status(500);
@@ -392,7 +387,6 @@ public class ChatController {
         private final String institutionName;
         private final String institutionEmail;
 
-
         public ChatDTO(Chat chat) {
             this.id = chat.getId();
             this.userId = chat.getUser().getId();
@@ -403,11 +397,33 @@ public class ChatController {
             this.institutionEmail = chat.getInstitution().getEmail();
         }
 
+        public Long getId() {
+            return id;
+        }
 
+        public Long getUserId() {
+            return userId;
+        }
 
+        public String getUserName() {
+            return userName;
+        }
 
+        public String getUserEmail() {
+            return userEmail;
+        }
 
+        public Long getInstitutionId() {
+            return institutionId;
+        }
 
+        public String getInstitutionName() {
+            return institutionName;
+        }
+
+        public String getInstitutionEmail() {
+            return institutionEmail;
+        }
     }
 
 

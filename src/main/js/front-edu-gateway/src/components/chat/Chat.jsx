@@ -14,7 +14,7 @@ export default function Chat({nombre, mensajesAnteriores, chatId, userId, instit
     };
 
     useEffect(() => {
-        console.log("💬 Chat component mounted with:", {chatId, userId, institutionId, mensajesAnteriores});
+        console.log("Chat component mounted with:", {chatId, userId, institutionId, mensajesAnteriores});
         setMensajes(mensajesAnteriores || []);
         // Scroll al final cuando se cargan mensajes
         setTimeout(scrollToBottom, 100);
@@ -30,7 +30,7 @@ export default function Chat({nombre, mensajesAnteriores, chatId, userId, instit
         if (!chatId) return;
 
         const handleWebSocketMessage = (data) => {
-            console.log("💬 WebSocket message received in Chat:", data);
+            console.log("WebSocket message received in Chat:", data);
             
             // Si es un mensaje de chat, agregarlo a la lista
             if (data.includes("New message:")) {
@@ -80,12 +80,17 @@ export default function Chat({nombre, mensajesAnteriores, chatId, userId, instit
                 receiverType = "participant";
             }
 
-            console.log("💬 Sending message:", {
+            console.log("Sending message:", {
                 chatId, 
                 senderId: currentUserId, 
                 receiverId, 
                 content: mensaje,
-                receiverType
+                receiverType,
+                debug: {
+                    currentUserType,
+                    institutionId: institutionId,
+                    userId: userId
+                }
             });
 
             // Enviar mensaje al backend
@@ -106,10 +111,10 @@ export default function Chat({nombre, mensajesAnteriores, chatId, userId, instit
             });
             setMensaje("");
             
-            console.log("✅ Message sent successfully");
+            console.log("Message sent successfully");
             
         } catch (error) {
-            console.error("❌ Error sending message:", error);
+            console.error("Error sending message:", error);
             alert("Error al enviar mensaje. Intenta de nuevo.");
         } finally {
             setLoading(false);

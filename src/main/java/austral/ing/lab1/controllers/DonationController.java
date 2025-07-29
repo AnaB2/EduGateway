@@ -3,8 +3,10 @@ package austral.ing.lab1.controllers;
 import austral.ing.lab1.model.Donation;
 import austral.ing.lab1.model.DonationDTO;
 import austral.ing.lab1.model.Institution;
+import austral.ing.lab1.model.Notification;
 import austral.ing.lab1.model.User;
 import austral.ing.lab1.repository.Donations;
+import austral.ing.lab1.repository.NotificationService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -104,6 +106,21 @@ public class DonationController {
             donationRepository.persist(donation);
             System.out.println("Donación persistida en memoria.");
             tx.commit();
+
+            // Notificar a la institución sobre la nueva donación
+            try {
+                NotificationService notificationService = new NotificationService(entityManager);
+                String message = "Has recibido una nueva donación. " + 
+                               user.getFirstName() + " " + user.getLastName() + 
+                               " te donó $" + amount + ". Gracias por tu labor.";
+                
+                Notification notification = new Notification(message, institution.getId(), null);
+                notificationService.sendNotification(notification);
+                System.out.println("Notificación de donación enviada a: " + institution.getInstitutionalName());
+            } catch (Exception e) {
+                System.err.println("Error enviando notificación de donación: " + e.getMessage());
+                // No fallar la operación principal por un error de notificación
+            }
 
             System.out.println("Donación creada exitosamente con ID: " + donation.getId());
             response.type("application/json");

@@ -162,18 +162,18 @@ public class Application {
 
         Spark.post("/update-user-tags", UserController.updateUserTags);
         
-        // 🔔 Notification endpoints
+        // Notification endpoints
         Spark.get("/notifications/user", NotificationController.handleGetUserNotifications);
         Spark.get("/notifications/institution", NotificationController.handleGetInstitutionNotifications);
         Spark.get("/notifications/unread-count", NotificationController.handleGetUnreadCount);
-        Spark.post("/notifications/mark-read", NotificationController.handleMarkAsRead);
+        Spark.post("/notifications/mark-as-read", NotificationController.handleMarkAsRead);
         Spark.post("/notifications/mark-all-read", NotificationController.handleMarkAllAsRead);
         
         System.out.println("============================================");
-        System.out.println("✅ EduGateway Backend is running!");
-        System.out.println("🌐 Server: http://localhost:4321");
-        System.out.println("🗄️  Database: HSQLDB running");
-        System.out.println("⏹️  Press Ctrl+C to stop");
+        System.out.println("EduGateway Backend is running!");
+        System.out.println("Server: http://localhost:4321");
+        System.out.println("Database: HSQLDB running");
+        System.out.println("Press Ctrl+C to stop");
         System.out.println("============================================");
     }
 }

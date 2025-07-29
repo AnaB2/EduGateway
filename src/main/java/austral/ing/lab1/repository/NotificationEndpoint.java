@@ -112,9 +112,9 @@ public class NotificationEndpoint {
     if (session != null && session.isOpen()) {
       try {
         session.getRemote().sendString(message);
-        System.out.println("✅ Notification sent successfully to user " + userId);
-      } catch (IOException e) {
-        System.err.println("❌ Error sending notification to user " + userId + ": " + e.getMessage());
+        System.out.println("Notification sent successfully to user " + userId);
+      } catch (Exception e) {
+        System.err.println("Error sending notification to user " + userId + ": " + e.getMessage());
         e.printStackTrace();
       }
     } else {

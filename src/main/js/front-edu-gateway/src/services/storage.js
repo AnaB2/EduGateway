@@ -33,7 +33,7 @@ export function updateName(firstName, lastName) {
 
 export function getId() {
     const id = localStorage.getItem('id');
-    return id ? Number(id) : null; // ✅ Convertir a número
+    return id ? Number(id) : null; // Convertir a número
 }
 
 

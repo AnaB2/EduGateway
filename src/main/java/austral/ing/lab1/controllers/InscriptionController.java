@@ -94,31 +94,24 @@ public class InscriptionController {
 
       tx.commit();
       
-      // 🔔 NUEVA FUNCIONALIDAD: Notificar a la institución
+      // NUEVA FUNCIONALIDAD: Notificar a la institución
       try {
           // Buscar la institución por email para obtener su ID
           Institutions institutions = new Institutions(entityManager);
           Institution institution = institutions.findByEmail(opportunity.getInstitutionEmail()).orElse(null);
-          
           if (institution != null) {
-              System.out.println("🔔 Sending notification to institution: " + institution.getId());
+              System.out.println("Sending notification to institution: " + institution.getId());
               
-              // Crear servicio de notificaciones
               NotificationService notificationService = new NotificationService(entityManager);
-              
-              // Crear mensaje personalizado
-              String message = "Nuevo participante inscrito: " + user.getFirstName() + " " + user.getLastName() + 
-                             " se inscribió en la oportunidad: " + opportunity.getName();
-              
-              // Crear y enviar notificación
-              Notification notification = new Notification(message, null, institution.getId());
+              String notificationMessage = "Nueva postulación recibida para la oportunidad: " + opportunity.getName();
+              Notification notification = new Notification(notificationMessage, institution.getId(), null);
               notificationService.sendNotification(notification);
-              System.out.println("✅ Notification sent to institution: " + institution.getId());
+              
+              System.out.println("Notification sent to institution: " + institution.getId());
           }
-      } catch (Exception notificationError) {
-          // No fallar la inscripción si las notificaciones fallan
-          System.err.println("⚠️ Error sending notification to institution: " + notificationError.getMessage());
-          notificationError.printStackTrace();
+      } catch (Exception e) {
+          System.err.println("Error enviando notificación a institución: " + e.getMessage());
+          // No fallar la operación principal por un error de notificación
       }
       
       response.type("application/json");
@@ -172,7 +165,7 @@ public class InscriptionController {
 
       // Enviar notificación después del commit
       NotificationService notificationService = new NotificationService(em);
-      String message = "Your inscription has been accepted.";
+      String message = "Tu postulación a '" + opportunity.getName() + "' ha sido aceptada.";
 
       // Buscar el usuario para obtener el userId
       Users users = new Users(em);
@@ -244,7 +237,7 @@ public class InscriptionController {
 
       // Enviar notificación después del commit
       NotificationService notificationService = new NotificationService(em);
-      String message = "Your inscription has been rejected.";
+      String message = "Tu postulación a '" + opportunity.getName() + "' ha sido rechazada. No te desanimes, sigue postulándote a otras oportunidades.";
 
       // Buscar el usuario para obtener el userId
       Users users = new Users(em);

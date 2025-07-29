@@ -57,17 +57,17 @@ const addAuthorizationHeader = (headers) => {
     const token = getToken();
     const email = getEmail();
 
-    console.log("🔐 Debug authorization - Token:", token ? "Present" : "Missing");
-    console.log("🔐 Debug authorization - Email:", email);
+    console.log("Debug authorization - Token:", token ? "Present" : "Missing");
+    console.log("Debug authorization - Email:", email);
 
     if (!token || !email) {
-        console.error("❌ Authorization failed - Token or email missing");
+        console.error("Authorization failed - Token or email missing");
         throw new Error('Token or email not found.');
     }
 
     // Agregar "Bearer " al token si no lo tiene ya
     const formattedToken = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
-    console.log("🔐 Formatted token:", formattedToken.substring(0, 20) + "...");
+    console.log("Formatted token:", formattedToken.substring(0, 20) + "...");
 
     return {...headers, Authorization: formattedToken, Email: email,};
 };
@@ -198,13 +198,13 @@ export const getWebSocketStatus = () => {
 
 export const addOpportunity = async (opportunityData) => {
     try {
-        console.log("🚀 Attempting to add opportunity:", opportunityData);
+        console.log("Attempting to add opportunity:", opportunityData);
         
         const headers = addAuthorizationHeader({
             'Content-Type': 'application/json',
         });
 
-        console.log("🔐 Headers being sent:", headers);
+        console.log("Headers being sent:", headers);
 
         const response = await fetch(`${API_URL}/add-opportunity`, {
             method: 'POST',
@@ -212,26 +212,27 @@ export const addOpportunity = async (opportunityData) => {
             body: JSON.stringify(opportunityData),
         });
 
-        console.log("📡 Response status:", response.status);
-        console.log("📡 Response statusText:", response.statusText);
+        console.log("Response status:", response.status);
+        console.log("Response statusText:", response.statusText);
 
         if (response.status === 401) {
             const errorText = await response.text();
-            console.error("❌ 401 Unauthorized - Backend response:", errorText);
+            console.error("401 Unauthorized - Backend response:", errorText);
             throw new Error('Unauthorized access');
         }
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error("❌ Network error - Backend response:", errorText);
-            throw new Error('Network response was not ok');
+            console.error("Network error - Backend response:", errorText);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const result = await response.json();
-        console.log("✅ Success - Backend response:", result);
+        console.log("Success - Backend response:", result);
         return result;
+
     } catch (error) {
-        console.error("💥 Failed to add opportunity:", error);
+        console.log("Failed to add opportunity:", error);
         throw error;
     }
 };
@@ -831,7 +832,7 @@ export async function createChat(emailDestino, id) {
         }
 
         const data = await response.json();
-        console.log("💬 Chat creation response:", data);
+        console.log("Chat creation response:", data);
         
         return {
             chatId: data.chatId,
@@ -1080,7 +1081,7 @@ export const getChatMessages = async (chatId) => {
         }
 
         const data = await response.json();
-        console.log("💬 Chat messages response:", data);
+        console.log("Chat messages response:", data);
         return data;
     } catch (error) {
         console.error("Error al obtener mensajes del chat:", error);
@@ -1116,7 +1117,7 @@ export const sendMessage = async (chatId, senderId, receiverId, content, receive
         }
 
         const data = await response.json();
-        console.log("💬 Message sent response:", data);
+        console.log("Message sent response:", data);
         return data;
     } catch (error) {
         console.error("Error al enviar mensaje:", error);

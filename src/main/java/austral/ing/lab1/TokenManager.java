@@ -68,46 +68,46 @@ public class TokenManager {
 
     public static boolean isAuthorized(String token, String requestedEmail) {
 
-        System.out.println("🔐 ===== AUTHORIZATION DEBUG START =====");
-        System.out.println("🔐 Token recibido: " + token);
-        System.out.println("🔐 Email solicitado: " + requestedEmail);
+        System.out.println("===== AUTHORIZATION DEBUG START =====");
+        System.out.println("Token recibido: " + token);
+        System.out.println("Email solicitado: " + requestedEmail);
 
         // Remover el prefijo "Bearer " si está presente
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
-            System.out.println("🔐 Token sin Bearer: " + token);
+            System.out.println("Token sin Bearer: " + token);
         } else {
-            System.out.println("🔐 Token no tiene prefijo Bearer");
+            System.out.println("Token no tiene prefijo Bearer");
         }
 
         // Verificar si el token está en la lista negra
         if (isTokenBlacklisted(token)) {
-            System.out.println("❌ Token está en la lista negra");
+            System.out.println("Token está en la lista negra");
             return false;
         }
-        System.out.println("✅ Token no está en lista negra");
+        System.out.println("Token no está en lista negra");
 
         try {
             String userEmail = getUserEmail(token);
-            System.out.println("🔐 Email extraído del token: " + userEmail);
+            System.out.println("Email extraído del token: " + userEmail);
 
             // Verificar si el correo electrónico obtenido está vacío o nulo
             if (userEmail == null || userEmail.isEmpty()) {
-                System.out.println("❌ Email del token es null o vacío");
+                System.out.println("Email del token es null o vacío");
                 return false;
             }
 
             // Verificar si el correo electrónico del token coincide con el correo solicitado
             boolean emailsMatch = userEmail.equals(requestedEmail);
-            System.out.println("🔐 ¿Emails coinciden? " + emailsMatch + " (token: '" + userEmail + "' vs solicitado: '" + requestedEmail + "')");
+            System.out.println("¿Emails coinciden? " + emailsMatch + " (token: '" + userEmail + "' vs solicitado: '" + requestedEmail + "')");
             
-            System.out.println("🔐 ===== AUTHORIZATION DEBUG END =====");
+            System.out.println("===== AUTHORIZATION DEBUG END =====");
             return emailsMatch;
             
         } catch (Exception e) {
-            System.out.println("❌ Error durante autorización: " + e.getMessage());
+            System.out.println("Error durante autorización: " + e.getMessage());
             e.printStackTrace();
-            System.out.println("🔐 ===== AUTHORIZATION DEBUG END =====");
+            System.out.println("===== AUTHORIZATION DEBUG END =====");
             return false;
         }
     }
