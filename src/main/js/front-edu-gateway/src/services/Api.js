@@ -3,6 +3,24 @@ import axios from "axios";
 
 const API_URL = 'http://localhost:4321'; // Backend base URL
 
+export async function emailExists(email, type = "participant") {
+    const endpoint = type === "participant"
+        ? "exists-user"
+        : "exists-institution";
+
+    const url = `${API_URL}/${endpoint}?email=${encodeURIComponent(email)}`;
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    });
+
+    if (!response.ok) throw new Error("Fallo verificación de email");
+
+    return await response.json(); // true o false
+}
+
+
 // Mercado pago create preference
 export const createPreference = async (price, name) => {
     try {

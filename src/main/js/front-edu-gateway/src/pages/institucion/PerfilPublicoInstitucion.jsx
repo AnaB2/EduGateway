@@ -26,7 +26,7 @@ export function PerfilPublicoInstitucion() {
     const [donationAmount, setDonationAmount] = useState("");
     const [institucionesSeguidas, setInstitucionesSeguidas] = useState([]);
 
-    // ✅ Cargar las instituciones seguidas solo cuando se monta el componente
+    // Cargar las instituciones seguidas solo cuando se monta el componente
     useEffect(() => {
         async function fetchFollowedInstitutions() {
             try {
@@ -48,7 +48,7 @@ export function PerfilPublicoInstitucion() {
     const follow = async () => {
         if (!institutionData?.id) return;
 
-        // ✅ Cambia el estado localmente INMEDIATAMENTE sin esperar al backend
+        // Cambia el estado localmente INMEDIATAMENTE sin esperar al backend
         setSiguiendo(true);
         setInstitucionesSeguidas(prev => [...prev, { id: institutionData.id }]);
 
@@ -56,14 +56,14 @@ export function PerfilPublicoInstitucion() {
             await followInstitution(getId().toString(), institutionData.id.toString());
         } catch (error) {
             console.error("Error al seguir la institución:", error);
-            setSiguiendo(false); // 🔄 Revierte el estado si hay error
+            setSiguiendo(false); // Revierte el estado si hay error
         }
     };
 
     const unfollow = async () => {
         if (!institutionData?.id) return;
 
-        // ✅ Cambia el estado localmente INMEDIATAMENTE sin esperar al backend
+        // Cambia el estado localmente INMEDIATAMENTE sin esperar al backend
         setSiguiendo(false);
         setInstitucionesSeguidas(prev => prev.filter(inst => inst.id !== institutionData.id));
 
@@ -71,7 +71,7 @@ export function PerfilPublicoInstitucion() {
             await unfollowInstitution(getId().toString(), institutionData.id.toString());
         } catch (error) {
             console.error("Error al dejar de seguir la institución:", error);
-            setSiguiendo(true); // 🔄 Revierte el estado si hay error
+            setSiguiendo(true); // Revierte el estado si hay error
         }
     };
 
@@ -86,7 +86,6 @@ export function PerfilPublicoInstitucion() {
             if (id) {
                 setPreferenceId(id.preferenceId);
                 await saveDonation(getId(), institutionData.id, donationAmount);
-                console.log(`Donación de $${donationAmount} registrada en la base de datos.`);
             }
         } catch (error) {
             console.error("Error al procesar la donación:", error);

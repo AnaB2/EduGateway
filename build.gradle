@@ -12,14 +12,20 @@ plugins {
 }
 
 repositories {
-    // Use jcenter for resolving dependencies.
-    // You can declare any Maven/Ivy/file repository here.
     jcenter()
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    implementation 'com.google.guava:guava:33.0.0-jre'
+    implementation 'com.google.guava:guava:31.1-jre'
+
+    constraints {
+        implementation('com.google.guava:guava:31.1-jre') {
+            because 'resuelve conflictos con google-collections'
+        }
+    }
+
     implementation 'org.hibernate:hibernate-core:5.6.5.Final'
     implementation 'org.hsqldb:hsqldb:2.7.2'
 
@@ -49,10 +55,7 @@ dependencies {
     implementation 'com.h2database:h2:1.4.200'
 
     // Mercado pago
-    implementation ('com.mercadopago:sdk-java:2.1.+') {
-        exclude group: 'com.google.guava', module: 'guava'
-        exclude group: 'com.google.collections', module: 'google-collections'
-    }
+    implementation 'com.github.mercadopago:dx-java:2.1.13'
 
     // Incluye una versión compatible de Guava
     implementation 'com.google.guava:guava:32.0.1-jre'

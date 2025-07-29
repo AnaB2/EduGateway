@@ -120,5 +120,10 @@ public class Application {
         Spark.get("/recommended-opportunities", OpportunityController.getRecommendedOpportunities);
 
         Spark.post("/update-user-tags", UserController.updateUserTags);
+
+        Spark.get("/exists-user", UserController.handleUserExists);
+
+        Spark.get("/exists-institution", InstitutionController.handleInstitutionExists);
+
     }
 }
