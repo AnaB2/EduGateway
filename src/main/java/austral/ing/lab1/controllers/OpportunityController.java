@@ -103,7 +103,14 @@ public class OpportunityController {
             Set<String> tagsSet = new HashSet<>();
             if (formData.get("tags") != null) {
                 Object tagsObject = formData.get("tags");
-                if (tagsObject instanceof String && !((String) tagsObject).trim().isEmpty()) {
+                if (tagsObject instanceof List) {
+                    List<?> tagsList = (List<?>) tagsObject;
+                    for (Object tag : tagsList) {
+                        if (tag instanceof String && !((String) tag).trim().isEmpty()) {
+                            tagsSet.add((String) tag);
+                        }
+                    }
+                } else if (tagsObject instanceof String && !((String) tagsObject).trim().isEmpty()) {
                     tagsSet.add((String) tagsObject);
                 }
             }
@@ -120,52 +127,39 @@ public class OpportunityController {
             opportunity.setTags(tagsSet);
             opportunity.setInstitutionEmail(requestedUserEmail);
 
+            // NUEVA FUNCIONALIDAD: Notificar a los seguidores
             try {
-                tx.begin();
-                opportunities.persist(opportunity);
-
-                // NUEVA FUNCIONALIDAD: Notificar a los seguidores
-                try {
-                    // Buscar la institución por email para obtener sus seguidores
-                    Institutions institutions = new Institutions(entityManager);
-                    Institution institution = institutions.findByEmail(requestedUserEmail).orElse(null);
+                // Buscar la institución por email para obtener sus seguidores
+                Institutions institutions = new Institutions(entityManager);
+                Institution institution = institutions.findByEmail(requestedUserEmail).orElse(null);
+                
+                if (institution != null) {
+                    Set<User> followers = institution.getFollowers();
+                    followers.size(); // Trigger lazy loading
                     
-                    if (institution != null) {
-                        Set<User> followers = institution.getFollowers();
-                        followers.size(); // Trigger lazy loading
-                        
-                        System.out.println("Sending notifications to " + followers.size() + " followers");
-                        
-                        // Crear servicio de notificaciones
-                        NotificationService notificationService = new NotificationService(entityManager);
-                        
-                        // Notificar a cada seguidor
-                        for (User follower : followers) {
-                            String notificationMessage = "Nueva oportunidad disponible: '" + opportunity.getName() + 
-                                                   "' de " + institution.getInstitutionalName() + ". Revisa los detalles.";
-                            Notification notification = new Notification(notificationMessage, follower.getId(), null);
-                            notificationService.sendNotification(notification);
-                            System.out.println("Notification sent to user: " + follower.getId());
-                        }
+                    System.out.println("Sending notifications to " + followers.size() + " followers");
+                    
+                    // Crear servicio de notificaciones
+                    NotificationService notificationService = new NotificationService(entityManager);
+                    
+                    // Notificar a cada seguidor
+                    for (User follower : followers) {
+                        String notificationMessage = "Nueva oportunidad disponible: '" + opportunity.getName() + 
+                                               "' de " + institution.getInstitutionalName() + ". Revisa los detalles.";
+                        Notification notification = new Notification(notificationMessage, follower.getId(), null);
+                        notificationService.sendNotification(notification);
+                        System.out.println("Notification sent to user: " + follower.getId());
                     }
-                } catch (Exception e) {
-                    System.err.println("Error sending notifications to followers: " + e.getMessage());
-                    // No fallar la operación principal por un error de notificación
                 }
-
-                tx.commit();
-                response.type("application/json");
-                return gson.toJson(Map.of("message", "Opportunity added successfully", "opportunityId", opportunity.getId()));
-
             } catch (Exception e) {
-                if (tx.isActive()) {
-                    tx.rollback();
-                }
-                response.status(500);
-                return "{\"error\": \"An error occurred while adding the opportunity\"}";
-            } finally {
-                entityManager.close();
+                System.err.println("Error sending notifications to followers: " + e.getMessage());
+                // No fallar la operación principal por un error de notificación
             }
+
+            opportunities.persist(opportunity);
+            tx.commit();
+            response.type("application/json");
+            return gson.toJson(Map.of("message", "Opportunity added successfully", "opportunityId", opportunity.getId()));
 
         } catch (Exception e) {
             if (tx.isActive()) {
