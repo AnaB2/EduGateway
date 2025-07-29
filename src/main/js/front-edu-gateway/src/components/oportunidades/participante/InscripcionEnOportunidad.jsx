@@ -79,8 +79,8 @@ export function InscripcionEnOportunidad({ actualizarOportunidades, oportunidadD
                     <FloatingLabel controlId="floatingLocalidad" label="Localidad" className="mb-3">
                         <Form.Control type="text" placeholder="Localidad de participante" value={localidad} onChange={(event) => { setLocalidad(event.target.value) }} />
                     </FloatingLabel>
-                    <FloatingLabel controlId="floatingMensaje" label="Mensaje" className="mb-3">
-                        <Form.Control as="textarea" placeholder="Mensaje" value={mensaje} onChange={(event) => { setMensaje(event.target.value) }} />
+                    <FloatingLabel controlId="floatingMensaje" label="Carta de postulación" className="mb-3">
+                        <Form.Control as="textarea" placeholder="Carta de postulación" value={mensaje} onChange={(event) => { setMensaje(event.target.value) }} />
                     </FloatingLabel>
                 </Modal.Body>
 

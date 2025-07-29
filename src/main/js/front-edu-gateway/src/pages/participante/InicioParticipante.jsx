@@ -16,16 +16,37 @@ export function InicioParticipante() {
     const [currentPage, setCurrentPage] = useState(1);
     const [userTags, setUserTags] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [userName, setUserName] = useState('');
     const pageSize = 9;
 
     useEffect(() => {
         fetchUserTags();
+        // Actualizar el nombre del usuario cuando se monta el componente
+        setUserName(getName() || 'Usuario');
+
+        // Listener para actualizar el nombre cuando el usuario regresa a la página
+        const handleFocus = () => {
+            setUserName(getName() || 'Usuario');
+        };
+
+        const handleVisibilityChange = () => {
+            if (!document.hidden) {
+                setUserName(getName() || 'Usuario');
+            }
+        };
+
+        window.addEventListener('focus', handleFocus);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        
+        // Cleanup del listener
+        return () => {
+            window.removeEventListener('focus', handleFocus);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
     }, []);
 
     useEffect(() => {
-        if (userTags.length > 0) {
-            fetchRecommendedOpportunities();
-        }
+        fetchRecommendedOpportunities();
     }, [currentPage, userTags]);
 
     // ✅ Obtiene los tags del usuario desde su perfil
@@ -68,6 +89,8 @@ export function InicioParticipante() {
             setTotalPages(1);
         } catch (error) {
             console.error("Error fetching recommended opportunities:", error);
+            // En caso de error, asegurarse de que se muestre el mensaje apropiado
+            setOportunidades([]);
         } finally {
             setLoading(false);
         }
@@ -82,7 +105,7 @@ export function InicioParticipante() {
     return (
         <div>
             <NavbarParticipante />
-            <Portada img_path={"/img/portada_participante.png"} nombre={getName()} />
+            <Portada img_path={"/img/portada_participante.png"} nombre={userName} />
 
             <div className="contenido-pagina-oportunidades">
                 <h1 style={{ textAlign: "center", marginTop: "20px" }}>Sugerencias para Ti</h1>

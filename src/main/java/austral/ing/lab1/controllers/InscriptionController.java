@@ -271,8 +271,11 @@ public class InscriptionController {
           JsonObject inscriptionJson = new JsonObject();
           inscriptionJson.addProperty("inscriptionId", inscription.getId());
           inscriptionJson.addProperty("inscriptionName", inscription.getNombre());
+          inscriptionJson.addProperty("nombre", inscription.getNombre());
+          inscriptionJson.addProperty("apellido", inscription.getApellido());
           inscriptionJson.addProperty("emailParticipante", inscription.getEmailParticipante());
           inscriptionJson.addProperty("localidad", inscription.getLocalidad());
+          inscriptionJson.addProperty("mensaje", inscription.getMensaje());
           inscriptionJson.addProperty("estado", inscription.getEstado().toString());
 
           inscriptionsJson.add(inscriptionJson);

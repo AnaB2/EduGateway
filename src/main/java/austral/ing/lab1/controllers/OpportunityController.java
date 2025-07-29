@@ -353,16 +353,21 @@ public class OpportunityController {
             }
 
             Set<String> preferredTags = user.getPreferredTags();
+            List<Opportunity> recommendedOpportunities;
+            
             if (preferredTags.isEmpty()) {
-                response.status(200);
-                return gson.toJson(Collections.emptyList());
+                // Si no hay preferencias, devolver oportunidades aleatorias
+                recommendedOpportunities = entityManager.createQuery(
+                        "SELECT o FROM Opportunity o ORDER BY RANDOM()", Opportunity.class)
+                        .setMaxResults(10) // Limitar a 10 oportunidades aleatorias
+                        .getResultList();
+            } else {
+                // ✅ Verificar si las oportunidades tienen tags en común con el usuario
+                recommendedOpportunities = entityManager.createQuery(
+                                "SELECT DISTINCT o FROM Opportunity o JOIN o.tags tag WHERE tag IN :preferredTags", Opportunity.class)
+                        .setParameter("preferredTags", preferredTags)
+                        .getResultList();
             }
-
-            // ✅ Verificar si las oportunidades tienen tags en común con el usuario
-            List<Opportunity> recommendedOpportunities = entityManager.createQuery(
-                            "SELECT DISTINCT o FROM Opportunity o JOIN o.tags tag WHERE tag IN :preferredTags", Opportunity.class)
-                    .setParameter("preferredTags", preferredTags)
-                    .getResultList();
 
             response.type("application/json");
             return gson.toJson(recommendedOpportunities);

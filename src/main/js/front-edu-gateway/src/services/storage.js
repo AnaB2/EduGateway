@@ -25,6 +25,12 @@ export function getName() {
     return localStorage.getItem('name');
 }
 
+export function updateName(firstName, lastName) {
+    const fullName = `${firstName} ${lastName}`;
+    localStorage.setItem('name', fullName);
+    return fullName;
+}
+
 export function getId() {
     const id = localStorage.getItem('id');
     return id ? Number(id) : null; // ✅ Convertir a número

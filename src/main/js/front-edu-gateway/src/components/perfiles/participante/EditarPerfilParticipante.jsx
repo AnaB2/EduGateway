@@ -4,6 +4,7 @@ import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { editUser } from "../../../services/Api";
+import { updateName } from "../../../services/storage";
 //import { useNavigate } from "react-router-dom";
 
 export function EditarPerfilParticipante({ actualizarParticipante, datosAnteriores = {} }) {
@@ -37,6 +38,7 @@ export function EditarPerfilParticipante({ actualizarParticipante, datosAnterior
             setAddSuccess(true);
             setAddError('');
             actualizarParticipante();
+            updateName(firstName, lastName); // Call updateName after successful edit
         } catch (error) {
             console.error("Error al editar perfil: ", error);
             setAddSuccess(false);
