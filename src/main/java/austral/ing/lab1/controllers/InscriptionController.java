@@ -160,19 +160,12 @@ public class InscriptionController {
       inscription.setEstado(InscriptionStatus.ACCEPTED);
       em.merge(inscription); // Persistir los cambios
       
-      // Obtener la oportunidad para decrementar la capacidad
+      // Obtener la oportunidad para obtener la capacidad actual (sin decrementar)
       Opportunity opportunity = em.find(Opportunity.class, inscription.getOpportunityID());
       if (opportunity == null) {
         tx.rollback();
         response.status(404);
         return gson.toJson(Map.of("error", "Opportunity not found"));
-      }
-
-      // DECREMENTAR LA CAPACIDAD DE LA OPORTUNIDAD
-      int currentCapacity = opportunity.getCapacity();
-      if (currentCapacity > 0) {
-        opportunity.setCapacity(currentCapacity - 1);
-        em.merge(opportunity); // Persistir el cambio de capacidad
       }
 
       tx.commit();
@@ -188,7 +181,7 @@ public class InscriptionController {
         Notification notification = new Notification(message, user.getId(), null);
         notificationService.sendNotification(notification);
       }
-      
+
       // Devolver información actualizada incluyendo los cupos actuales
       response.type("application/json");
       return gson.toJson(Map.of(
@@ -196,7 +189,7 @@ public class InscriptionController {
         "opportunityId", opportunity.getId(),
         "currentCapacity", opportunity.getCapacity()
       ));
-      
+
     } catch (Exception e) {
       if (tx.isActive()) {
         tx.rollback();
@@ -234,13 +227,18 @@ public class InscriptionController {
       inscription.setEstado(InscriptionStatus.REJECTED);
       em.merge(inscription); // Persistir los cambios
       
-      // Obtener la oportunidad para devolver información actualizada
+      // Obtener la oportunidad para incrementar la capacidad (liberar cupo reservado)
       Opportunity opportunity = em.find(Opportunity.class, inscription.getOpportunityID());
       if (opportunity == null) {
         tx.rollback();
         response.status(404);
         return gson.toJson(Map.of("error", "Opportunity not found"));
       }
+
+      // INCREMENTAR LA CAPACIDAD DE LA OPORTUNIDAD (liberar cupo reservado)
+      int currentCapacity = opportunity.getCapacity();
+      opportunity.setCapacity(currentCapacity + 1);
+      em.merge(opportunity); // Persistir el cambio de capacidad
 
       tx.commit();
 
@@ -255,7 +253,7 @@ public class InscriptionController {
         Notification notification = new Notification(message, user.getId(), null);
         notificationService.sendNotification(notification);
       }
-      
+
       // Devolver información actualizada incluyendo los cupos actuales
       response.type("application/json");
       return gson.toJson(Map.of(
