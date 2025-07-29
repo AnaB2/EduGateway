@@ -4,13 +4,13 @@ import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
-import { addInscription, getUserDetails } from "../../../services/Api"; // Assuming getUserDetails is an API call to fetch user details
+import { addInscription, getUserDetails } from "../../../services/Api";
 import { getEmail } from "../../../services/storage";
 
 export function InscripcionEnOportunidad({ actualizarOportunidades, oportunidadData }) {
 
-    const [addSuccess, setAddSuccess] = useState(false); // true o false
-    const [addError, setAddError] = useState(''); // indica error en caso de error
+    const [addSuccess, setAddSuccess] = useState(false);
+    const [addError, setAddError] = useState('');
 
     // Controles del modal
     const [visible, setVisible] = useState(false);
@@ -22,7 +22,7 @@ export function InscripcionEnOportunidad({ actualizarOportunidades, oportunidadD
     }
 
     // Objeto navegación
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     // Controles de respuesta de form
     const [localidad, setLocalidad] = useState('');
@@ -38,9 +38,7 @@ export function InscripcionEnOportunidad({ actualizarOportunidades, oportunidadD
             (async () => {
                 try {
                     const email = getEmail();
-                    console.log("Fetching user details for email:", email); // Debugging line
                     const userDetails = await getUserDetails(email);
-                    console.log("Fetched user details:", userDetails); // Debugging line
                     setUserName(userDetails.firstName);
                     setUserLastName(userDetails.lastName);
                 } catch (error) {
@@ -53,16 +51,16 @@ export function InscripcionEnOportunidad({ actualizarOportunidades, oportunidadD
     // Función que se ejecuta al presionar botón de envío, y que llama a función addInscription en Api.js
     async function enviarForm() {
         try {
-            const inscriptionData = { localidad: localidad, mensaje: mensaje, firstName: userName, lastName: userLastName }
-            console.log("Sending inscription data:", inscriptionData); // Debugging line
-            await addInscription(getEmail(), oportunidadData.id, inscriptionData)
-            setAddSuccess(true)
-            setAddError('')
-            actualizarOportunidades()
+            const inscriptionData = { localidad, mensaje, firstName: userName, lastName: userLastName };
+            await addInscription(getEmail(), oportunidadData.id, inscriptionData);
+            setAddSuccess(true);
+            setAddError('');
+            cerrar(); // Cierra el modal después de inscribirse
+            actualizarOportunidades();
         } catch (error) {
-            console.error("Error al inscribirse:", error)
-            setAddSuccess(false)
-            setAddError("Error al inscribirse.")
+            console.error("Error al inscribirse:", error);
+            setAddSuccess(false);
+            setAddError("Error al inscribirse.");
         }
     }
 

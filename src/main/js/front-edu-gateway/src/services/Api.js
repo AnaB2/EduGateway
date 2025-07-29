@@ -824,3 +824,25 @@ export async function updateUserTags(email, tags) {
         throw error;
     }
 }
+
+export async function getOpportunityById(id) {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const response = await fetch(`${API_URL}/get-opportunity/${id}`, {
+            method: 'GET',
+            headers,
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to get opportunity by id:", error);
+        throw error;
+    }
+}

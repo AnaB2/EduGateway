@@ -1,30 +1,33 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
-import FloatingLabel from "react-bootstrap/FloatingLabel";
-import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {useNavigate} from "react-router-dom";
-import {approveInscription, getInscriptions, rejectInscription} from "../../../services/Api";
+import { useNavigate } from "react-router-dom";
+import { approveInscription, getInscriptions, rejectInscription, getOpportunityById } from "../../../services/Api";
 
-export function GestionarPostulaciones({oportunidad}){
+export function GestionarPostulaciones({ oportunidad }) {
     const [inscripciones, setInscripciones] = useState([]);
-    const [pendientes, setPendientes] = useState([])
-    const [aceptados, setAceptados] = useState([])
-    const [rechazados, setRechazados] = useState([])
-    const [cupos, setCupos] = useState(oportunidad.capacity)
-
-    function disminuirCupos(){
-        // HAY QUE HACER QUE PIDA LOS CUPOS AL BACK ACTUALIZADOS
-        // LOS CUPOS TIENEN QUE ACTUALIZARSE DESDE EL BACK CUANDO SE ACEPTA O RECHAZA POSTULACION
-    }
+    const [pendientes, setPendientes] = useState([]);
+    const [aceptados, setAceptados] = useState([]);
+    const [rechazados, setRechazados] = useState([]);
+    const [cupos, setCupos] = useState(oportunidad.capacity);
 
     // Controles del modal
-    const[visible, setVisible] = useState(false);
+    const [visible, setVisible] = useState(false);
     const abrir = () => setVisible(true);
-    const cerrar = () => {setVisible(false)}
+    const cerrar = () => setVisible(false);
 
     // Objeto navegación
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
+    // Función para traer la capacidad/cupos actualizada del backend
+    async function fetchCuposActualizados() {
+        try {
+            const updatedOpportunity = await getOpportunityById(oportunidad.id); // o el campo real de id
+            setCupos(updatedOpportunity.capacity);
+        } catch (error) {
+            console.error("Error trayendo cupos actualizados:", error);
+        }
+    }
 
     useEffect(() => {
         setCupos(oportunidad.capacity)
@@ -33,16 +36,24 @@ export function GestionarPostulaciones({oportunidad}){
     async function obtenerInscripciones() {
         try {
             const allInscriptions = await getInscriptions();
-            // console.log(allInscriptions)
-            const inscripcionesOpportunity = allInscriptions.filter(inscripcion => inscripcion.opportunityName == oportunidad.name);
-            console.log(inscripcionesOpportunity)
-            setInscripciones(inscripcionesOpportunity[0].inscriptions);
+            const inscripcionesOpportunity = allInscriptions.filter(
+                inscripcion => inscripcion.opportunityName === oportunidad.name
+            );
+            if (inscripcionesOpportunity.length > 0) {
+                setInscripciones(inscripcionesOpportunity[0].inscriptions);
+            } else {
+                setInscripciones([]);
+            }
+
+            // Traer el cupo actualizado después de cargar inscripciones
+            fetchCuposActualizados();
+
         } catch (error) {
             console.error("Error al obtener inscripciones:", error);
         }
     }
 
-    useEffect( () => {
+    useEffect(() => {
         if (visible) {
             obtenerInscripciones();
         }
@@ -59,24 +70,40 @@ export function GestionarPostulaciones({oportunidad}){
     }, [inscripciones]);
 
     function aceptarPostulacion(inscriptionId) {
-        console.log(inscriptionId)
         approveInscription(inscriptionId)
-            .then(() =>  {
-                obtenerInscripciones();
+            .then(() => {
+                obtenerInscripciones(); // Actualiza inscripciones y cupos
             })
     }
 
-    function rechazarPostulacion(inscriptionId){
+    function rechazarPostulacion(inscriptionId) {
         rejectInscription(inscriptionId)
-
-
-            .then(() =>  {
-                obtenerInscripciones();
+            .then(() => {
+                obtenerInscripciones(); // Actualiza inscripciones y cupos
             })
-
     }
 
-    return(
+    // Función para mostrar el nombre más completo posible
+    function mostrarNombre(inscripcion) {
+        // Si existe un nombre combinado
+        if (inscripcion.inscriptionName) return inscripcion.inscriptionName;
+        // Si tiene nombre y apellido por separado
+        if (inscripcion.firstName || inscripcion.lastName)
+            return `${inscripcion.firstName || ""} ${inscripcion.lastName || ""}`.trim();
+        return "-";
+    }
+
+    // Función robusta para mostrar el mensaje cualquiera sea el campo
+    function mostrarMensaje(inscripcion) {
+        if (inscripcion.mensaje) return inscripcion.mensaje;
+        if (inscripcion.message) return inscripcion.message;
+        if (inscripcion.userMessage) return inscripcion.userMessage;
+        if (inscripcion.comment) return inscripcion.comment;
+        if (inscripcion.msg) return inscripcion.msg;
+        return "Sin mensaje";
+    }
+
+    return (
         <>
             <Button variant="dark" onClick={abrir}>Gestionar postulaciones</Button>
 
@@ -88,24 +115,82 @@ export function GestionarPostulaciones({oportunidad}){
                 <Modal.Body>
                     <p>Cupos disponibles: {cupos}</p>
                     <div>
+                        {/* Pendientes */}
                         <div className="pendientes">
-                            {pendientes.map(inscripcion =>(<div style={{backgroundColor:'yellow', display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:'center', padding:'10px'}}>
-                                {inscripcion.inscriptionName + " ID " + inscripcion.inscriptionId}
-                                <div  key={inscripcion.id} style={{display:"flex", flexDirection:"row", gap:'5px'}}>
-                                    <Button onClick={()=>aceptarPostulacion(inscripcion.inscriptionId)} className="btn-dark">SI</Button>
-                                    <Button onClick={()=>rechazarPostulacion(inscripcion.inscriptionId)} className="btn-dark">NO</Button>
+                            {pendientes.map(inscripcion => (
+                                <div
+                                    key={inscripcion.inscriptionId}
+                                    style={{
+                                        backgroundColor: 'yellow',
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: '6px',
+                                        padding: '10px',
+                                        marginBottom: '8px',
+                                        borderRadius: '10px'
+                                    }}
+                                >
+                                    <div><b>Nombre:</b> {mostrarNombre(inscripcion)}</div>
+                                    <div><b>ID:</b> {inscripcion.inscriptionId}</div>
+                                    <div><b>Localidad:</b> {inscripcion.localidad || "Sin info"}</div>
+                                    <div><b>Mensaje:</b> <i>{mostrarMensaje(inscripcion)}</i></div>
+                                    <div style={{ display: "flex", flexDirection: "row", gap: '7px', marginTop: 4 }}>
+                                        <Button onClick={() => aceptarPostulacion(inscripcion.inscriptionId)} className="btn-dark">Aceptar</Button>
+                                        <Button onClick={() => rechazarPostulacion(inscripcion.inscriptionId)} className="btn-dark">Rechazar</Button>
+                                    </div>
                                 </div>
-                            </div>))}
+                            ))}
                         </div>
+
+                        {/* Aceptados */}
                         <div className="aceptados">
-                            {aceptados.map(inscripcion =>(<div style={{backgroundColor:'green', display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:'center', padding:'10px'}} key={inscripcion.id}>{inscripcion.inscriptionName}</div>))}
+                            {aceptados.map(inscripcion => (
+                                <div
+                                    key={inscripcion.inscriptionId}
+                                    style={{
+                                        backgroundColor: 'green',
+                                        color: 'white',
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: '5px',
+                                        padding: '10px',
+                                        marginBottom: '8px',
+                                        borderRadius: '10px'
+                                    }}
+                                >
+                                    <div><b>Nombre:</b> {mostrarNombre(inscripcion)}</div>
+                                    <div><b>ID:</b> {inscripcion.inscriptionId}</div>
+                                    <div><b>Localidad:</b> {inscripcion.localidad || "Sin info"}</div>
+                                    <div><b>Mensaje:</b> <i>{mostrarMensaje(inscripcion)}</i></div>
+                                </div>
+                            ))}
                         </div>
+
+                        {/* Rechazados */}
                         <div className="rechazados">
-                            {rechazados.map(inscripcion=>(<div style={{backgroundColor:'red', display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:'center', padding:'10px'}} key={inscripcion.id}>{inscripcion.inscriptionName}</div>))}
+                            {rechazados.map(inscripcion => (
+                                <div
+                                    key={inscripcion.inscriptionId}
+                                    style={{
+                                        backgroundColor: 'red',
+                                        color: 'white',
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: '5px',
+                                        padding: '10px',
+                                        marginBottom: '8px',
+                                        borderRadius: '10px'
+                                    }}
+                                >
+                                    <div><b>Nombre:</b> {mostrarNombre(inscripcion)}</div>
+                                    <div><b>ID:</b> {inscripcion.inscriptionId}</div>
+                                    <div><b>Localidad:</b> {inscripcion.localidad || "Sin info"}</div>
+                                    <div><b>Mensaje:</b> <i>{mostrarMensaje(inscripcion)}</i></div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </Modal.Body>
-
 
                 <Modal.Footer>
                     <Button variant="dark" onClick={cerrar}>Cerrar</Button>

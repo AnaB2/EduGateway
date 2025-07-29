@@ -85,8 +85,8 @@ public class InscriptionController {
       // Set status to "pending" by default
       inscription.setEstado(InscriptionStatus.PENDING);
 
-      // Decrement the opportunity's capacity
-      opportunity.setCapacity(capacity - 1);
+      // Ya NO bajamos el cupo acá
+      // opportunity.setCapacity(capacity - 1);  // <-- cambio aquí
 
       inscriptions.persist(inscription);
 
@@ -195,6 +195,14 @@ public class InscriptionController {
         return;
       }
 
+      // SOLO bajamos el cupo si se acepta y antes NO estaba aceptada
+      if (newStatus == InscriptionStatus.ACCEPTED && inscription.getEstado() != InscriptionStatus.ACCEPTED) {
+        Opportunity opportunity = entityManager.find(Opportunity.class, inscription.getOpportunityID());
+        if (opportunity != null && opportunity.getCapacity() > 0) {
+          opportunity.setCapacity(opportunity.getCapacity() - 1);
+        }
+      }
+
       inscription.setEstado(newStatus); // Update the status of the inscription
 
       inscriptions.persist(inscription);
@@ -241,8 +249,10 @@ public class InscriptionController {
           JsonObject inscriptionJson = new JsonObject();
           inscriptionJson.addProperty("inscriptionId", inscription.getId());
           inscriptionJson.addProperty("inscriptionName", inscription.getNombre());
+          inscriptionJson.addProperty("apellido", inscription.getApellido());
           inscriptionJson.addProperty("emailParticipante", inscription.getEmailParticipante());
           inscriptionJson.addProperty("localidad", inscription.getLocalidad());
+          inscriptionJson.addProperty("mensaje", inscription.getMensaje());
           inscriptionJson.addProperty("estado", inscription.getEstado().toString());
 
           inscriptionsJson.add(inscriptionJson);

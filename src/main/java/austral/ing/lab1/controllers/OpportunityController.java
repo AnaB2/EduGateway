@@ -336,4 +336,40 @@ public class OpportunityController {
             entityManager.close();
         }
     };
+
+    // Endpoint: GET /get-opportunity/:id
+    public static Route handleGetOpportunityById = (Request request, Response response) -> {
+        Long id = Long.parseLong(request.params(":id"));
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            Opportunity opportunity = entityManager.find(Opportunity.class, id);
+
+            if (opportunity == null) {
+                response.status(404);
+                return "{\"error\": \"Opportunity not found\"}";
+            }
+
+            JsonObject opportunityJson = new JsonObject();
+            opportunityJson.addProperty("id", opportunity.getId());
+            opportunityJson.addProperty("name", opportunity.getName());
+            opportunityJson.addProperty("category", opportunity.getCategory());
+            opportunityJson.addProperty("city", opportunity.getCity());
+            opportunityJson.addProperty("educationalLevel", opportunity.getEducationalLevel());
+            opportunityJson.addProperty("modality", opportunity.getModality());
+            opportunityJson.addProperty("language", opportunity.getLanguage());
+            opportunityJson.addProperty("capacity", opportunity.getCapacity());
+            opportunityJson.addProperty("institutionEmail", opportunity.getInstitutionEmail());
+            // Agregá otros campos si los necesitas
+
+            response.type("application/json");
+            return opportunityJson.toString();
+        } catch (Exception e) {
+            response.status(500);
+            return "{\"error\": \"An error occurred while fetching the opportunity\"}";
+        } finally {
+            entityManager.close();
+        }
+    };
+
+
 }

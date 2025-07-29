@@ -6,20 +6,18 @@ import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { addOpportunity } from "../../../services/Api";
 
-const allTags = ["Programación", "Matemáticas", "Ciencia", "Literatura", "Idiomas", "Arte", "Música", "Negocios", "Salud", "Deportes", "Tecnología", "Universidad"];  // ✅ Lista de tags predeterminados
+const allTags = ["Programación", "Matemáticas", "Ciencia", "Literatura", "Idiomas", "Arte", "Música", "Negocios", "Salud", "Deportes", "Tecnología", "Universidad"];
 
 export function AgregarOportunidad({ actualizarOportunidades }) {
-
     const [addSuccess, setAddSuccess] = useState(false);
     const [addError, setAddError] = useState('');
-
     const [visible, setVisible] = useState(false);
     const abrir = () => setVisible(true);
     const cerrar = () => {
         setVisible(false);
         setAddError('');
         setAddSuccess(false);
-    }
+    };
 
     const navigate = useNavigate();
 
@@ -30,32 +28,37 @@ export function AgregarOportunidad({ actualizarOportunidades }) {
     const [city, setCity] = useState('');
     const [category, setCategory] = useState('');
     const [capacity, setCapacity] = useState(0);
-    const [selectedTags, setSelectedTags] = useState([]);  // ✅ Estado para los tags seleccionados
+    const [selectedTags, setSelectedTags] = useState([]);
 
     const handleTagSelection = (tag) => {
         if (selectedTags.includes(tag)) {
-            setSelectedTags(selectedTags.filter(t => t !== tag));  // ✅ Quitar tag si ya está seleccionado
+            setSelectedTags(selectedTags.filter(t => t !== tag));
         } else {
-            setSelectedTags([...selectedTags, tag]);  // ✅ Agregar tag si no está seleccionado
+            setSelectedTags([...selectedTags, tag]);
         }
     };
 
     async function enviarForm() {
         try {
             const opportunityData = {
-                name: name,
-                language: language,
-                educationalLevel: educationalLevel,
-                modality: modality,
-                city: city,
-                category: category,
-                capacity: capacity,
-                tags: selectedTags  // ✅ Enviar los tags al backend
-            }
+                name, language, educationalLevel, modality, city, category, capacity, tags: selectedTags
+            };
             await addOpportunity(opportunityData);
             setAddSuccess(true);
             setAddError('');
             actualizarOportunidades();
+            setTimeout(() => {
+                cerrar();
+                // Limpiar campos:
+                setName('');
+                setLanguage('');
+                setEducationalLevel('');
+                setModality('');
+                setCity('');
+                setCategory('');
+                setCapacity(0);
+                setSelectedTags([]);
+            }, 900); // 900ms para mostrar "éxito"
         } catch (error) {
             console.error("Error al añadir oportunidad: ", error);
             setAddSuccess(false);
@@ -83,22 +86,22 @@ export function AgregarOportunidad({ actualizarOportunidades }) {
 
                     <div className="form-oportunidad">
                         <FloatingLabel controlId="floatingName" label="Nombre" className="mb-3">
-                            <Form.Control type="text" placeholder="Nombre de la oportunidad" onChange={(event) => { setName(event.target.value) }} />
+                            <Form.Control type="text" placeholder="Nombre de la oportunidad" value={name} onChange={(event) => setName(event.target.value)} />
                         </FloatingLabel>
                         <FloatingLabel controlId="floatingLanguage" label="Idioma" className="mb-3">
-                            <Form.Control type="text" placeholder="Idioma de la oportunidad" onChange={(event) => { setLanguage(event.target.value) }} />
+                            <Form.Control type="text" placeholder="Idioma de la oportunidad" value={language} onChange={(event) => setLanguage(event.target.value)} />
                         </FloatingLabel>
                         <FloatingLabel controlId="floatingEducationalLevel" label="Nivel educativo" className="mb-3">
-                            <Form.Control type="text" placeholder="Nivel educativo requerido" onChange={(event) => { setEducationalLevel(event.target.value) }} />
+                            <Form.Control type="text" placeholder="Nivel educativo requerido" value={educationalLevel} onChange={(event) => setEducationalLevel(event.target.value)} />
                         </FloatingLabel>
                         <FloatingLabel controlId="floatingModality" label="Modalidad" className="mb-3">
-                            <Form.Control type="text" placeholder="Modalidad" onChange={(event) => { setModality(event.target.value) }} />
+                            <Form.Control type="text" placeholder="Modalidad" value={modality} onChange={(event) => setModality(event.target.value)} />
                         </FloatingLabel>
                         <FloatingLabel controlId="floatingCity" label="Ciudad" className="mb-3">
-                            <Form.Control type="text" placeholder="Ciudad" onChange={(event) => { setCity(event.target.value) }} />
+                            <Form.Control type="text" placeholder="Ciudad" value={city} onChange={(event) => setCity(event.target.value)} />
                         </FloatingLabel>
                         <FloatingLabel controlId="floatingCapacity" label="Capacidad" className="mb-3">
-                            <Form.Control type="number" placeholder="Capacidad" min="0" onChange={(event) => { setCapacity(parseInt(event.target.value)) }} />
+                            <Form.Control type="number" placeholder="Capacidad" min="0" value={capacity} onChange={(event) => setCapacity(parseInt(event.target.value))} />
                         </FloatingLabel>
                     </div>
 
@@ -125,5 +128,5 @@ export function AgregarOportunidad({ actualizarOportunidades }) {
                 </Modal.Footer>
             </Modal>
         </>
-    )
+    );
 }
