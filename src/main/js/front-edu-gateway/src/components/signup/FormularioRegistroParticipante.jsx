@@ -33,14 +33,14 @@ export function FormularioRegistroParticipante() {
             };
 
             await signUpUser(userData);
-            setMensaje({ text: '✅ ¡Registro exitoso! Redirigiendo...', type: 'success' });
+            setMensaje({ text: '¡Registro exitoso!', type: 'success' });
             
             setTimeout(() => {
                 navigate('/');
             }, 1500);
             
         } catch (error) {
-            setMensaje({ text: '❌ Error de registro. Intenta nuevamente.', type: 'error' });
+            setMensaje({ text: 'Error de registro. Intenta nuevamente.', type: 'error' });
             console.error("Error de registro: ", error);
         } finally {
             setLoading(false);
@@ -49,17 +49,17 @@ export function FormularioRegistroParticipante() {
 
     function validateForm() {
         if (!firstname || !lastname || !email || !password) {
-            setMensaje({ text: '⚠️ Todos los campos son obligatorios', type: 'error' });
+            setMensaje({ text: 'Todos los campos son obligatorios', type: 'error' });
             return false;
         }
 
         if (password.length < 6) {
-            setMensaje({ text: '🔒 La contraseña debe tener al menos 6 caracteres', type: 'error' });
+            setMensaje({ text: 'La contraseña debe tener al menos 6 caracteres', type: 'error' });
             return false;
         }
 
         if (!isValidEmail(email)) {
-            setMensaje({ text: '📧 Formato de correo electrónico inválido', type: 'error' });
+            setMensaje({ text: 'Formato de correo electrónico inválido', type: 'error' });
             return false;
         }
 
@@ -83,14 +83,14 @@ export function FormularioRegistroParticipante() {
                 fontSize: '1rem',
                 fontWeight: '500' 
             }}>
-                🎓 Registro de Participante
+                Registro de Participante
             </div>
 
             <div className="row">
                 <div className="col-md-6">
                     <FloatingLabel 
                         controlId="participanteFirstname" 
-                        label="👤 Nombre" 
+                        label="Nombre" 
                         className="mb-3"
                     >
                         <Form.Control 
@@ -106,12 +106,12 @@ export function FormularioRegistroParticipante() {
                 <div className="col-md-6">
                     <FloatingLabel 
                         controlId="participanteLastname" 
-                        label="👤 Apellido" 
+                        label="Apellido" 
                         className="mb-3"
                     >
                         <Form.Control 
                             type="text" 
-                            placeholder="Tu apellido" 
+                            placeholder=" " 
                             value={lastname} 
                             onChange={(event) => setLastName(event.target.value)}
                             onKeyPress={handleKeyPress}
@@ -123,7 +123,7 @@ export function FormularioRegistroParticipante() {
 
             <FloatingLabel 
                 controlId="participanteEmail" 
-                label="📧 Correo electrónico" 
+                label="Correo electrónico" 
                 className="mb-3"
             >
                 <Form.Control 
@@ -138,7 +138,7 @@ export function FormularioRegistroParticipante() {
 
             <FloatingLabel 
                 controlId="participantePassword" 
-                label="🔒 Contraseña" 
+                label="Contraseña" 
                 className="mb-3"
             >
                 <Form.Control 
@@ -164,7 +164,7 @@ export function FormularioRegistroParticipante() {
                             Registrando...
                         </>
                     ) : (
-                        '🚀 Crear cuenta'
+                        'Crear cuenta'
                     )}
                 </Button>
             </div>

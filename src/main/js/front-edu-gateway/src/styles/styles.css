@@ -1939,12 +1939,15 @@ body:has(.landing-page) {
 .modern-form .form-floating > .form-control {
     border: 2px solid rgba(102, 126, 234, 0.2);
     border-radius: 12px;
-    padding: 1rem 1rem;
+    padding: 1.5rem 0.75rem 0.5rem; /* espacio para el label flotante arriba */
     font-size: 1rem;
-    background: rgba(255, 255, 255, 0.8);
+    line-height: 1.25;
+    color: #000; /* <-- asegura que el texto sea visible */
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
 }
+
 
 .modern-form .form-floating > .form-control:focus {
     border-color: #667eea;
@@ -1956,8 +1959,11 @@ body:has(.landing-page) {
 .modern-form .form-floating > label {
     color: #667eea;
     font-weight: 500;
-    padding: 1rem 1rem;
+    padding: 0.5rem 0.75rem;
+    pointer-events: none;
+    transition: all 0.2s ease;
 }
+
 
 /* Modern Buttons */
 .modern-btn {

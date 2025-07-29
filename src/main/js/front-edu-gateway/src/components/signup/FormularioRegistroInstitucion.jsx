@@ -33,7 +33,7 @@ export function FormularioRegistroInstitucion() {
             };
 
             await signUpInstitution(institutionData);
-            setMensaje({ text: '✅ ¡Registro exitoso! Redirigiendo...', type: 'success' });
+            setMensaje({ text: '¡Registro exitoso!', type: 'success' });
             
             setTimeout(() => {
                 navigate('/');
@@ -41,9 +41,9 @@ export function FormularioRegistroInstitucion() {
             
         } catch (error) {
             if (error.response && error.response.status === 409) {
-                setMensaje({ text: '❌ Este correo electrónico ya está en uso', type: 'error' });
+                setMensaje({ text: 'Este correo electrónico ya está en uso', type: 'error' });
             } else {
-                setMensaje({ text: '❌ Error de registro. Intenta nuevamente.', type: 'error' });
+                setMensaje({ text: 'Error de registro. Intenta nuevamente.', type: 'error' });
             }
             console.error("Error de registro: ", error);
         } finally {
@@ -53,17 +53,17 @@ export function FormularioRegistroInstitucion() {
 
     function validateForm() {
         if (!institutionName || !email || !password || !credential) {
-            setMensaje({ text: '⚠️ Todos los campos son obligatorios', type: 'error' });
+            setMensaje({ text: 'Todos los campos son obligatorios', type: 'error' });
             return false;
         }
 
         if (password.length < 6) {
-            setMensaje({ text: '🔒 La contraseña debe tener al menos 6 caracteres', type: 'error' });
+            setMensaje({ text: 'La contraseña debe tener al menos 6 caracteres', type: 'error' });
             return false;
         }
 
         if (!isValidEmail(email)) {
-            setMensaje({ text: '📧 Formato de correo electrónico inválido', type: 'error' });
+            setMensaje({ text: 'Formato de correo electrónico inválido', type: 'error' });
             return false;
         }
 
@@ -87,12 +87,12 @@ export function FormularioRegistroInstitucion() {
                 fontSize: '1rem',
                 fontWeight: '500' 
             }}>
-                🏫 Registro de Institución
+                Registro de Institución
             </div>
 
             <FloatingLabel 
                 controlId="institucionName" 
-                label="🏢 Nombre institucional" 
+                label="Nombre institucional" 
                 className="mb-3"
             >
                 <Form.Control 
@@ -107,7 +107,7 @@ export function FormularioRegistroInstitucion() {
 
             <FloatingLabel 
                 controlId="institucionEmail" 
-                label="📧 Correo electrónico institucional" 
+                label="Correo electrónico institucional" 
                 className="mb-3"
             >
                 <Form.Control 
@@ -122,7 +122,7 @@ export function FormularioRegistroInstitucion() {
 
             <FloatingLabel 
                 controlId="institucionPassword" 
-                label="🔒 Contraseña" 
+                label="Contraseña" 
                 className="mb-3"
             >
                 <Form.Control 
@@ -137,7 +137,7 @@ export function FormularioRegistroInstitucion() {
 
             <FloatingLabel 
                 controlId="institucionCredential" 
-                label="🏆 Credencial institucional" 
+                label="Credencial institucional" 
                 className="mb-3"
             >
                 <Form.Control 
@@ -163,7 +163,7 @@ export function FormularioRegistroInstitucion() {
                             Registrando...
                         </>
                     ) : (
-                        '🚀 Crear cuenta institucional'
+                        'Crear cuenta institucional'
                     )}
                 </Button>
             </div>

@@ -36,7 +36,7 @@ export function ModalRegistro(){
                 size="lg"
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>🌟 Únete a EduGateway</Modal.Title>
+                    <Modal.Title>Únete a EduGateway</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
@@ -63,7 +63,7 @@ export function ModalRegistro(){
                             className={`modern-btn ${botonActivo === 'participante' ? 'modern-btn-primary' : 'modern-btn-secondary'}`}
                             onClick={() => verFormDeUsuario(<FormularioRegistroParticipante/>, 'participante')}
                         >
-                            🎓 Participante
+                            Participante
                             <small className="d-block mt-1" style={{ fontSize: '0.85rem', opacity: 0.8 }}>
                                 Estudiante o profesional
                             </small>
@@ -72,7 +72,7 @@ export function ModalRegistro(){
                             className={`modern-btn ${botonActivo === 'institucion' ? 'modern-btn-primary' : 'modern-btn-secondary'}`}
                             onClick={() => verFormDeUsuario(<FormularioRegistroInstitucion/>, 'institucion')}
                         >
-                            🏫 Institución
+                            Institución
                             <small className="d-block mt-1" style={{ fontSize: '0.85rem', opacity: 0.8 }}>
                                 Centro educativo u organización
                             </small>
@@ -89,7 +89,7 @@ export function ModalRegistro(){
                             color: '#9ca3af',
                             fontStyle: 'italic'
                         }}>
-                            👆 Selecciona tu tipo de cuenta para continuar
+                            Selecciona tu tipo de cuenta para continuar
                         </div>
                     )}
                 </Modal.Body>
@@ -107,7 +107,7 @@ export function ModalRegistro(){
                             color: '#667eea',
                             fontWeight: '500'
                         }}>
-                            ✨ Completa el formulario para crear tu cuenta
+                            Completa el formulario para crear tu cuenta
                         </div>
                     )}
                 </Modal.Footer>

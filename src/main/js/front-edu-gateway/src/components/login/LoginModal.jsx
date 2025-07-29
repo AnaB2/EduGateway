@@ -78,7 +78,7 @@ export function LoginModal(){
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>✨ Bienvenido de vuelta</Modal.Title>
+                    <Modal.Title>Bienvenido de vuelta</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
@@ -93,7 +93,7 @@ export function LoginModal(){
                         
                         <FloatingLabel 
                             controlId="loginEmail" 
-                            label="📧 Correo electrónico" 
+                            label="Correo electrónico" 
                             className="mb-3"
                         >
                             <Form.Control 
@@ -108,7 +108,7 @@ export function LoginModal(){
                         
                         <FloatingLabel 
                             controlId="loginPassword" 
-                            label="🔒 Contraseña"
+                            label="Contraseña"
                         >
                             <Form.Control 
                                 type="password" 
@@ -146,7 +146,7 @@ export function LoginModal(){
                                 Iniciando...
                             </>
                         ) : (
-                            '🚀 Iniciar sesión'
+                            'Iniciar sesión'
                         )}
                     </Button>
                     <Button 
