@@ -65,16 +65,18 @@ export function AgregarOportunidad({ actualizarOportunidades }) {
 
     return (
         <>
-            <Button variant="dark" onClick={abrir}>Agregar oportunidad</Button>
+            <Button className="btn-add-opportunity" onClick={abrir}>
+                Agregar Nueva Oportunidad
+            </Button>
 
             <Modal show={visible} onHide={cerrar} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Añadir oportunidad</Modal.Title>
+                    <Modal.Title>Añadir Nueva Oportunidad</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
                     <Form.Select className="form-select mb-3" aria-label="Categoría" onChange={(event) => setCategory(event.target.value)}>
-                        <option>Categoría</option>
+                        <option>Selecciona una categoría</option>
                         <option value="Voluntariado">Voluntariado</option>
                         <option value="Curso">Curso</option>
                         <option value="Programa">Programa</option>

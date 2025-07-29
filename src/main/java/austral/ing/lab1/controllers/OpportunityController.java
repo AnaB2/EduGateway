@@ -26,6 +26,7 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 import austral.ing.lab1.model.Institution;
+import austral.ing.lab1.util.EntityManagers;
 
 public class OpportunityController {
 
@@ -329,7 +330,7 @@ public class OpportunityController {
     };
 
     public static Route getRecommendedOpportunities = (Request request, Response response) -> {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityManager entityManager = EntityManagers.currentEntityManager();
         try {
             String userIdParam = request.queryParams("userId");
             if (userIdParam == null || userIdParam.trim().isEmpty()) {
@@ -371,7 +372,7 @@ public class OpportunityController {
             response.status(500);
             return "{\"error\": \"An error occurred while fetching recommendations\"}";
         } finally {
-            entityManager.close();
+            EntityManagers.close();
         }
     };
 }

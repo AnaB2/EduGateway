@@ -11,12 +11,19 @@ export function FormularioRegistroParticipante() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [mensaje, setMensaje] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
     async function enviarForm() {
+        setLoading(true);
+        setMensaje('');
+
         try {
-            if (!validateForm()) return;
+            if (!validateForm()) {
+                setLoading(false);
+                return;
+            }
 
             const userData = {
                 email: email,
@@ -26,22 +33,33 @@ export function FormularioRegistroParticipante() {
             };
 
             await signUpUser(userData);
-            setMensaje({ text: 'Registro exitoso', color: 'green' });
-            navigate('/');
+            setMensaje({ text: '✅ ¡Registro exitoso! Redirigiendo...', type: 'success' });
+            
+            setTimeout(() => {
+                navigate('/');
+            }, 1500);
+            
         } catch (error) {
-            setMensaje({ text: 'Error de registro', color: 'red' });
+            setMensaje({ text: '❌ Error de registro. Intenta nuevamente.', type: 'error' });
             console.error("Error de registro: ", error);
+        } finally {
+            setLoading(false);
         }
     }
 
     function validateForm() {
         if (!firstname || !lastname || !email || !password) {
-            setMensaje({ text: 'Todos los campos son obligatorios', color: 'red' });
+            setMensaje({ text: '⚠️ Todos los campos son obligatorios', type: 'error' });
+            return false;
+        }
+
+        if (password.length < 6) {
+            setMensaje({ text: '🔒 La contraseña debe tener al menos 6 caracteres', type: 'error' });
             return false;
         }
 
         if (!isValidEmail(email)) {
-            setMensaje({ text: 'Formato de correo electrónico inválido', color: 'red' });
+            setMensaje({ text: '📧 Formato de correo electrónico inválido', type: 'error' });
             return false;
         }
 
@@ -49,35 +67,113 @@ export function FormularioRegistroParticipante() {
     }
 
     function isValidEmail(email) {
-        // Implement email validation logic here
-        // For example, you can use regular expressions or a library like validator.js
-        // Here's a basic example:
         return email.match(/^[\w-]+(\.[\w-]+)*@([a-z0-9-]+\.)+[a-z]{2,}$/i);
     }
 
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            enviarForm();
+        }
+    };
+
     return (
-        <div>
-            <div className="form-registro">
-                <FloatingLabel controlId="floatingInput1" label="Nombre" className="mb-3">
-                    <Form.Control type="text" placeholder="Nombre" onChange={(event) => { setFirstName(event.target.value) }} />
-                </FloatingLabel>
-
-                <FloatingLabel controlId="floatingInput2" label="Apellido" className="mb-3">
-                    <Form.Control type="text" placeholder="Apellido" onChange={(event) => { setLastName(event.target.value) }} />
-                </FloatingLabel>
-
-                <FloatingLabel controlId="floatingInput3" label="Correo electrónico" className="mb-3">
-                    <Form.Control type="email" placeholder="nombre@ejemplo.com" onChange={(event) => { setEmail(event.target.value) }} />
-                </FloatingLabel>
-
-                <FloatingLabel controlId="floatingPassword" label="Contraseña" className="mb-3">
-                    <Form.Control type="password" placeholder="Contraseña" onChange={(event) => { setPassword(event.target.value) }} />
-                </FloatingLabel>
+        <div className="modern-form">
+            <div className="text-center mb-4" style={{ 
+                color: '#667eea', 
+                fontSize: '1rem',
+                fontWeight: '500' 
+            }}>
+                🎓 Registro de Participante
             </div>
-            <div>
-                <Button variant="dark" onClick={enviarForm}>Registrarse</Button>
-                <p style={{ marginTop: 10, color: mensaje.color }}>{mensaje.text}</p>
+
+            <div className="row">
+                <div className="col-md-6">
+                    <FloatingLabel 
+                        controlId="participanteFirstname" 
+                        label="👤 Nombre" 
+                        className="mb-3"
+                    >
+                        <Form.Control 
+                            type="text" 
+                            placeholder="Tu nombre" 
+                            value={firstname} 
+                            onChange={(event) => setFirstName(event.target.value)}
+                            onKeyPress={handleKeyPress}
+                            disabled={loading}
+                        />
+                    </FloatingLabel>
+                </div>
+                <div className="col-md-6">
+                    <FloatingLabel 
+                        controlId="participanteLastname" 
+                        label="👤 Apellido" 
+                        className="mb-3"
+                    >
+                        <Form.Control 
+                            type="text" 
+                            placeholder="Tu apellido" 
+                            value={lastname} 
+                            onChange={(event) => setLastName(event.target.value)}
+                            onKeyPress={handleKeyPress}
+                            disabled={loading}
+                        />
+                    </FloatingLabel>
+                </div>
             </div>
+
+            <FloatingLabel 
+                controlId="participanteEmail" 
+                label="📧 Correo electrónico" 
+                className="mb-3"
+            >
+                <Form.Control 
+                    type="email" 
+                    placeholder="nombre@ejemplo.com" 
+                    value={email} 
+                    onChange={(event) => setEmail(event.target.value)}
+                    onKeyPress={handleKeyPress}
+                    disabled={loading}
+                />
+            </FloatingLabel>
+
+            <FloatingLabel 
+                controlId="participantePassword" 
+                label="🔒 Contraseña" 
+                className="mb-3"
+            >
+                <Form.Control 
+                    type="password" 
+                    placeholder="Mínimo 6 caracteres" 
+                    value={password} 
+                    onChange={(event) => setPassword(event.target.value)}
+                    onKeyPress={handleKeyPress}
+                    disabled={loading}
+                />
+            </FloatingLabel>
+
+            <div className="text-center">
+                <Button 
+                    className="modern-btn modern-btn-primary"
+                    onClick={enviarForm}
+                    disabled={loading}
+                    style={{ minWidth: '200px' }}
+                >
+                    {loading ? (
+                        <>
+                            <span className="spinner-border spinner-border-sm me-2" />
+                            Registrando...
+                        </>
+                    ) : (
+                        '🚀 Crear cuenta'
+                    )}
+                </Button>
+            </div>
+
+            {mensaje && (
+                <div className={`modern-alert ${mensaje.type === 'success' ? 'modern-alert-success' : 'modern-alert-error'}`}>
+                    {mensaje.text}
+                </div>
+            )}
         </div>
     );
 }

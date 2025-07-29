@@ -7,9 +7,12 @@ export default function ListaDeChats({cambiarChatActual}) {
 
     var [chats, setChats] = useState([])
     const [email, setEmail] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [creating, setCreating] = useState(false);
 
     const buscarListaDeChats = async () => {
         try {
+            setLoading(true);
             const response = await getListChats(getId(), getUserType());
             console.log(response)
             setChats(response);
@@ -17,6 +20,8 @@ export default function ListaDeChats({cambiarChatActual}) {
         } catch (error) {
             console.error("Error al obtener la lista de chats:", error);
             return [];
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -29,41 +34,92 @@ export default function ListaDeChats({cambiarChatActual}) {
     }, []);
 
     const crearNuevoChat = async (emailDestino) => {
+        if (!emailDestino.trim()) return;
+        
         try {
+            setCreating(true);
             const userId = getId();
             const response = await createChat(emailDestino, userId);
-            //setChats((prevChats) => [...prevChats, newChat]);
             console.log(response)
 
             // Va a buscar lista de chats actual y actualiza
             buscarListaDeChats().then((chats)=>{
                 setChats(chats)
-
-            })        } catch (error) {
+            })
+            
+            // Limpiar el input
+            setEmail("");
+            
+        } catch (error) {
             console.error("Error al crear nuevo chat:", error);
+            alert("Error al crear el chat. Verifica que el email sea correcto.");
+        } finally {
+            setCreating(false);
         }
     };
 
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            crearNuevoChat(email);
+        }
+    };
 
     return (
         <div className="lista-de-chats">
             <h1>Chats</h1>
-            <div className={"NuevoChat"}>
+            
+            <div className="NuevoChat">
                 <p>Nuevo chat</p>
                 <input
-                    type="text"
+                    type="email"
                     placeholder="Ingresa email..."
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    disabled={creating}
                 />
-                <button onClick={()=>crearNuevoChat(email)}>Crear</button>
+                <button 
+                    onClick={() => crearNuevoChat(email)}
+                    disabled={creating || !email.trim()}
+                >
+                    {creating ? "Creando..." : "Crear"}
+                </button>
             </div>
+            
             <div className="chatsNames">
-                {chats.length !== 0 && chats.map((chat) => (
-                    <div onClick={() => cambiarChatActual(chat)} key={chat.idChat} className="chatName">
-                        {(getUserType() == "institution") ? chat.userName : chat.institutionName}
+                {loading ? (
+                    <div style={{ 
+                        padding: '20px', 
+                        textAlign: 'center', 
+                        color: '#6b7280',
+                        fontStyle: 'italic'
+                    }}>
+                        Cargando chats...
                     </div>
-                ))}
+                ) : chats.length === 0 ? (
+                    <div style={{ 
+                        padding: '20px', 
+                        textAlign: 'center', 
+                        color: '#6b7280',
+                        fontStyle: 'italic'
+                    }}>
+                        {getUserType() === "institution" 
+                            ? "No tienes conversaciones aún. Los participantes pueden contactarte desde tu perfil."
+                            : "No tienes chats. Crea uno nuevo ingresando el email de una institución."
+                        }
+                    </div>
+                ) : (
+                    chats.map((chat) => (
+                        <div 
+                            onClick={() => cambiarChatActual(chat)} 
+                            key={chat.idChat} 
+                            className="chatName"
+                            title={`Chat con ${(getUserType() == "institution") ? chat.userName : chat.institutionName}`}
+                        >
+                            {(getUserType() == "institution") ? chat.userName : chat.institutionName}
+                        </div>
+                    ))
+                )}
             </div>
         </div>
     )

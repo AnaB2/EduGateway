@@ -27,8 +27,8 @@ export function CardOportunidadParticipante({ oportunidad, actualizarOportunidad
     const navigate = useNavigate();
 
     return (
-        <div className="oportunidad">
-            <Card style={{ width: '18rem' }}>
+        <div className="oportunidad" data-category={oportunidad.category}>
+            <Card>
                 <Card.Body>
                     <Card.Title>{oportunidad.name.charAt(0).toUpperCase() + oportunidad.name.slice(1).toLowerCase()}</Card.Title>
                     <Card.Subtitle className="mb-2 text-muted">
@@ -42,7 +42,7 @@ export function CardOportunidadParticipante({ oportunidad, actualizarOportunidad
                         }
                     </Card.Subtitle>
                     <Card.Text>
-                        {`${oportunidad.category.toLowerCase()} en ${oportunidad.city} con modalidad ${oportunidad.modality.toLowerCase()}. El idioma requerido es ${oportunidad.language.toLowerCase()} y nivel educativo ${oportunidad.educationalLevel.toLowerCase()}. Capacidad ${oportunidad.capacity}.`}
+                        {`${oportunidad.category} en ${oportunidad.city} con modalidad ${oportunidad.modality.toLowerCase()}. El idioma requerido es ${oportunidad.language.toLowerCase()} y nivel educativo ${oportunidad.educationalLevel.toLowerCase()}. Capacidad ${oportunidad.capacity}.`}
                     </Card.Text>
                     <div className="footer-card-oportunidad">
                         <InscripcionEnOportunidad actualizarOportunidades={actualizarOportunidades} oportunidadData={oportunidad} />

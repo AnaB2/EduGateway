@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { Button, Spinner, Row, Col, Alert, Container } from "react-bootstrap";
+import { Spinner, Alert } from "react-bootstrap";
 import { getEmail, getToken, getUserType } from "../../services/storage";
 import { mostrarAlertaAutenticacion } from "../../components/AlertaAutenticacion";
 import { NavbarInstitucion } from "../../components/navbar/NavbarInstitucion";
@@ -47,54 +47,155 @@ export function PerfilInstitucion() {
     }
 
     if (loading) {
-        return <Spinner animation="border" role="status" className="d-block mx-auto mt-5" />;
+        return (
+            <>
+                <NavbarInstitucion />
+                <div className="profile-page">
+                    <div className="profile-loading">
+                        <Spinner animation="border" />
+                        <p>Cargando perfil de la institución...</p>
+                    </div>
+                </div>
+            </>
+        );
     }
 
     if (error) {
-        return <Alert variant="danger" className="text-center">{error}</Alert>;
+        return (
+            <>
+                <NavbarInstitucion />
+                <div className="profile-page">
+                    <div className="profile-error">
+                        <h3>❌ Error</h3>
+                        <p>{error}</p>
+                    </div>
+                </div>
+            </>
+        );
     }
 
     return (
         <>
             <NavbarInstitucion />
-            <Container fluid className="mt-4 bg-transparent">
-                <Row className="justify-content-center">
-                    <Col md={8}>
-                        <div className="p-4">
-                            <h1 className="text-center mb-4">Perfil de la Institución</h1>
-
-                            <Row className="mb-4">
-                                <Col md={6}>
-                                    <p><strong>Nombre:</strong> {institutionData.institutionalName}</p>
-                                </Col>
-                                <Col md={6}>
-                                    <p><strong>Correo:</strong> {institutionData.email}</p>
-                                </Col>
-                            </Row>
-
-                            <Row className="mb-4">
-                                <Col>
-                                    <p><strong>Descripción:</strong></p>
-                                    <p>{institutionData.description || "No hay descripción disponible."}</p>
-                                </Col>
-                            </Row>
-
-                            {/* ✅ Organización de botones con más separación */}
-                            <div className="d-flex justify-content-between align-items-center mt-5">
-                                <div className="d-flex gap-3">
-                                    <EditarPerfilInstitucion actualizarInstitucion={() => {
-                                        getInstitutionData(getEmail()).then(data => setInstitutionData(data[0]));
-                                    }} datosAnteriores={institutionData} />
-
-                                    <VerHistorialInstitucion opportunities={opportunities} />
+            <div className="profile-page">
+                <div className="profile-container">
+                    {/* Header */}
+                    <div className="profile-header institution-profile-header">
+                        <h1>Perfil de la Institución</h1>
+                        <p className="profile-subtitle">
+                            Administra la información de tu institución y revisa tu historial de oportunidades
+                        </p>
+                        
+                        <div className="profile-info-grid">
+                            <div className="profile-info-card">
+                                <div className="profile-info-item">
+                                    <div className="profile-info-icon">🏢</div>
+                                    <div className="profile-info-content">
+                                        <div className="profile-info-label">Nombre Institucional</div>
+                                        <div className="profile-info-value">{institutionData.institutionalName}</div>
+                                    </div>
                                 </div>
-
-                                <EliminarPerfilInstitucion actualizarInstitucion={() => navigate("/")} email={institutionData.email} />
+                                
+                                <div className="profile-info-item">
+                                    <div className="profile-info-icon">📧</div>
+                                    <div className="profile-info-content">
+                                        <div className="profile-info-label">Correo Institucional</div>
+                                        <div className="profile-info-value">{institutionData.email}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="profile-info-card">
+                                <div className="profile-info-item">
+                                    <div className="profile-info-icon">📝</div>
+                                    <div className="profile-info-content">
+                                        <div className="profile-info-label">Descripción</div>
+                                        <div className="profile-info-value">
+                                            {institutionData.description || "No hay descripción disponible."}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="profile-info-item">
+                                    <div className="profile-info-icon">📊</div>
+                                    <div className="profile-info-content">
+                                        <div className="profile-info-label">Oportunidades Creadas</div>
+                                        <div className="profile-info-value">
+                                            {opportunities.length} oportunidades en el historial
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </Col>
-                </Row>
-            </Container>
+                    </div>
+
+                    {/* Statistics Section */}
+                    <div className="preferences-section">
+                        <h3>📈 Estadísticas de la Institución</h3>
+                        <p style={{ color: '#6b7280', marginBottom: '24px' }}>
+                            Resumen de la actividad y alcance de tu institución en la plataforma
+                        </p>
+                        
+                        <div className="profile-info-grid">
+                            <div className="profile-info-card">
+                                <div className="profile-info-item">
+                                    <div className="profile-info-icon">🎯</div>
+                                    <div className="profile-info-content">
+                                        <div className="profile-info-label">Total de Oportunidades</div>
+                                        <div className="profile-info-value" style={{ fontSize: '1.5rem', fontWeight: '700', color: '#6366f1' }}>
+                                            {opportunities.length}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="profile-info-card">
+                                <div className="profile-info-item">
+                                    <div className="profile-info-icon">📅</div>
+                                    <div className="profile-info-content">
+                                        <div className="profile-info-label">Miembro desde</div>
+                                        <div className="profile-info-value" style={{ fontSize: '1.1rem', color: '#10b981' }}>
+                                            {institutionData.createdAt ? 
+                                                new Date(institutionData.createdAt).toLocaleDateString('es-ES', {
+                                                    year: 'numeric',
+                                                    month: 'long',
+                                                    day: 'numeric'
+                                                }) : 
+                                                "Fecha no disponible"
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Actions Section */}
+                    <div className="profile-actions">
+                        <h3>Acciones de Perfil</h3>
+                        <div className="actions-grid">
+                            <EditarPerfilInstitucion 
+                                actualizarInstitucion={() => {
+                                    getInstitutionData(getEmail()).then(data => setInstitutionData(data[0]));
+                                }} 
+                                datosAnteriores={institutionData}
+                                className="action-button action-button-primary"
+                            />
+                            
+                            <VerHistorialInstitucion 
+                                opportunities={opportunities}
+                                className="action-button action-button-secondary"
+                            />
+                            
+                            <EliminarPerfilInstitucion 
+                                actualizarInstitucion={() => navigate("/")} 
+                                email={institutionData.email}
+                                className="action-button action-button-danger"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </>
     );
 }

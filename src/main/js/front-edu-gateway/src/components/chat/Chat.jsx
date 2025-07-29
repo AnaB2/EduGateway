@@ -1,4 +1,4 @@
-import {useEffect, useState, useCallback} from "react";
+import {useEffect, useState, useCallback, useRef} from "react";
 import {getEmail, getId, getUserType} from "../../services/storage";
 import {sendMessage, initializeWebSocket} from "../../services/Api";
 
@@ -6,11 +6,24 @@ export default function Chat({nombre, mensajesAnteriores, chatId, userId, instit
     const [mensajes, setMensajes] = useState([]);
     const [mensaje, setMensaje] = useState("");
     const [loading, setLoading] = useState(false);
+    const mensajesEndRef = useRef(null);
+
+    // Scroll automático al final cuando hay nuevos mensajes
+    const scrollToBottom = () => {
+        mensajesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
 
     useEffect(() => {
         console.log("💬 Chat component mounted with:", {chatId, userId, institutionId, mensajesAnteriores});
         setMensajes(mensajesAnteriores || []);
+        // Scroll al final cuando se cargan mensajes
+        setTimeout(scrollToBottom, 100);
     }, [mensajesAnteriores]);
+
+    // Scroll automático cuando se agregan nuevos mensajes
+    useEffect(() => {
+        scrollToBottom();
+    }, [mensajes]);
 
     // Configurar WebSocket para recibir mensajes en tiempo real
     useEffect(() => {
@@ -110,24 +123,49 @@ export default function Chat({nombre, mensajesAnteriores, chatId, userId, instit
         }
     };
 
+    const formatTime = (timestamp) => {
+        try {
+            const date = new Date(timestamp);
+            return date.toLocaleTimeString('es-ES', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        } catch (error) {
+            return '';
+        }
+    };
+
     return (
         <div className="chat">
-            <h1 style={{paddingLeft: '10px'}}>{nombre}</h1>
+            <h1>{nombre}</h1>
 
             <div className="mensajes">
-                {mensajes.map((mensaje) => {
-                    const currentUserId = getId();
-                    const isOwnMessage = mensaje.emisor.toString() === currentUserId.toString();
-                    
-                    return (
-                        <div 
-                            key={mensaje.idMensaje || mensaje.timestamp}
-                            className={isOwnMessage ? "mensaje mensaje-emisor" : "mensaje mensaje-receptor"}
-                        >
-                            {mensaje.mensaje}
-                        </div>
-                    );
-                })}
+                {mensajes.length === 0 ? (
+                    <div style={{ 
+                        textAlign: 'center', 
+                        padding: '40px 20px', 
+                        color: '#6b7280',
+                        fontStyle: 'italic'
+                    }}>
+                        💬 No hay mensajes aún. ¡Envía el primer mensaje!
+                    </div>
+                ) : (
+                    mensajes.map((mensaje) => {
+                        const currentUserId = getId();
+                        const isOwnMessage = mensaje.emisor.toString() === currentUserId.toString();
+                        
+                        return (
+                            <div 
+                                key={mensaje.idMensaje || mensaje.timestamp}
+                                className={isOwnMessage ? "mensaje mensaje-emisor" : "mensaje mensaje-receptor"}
+                                title={formatTime(mensaje.timestamp)}
+                            >
+                                {mensaje.mensaje}
+                            </div>
+                        );
+                    })
+                )}
+                <div ref={mensajesEndRef} />
             </div>
 
             <div className="enviarMensaje">
@@ -142,8 +180,8 @@ export default function Chat({nombre, mensajesAnteriores, chatId, userId, instit
                 <button 
                     onClick={enviarMensaje}
                     disabled={loading || !mensaje.trim()}
+                    title={loading ? "Enviando..." : "Enviar mensaje"}
                 >
-                    {loading ? "Enviando..." : "Enviar"}
                 </button>
             </div>
         </div>

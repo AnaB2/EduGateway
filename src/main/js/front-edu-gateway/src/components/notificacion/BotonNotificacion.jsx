@@ -113,7 +113,7 @@ const NotificationButton = () => {
     };
 
     return (
-        <Dropdown show={isOpen} onToggle={setIsOpen}>
+        <Dropdown show={isOpen} onToggle={setIsOpen} className="notification-dropdown">
             <Dropdown.Toggle 
                 variant="outline-light" 
                 id="dropdown-notifications"
@@ -121,8 +121,8 @@ const NotificationButton = () => {
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
+                    width="22"
+                    height="22"
                     fill="currentColor"
                     className="bi bi-bell-fill"
                     viewBox="0 0 16 16"
@@ -130,39 +130,47 @@ const NotificationButton = () => {
                     <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901" />
                 </svg>
                 
-                {/* Badge de contador */}
+                {/* Badge de contador mejorado */}
                 {unreadCount > 0 && (
                     <Badge 
                         bg="danger" 
                         pill 
-                        className="position-absolute top-0 start-100 translate-middle notification-badge"
+                        className="position-absolute notification-badge"
                     >
                         {unreadCount > 99 ? "99+" : unreadCount}
                     </Badge>
                 )}
             </Dropdown.Toggle>
 
-            <Dropdown.Menu className="notification-menu">
-                <div className="notification-header d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
-                    <h6 className="mb-0">Notificaciones</h6>
+            <Dropdown.Menu className="notification-menu" align="end">
+                <div className="notification-header">
+                    <div className="d-flex justify-content-between align-items-center">
+                        <h6 className="mb-0">🔔 Notificaciones</h6>
+                        {unreadCount > 0 && (
+                            <Button 
+                                variant="link" 
+                                size="sm" 
+                                className="mark-all-read-btn"
+                                onClick={handleMarkAllAsRead}
+                            >
+                                Marcar todas como leídas
+                            </Button>
+                        )}
+                    </div>
                     {unreadCount > 0 && (
-                        <Button 
-                            variant="link" 
-                            size="sm" 
-                            className="p-0 text-primary"
-                            onClick={handleMarkAllAsRead}
-                        >
-                            Marcar todas como leídas
-                        </Button>
+                        <small className="text-muted mt-1 d-block">
+                            Tienes {unreadCount} notificación{unreadCount !== 1 ? 'es' : ''} sin leer
+                        </small>
                     )}
                 </div>
 
-                <div className="notification-list" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                <div className="notification-list">
                     {loading ? (
-                        <div className="text-center py-3">
-                            <div className="spinner-border spinner-border-sm" role="status">
+                        <div className="notification-loading">
+                            <div className="spinner-border spinner-border-sm me-2" role="status">
                                 <span className="visually-hidden">Cargando...</span>
                             </div>
+                            <span>Cargando notificaciones...</span>
                         </div>
                     ) : notifications.length === 0 ? (
                         <div className="text-center py-4 text-muted">
@@ -171,26 +179,27 @@ const NotificationButton = () => {
                                 width="48"
                                 height="48"
                                 fill="currentColor"
-                                className="bi bi-bell-slash mb-2"
+                                className="bi bi-bell-slash mb-3 opacity-50"
                                 viewBox="0 0 16 16"
                             >
                                 <path d="M5.164 14H15c-1.5-1-2-5.902-2-7 0-.264-.02-.523-.06-.776L5.164 14zm6.288-10.617A4.988 4.988 0 0 0 8.995 1.1a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 .898-.335 4.342-1.278 6.113l9.73-2.73zM10 16a2 2 0 1 1-4 0h4zM0 2.5L15 .5l.5 15L0 17.5 0 2.5z"/>
                             </svg>
-                            <p>No tienes notificaciones</p>
+                            <p className="mb-0">No tienes notificaciones</p>
+                            <small className="text-muted">Te notificaremos cuando tengas algo nuevo</small>
                         </div>
                     ) : (
                         notifications.map((notification, index) => (
                             <Dropdown.Item 
                                 key={notification.id || index}
-                                className={`notification-item ${!notification.read ? 'unread' : ''}`}
+                                className={`notification-item ${!notification.read ? 'unread' : 'read'}`}
                                 onClick={() => handleMarkAsRead(notification)}
                             >
-                                <div className="d-flex">
+                                <div className="d-flex align-items-start">
                                     <div className="flex-grow-1">
                                         <div className="notification-message">
                                             {notification.message}
                                         </div>
-                                        <small className="text-muted">
+                                        <small className="notification-time d-block">
                                             {formatTimeAgo(notification.timestamp)}
                                         </small>
                                     </div>

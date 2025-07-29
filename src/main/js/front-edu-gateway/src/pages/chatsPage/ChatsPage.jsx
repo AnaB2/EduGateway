@@ -73,15 +73,31 @@ export default function ChatsPage(){
         });
     };
 
+    const EmptyState = () => (
+        <div className="chat-empty">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M2.678 11.894a1 1 0 0 1 .287-1.864l.13-.03a1 1 0 0 1 1.358.83l.249 1.245a1 1 0 0 1-1.359.83l-.13-.03a1 1 0 0 1-.535-.837zm8.043-8.182a1 1 0 0 1 1.36-.83l.13.03a1 1 0 0 1 .835 1.363l-.246 1.245a1 1 0 0 1-1.36.83l-.13-.03a1 1 0 0 1-.835-1.363zM11.88 1.92a1 1 0 0 1 1.36-.83l.13.03c.367.094.622.448.622.834 0 .52-.301.924-.662 1.113l-.13.03a1 1 0 0 1-1.36-.83c0-.386.255-.74.622-.834zM13.5 7c.276 0 .5.224.5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z"/>
+                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            </svg>
+            <h3>Selecciona un chat</h3>
+            <p>
+                {getUserType() === "institution" 
+                    ? "Elige una conversación de la lista para empezar a chatear con participantes."
+                    : "Elige una conversación de la lista o crea un nuevo chat con una institución."
+                }
+            </p>
+        </div>
+    );
+
     return(
-        <div>
+        <div className="chats-page-container">
             {getUserType()=="institution"? <NavbarInstitucion/> : <NavbarParticipante/>}
             <div className="chats-page">
                 <ListaDeChats 
                     cambiarChatActual={cambiarChatActual}
                     selectedChatId={selectedChatId}
                 />
-                {chatActual && (
+                {chatActual ? (
                     <Chat 
                         nombre={chatActual.emisor} 
                         mensajesAnteriores={chatActual.mensajes}
@@ -89,6 +105,8 @@ export default function ChatsPage(){
                         userId={chatActual.userId}
                         institutionId={chatActual.institutionId}
                     />
+                ) : (
+                    <EmptyState />
                 )}
             </div>
             

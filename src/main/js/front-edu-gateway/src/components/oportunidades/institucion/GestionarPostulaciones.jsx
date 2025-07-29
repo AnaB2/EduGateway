@@ -78,11 +78,11 @@ export function GestionarPostulaciones({oportunidad}){
 
     return(
         <>
-            <Button variant="dark" onClick={abrir}>Gestionar postulaciones</Button>
+            <Button variant="dark" onClick={abrir}>Ver postulaciones</Button>
 
             <Modal show={visible} onHide={cerrar} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Gestionar postulaciones</Modal.Title>
+                    <Modal.Title>Ver postulaciones</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>

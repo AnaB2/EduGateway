@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router";
-import { Form, Button, Spinner, Row, Col, Alert, Container } from "react-bootstrap";
+import { Spinner, Alert } from "react-bootstrap";
 import { getEmail, getToken, getUserType } from "../../services/storage";
 import { mostrarAlertaAutenticacion } from "../../components/AlertaAutenticacion";
 import { NavbarParticipante } from "../../components/navbar/NavbarParticipante";
@@ -77,72 +77,145 @@ export function PerfilParticipante() {
     }
 
     if (loading) {
-        return <Spinner animation="border" role="status" className="d-block mx-auto mt-5" />;
+        return (
+            <>
+                <NavbarParticipante />
+                <div className="profile-page">
+                    <div className="profile-loading">
+                        <Spinner animation="border" />
+                        <p>Cargando tu perfil...</p>
+                    </div>
+                </div>
+            </>
+        );
     }
 
     if (error) {
-        return <Alert variant="danger" className="text-center">{error}</Alert>;
+        return (
+            <>
+                <NavbarParticipante />
+                <div className="profile-page">
+                    <div className="profile-error">
+                        <h3>❌ Error</h3>
+                        <p>{error}</p>
+                    </div>
+                </div>
+            </>
+        );
     }
 
     return (
         <>
             <NavbarParticipante />
-            <Container fluid className="mt-4 bg-transparent">
-                <Row className="justify-content-center">
-                    <Col md={8}>
-                        <div className="p-4">
-                            <h1 className="text-center mb-4">Perfil del Participante</h1>
-                            <Row>
-                                <Col md={6}>
-                                    <p><strong>Nombre:</strong> {userData.firstName}</p>
-                                    <p><strong>Apellido:</strong> {userData.lastName}</p>
-                                </Col>
-                                <Col md={6}>
-                                    <p><strong>Correo:</strong> {userData.email}</p>
-                                    <p><strong>Descripción:</strong> {userData.description}</p>
-                                </Col>
-                            </Row>
-
-                            <h3 className="mt-4">Preferencias</h3>
-                            <Form>
-                                <Row>
-                                    {allTags.map(tag => (
-                                        <Col key={tag} xs={6} md={4} lg={3} className="mb-2">
-                                            <Form.Check
-                                                type="checkbox"
-                                                label={tag}
-                                                checked={selectedTags.includes(tag)}
-                                                onChange={() => handleTagSelection(tag)}
-                                            />
-                                        </Col>
-                                    ))}
-                                </Row>
-                            </Form>
-                            <Button
-                                variant="success"
-                                onClick={handleSaveTags}
-                                className="mt-3 mb-4 w-100"
-                                disabled={saving}
-                            >
-                                {saving ? "Guardando..." : "Guardar Preferencias"}
-                            </Button>
-
-                            <div className="d-flex justify-content-between mt-4">
-                                <div className="d-flex gap-3">
-                                    <EditarPerfilParticipante actualizarParticipante={() => {
-                                        getUserData(getEmail()).then(data => setUserData(data[0]));
-                                    }} datosAnteriores={userData}/>
-
-                                    <VerHistorialParticipante inscriptions={inscriptions}/>
+            <div className="profile-page">
+                <div className="profile-container">
+                    {/* Header */}
+                    <div className="profile-header">
+                        <h1>Perfil del Participante</h1>
+                        <p className="profile-subtitle">
+                            Gestiona tu información personal y preferencias de aprendizaje
+                        </p>
+                        
+                        <div className="profile-info-grid">
+                            <div className="profile-info-card">
+                                <div className="profile-info-item">
+                                    <div className="profile-info-icon">👤</div>
+                                    <div className="profile-info-content">
+                                        <div className="profile-info-label">Nombre</div>
+                                        <div className="profile-info-value">{userData.firstName}</div>
+                                    </div>
                                 </div>
-
-                                <EliminarPerfilParticipante actualizarParticipante={() => navigate("/")}
-                                                            email={userData.email}/>
+                                
+                                <div className="profile-info-item">
+                                    <div className="profile-info-icon">👤</div>
+                                    <div className="profile-info-content">
+                                        <div className="profile-info-label">Apellido</div>
+                                        <div className="profile-info-value">{userData.lastName}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="profile-info-card">
+                                <div className="profile-info-item">
+                                    <div className="profile-info-icon">📧</div>
+                                    <div className="profile-info-content">
+                                        <div className="profile-info-label">Correo</div>
+                                        <div className="profile-info-value">{userData.email}</div>
+                                    </div>
+                                </div>
+                                
+                                <div className="profile-info-item">
+                                    <div className="profile-info-icon">📝</div>
+                                    <div className="profile-info-content">
+                                        <div className="profile-info-label">Descripción</div>
+                                        <div className="profile-info-value">
+                                            {userData.description || "No hay descripción disponible"}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </Col>
-                </Row>
-            </Container>
+                    </div>
+
+                    {/* Preferences Section */}
+                    <div className="preferences-section">
+                        <h3>Preferencias de Interés</h3>
+                        <p style={{ color: '#6b7280', marginBottom: '24px' }}>
+                            Selecciona los temas que más te interesan para recibir recomendaciones personalizadas
+                        </p>
+                        
+                        <div className="tags-grid">
+                            {allTags.map(tag => (
+                                <div 
+                                    key={tag} 
+                                    className={`tag-item ${selectedTags.includes(tag) ? 'selected' : ''}`}
+                                    onClick={() => handleTagSelection(tag)}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedTags.includes(tag)}
+                                        onChange={() => handleTagSelection(tag)}
+                                    />
+                                    <label>{tag}</label>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <button
+                            className="save-preferences-btn"
+                            onClick={handleSaveTags}
+                            disabled={saving}
+                        >
+                            {saving ? "Guardando..." : "Guardar Preferencias"}
+                        </button>
+                    </div>
+
+                    {/* Actions Section */}
+                    <div className="profile-actions">
+                        <h3>Acciones de Perfil</h3>
+                        <div className="actions-grid">
+                            <EditarPerfilParticipante 
+                                actualizarParticipante={() => {
+                                    getUserData(getEmail()).then(data => setUserData(data[0]));
+                                }} 
+                                datosAnteriores={userData}
+                                className="action-button action-button-primary"
+                            />
+                            
+                            <VerHistorialParticipante 
+                                inscriptions={inscriptions}
+                                className="action-button action-button-secondary"
+                            />
+                            
+                            <EliminarPerfilParticipante 
+                                actualizarParticipante={() => navigate("/")}
+                                email={userData.email}
+                                className="action-button action-button-danger"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </>
     );
 }
