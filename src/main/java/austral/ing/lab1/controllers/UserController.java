@@ -27,6 +27,27 @@ public class UserController {
     private static final Gson gson = new Gson();
     private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
 
+    public static Route handleUserExists = (Request request, Response response) -> {
+        String email = request.queryParams("email");
+
+        if (email == null || email.trim().isEmpty()) {
+            response.status(400);
+            return "{\"error\": \"Missing email parameter\"}";
+        }
+
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            boolean exists = new Users(entityManager).findByEmail(email).isPresent();
+            response.type("application/json");
+            return gson.toJson(exists); // true o false
+        } catch (Exception e) {
+            response.status(500);
+            return "{\"error\": \"An error occurred while checking user existence\"}";
+        } finally {
+            entityManager.close();
+        }
+    };
+
     public static Route handleFollowInstitution = (Request request, Response response) -> {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction tx = entityManager.getTransaction();

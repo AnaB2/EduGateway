@@ -47,12 +47,12 @@ public class NotificationEndpoint {
     // Example: {"institutionId": "456"}
 
     // Parse JSON
-    Map<String, String> data = new Gson().fromJson(message, Map.class);
+    Map<String, Object> data = new Gson().fromJson(message, Map.class);
     if (data.containsKey("userId")) {
-      Long userId = Long.parseLong(data.get("userId"));
+      Long userId = ((Double) data.get("userId")).longValue();
       userSessions.put(userId, session);
     } else if (data.containsKey("institutionId")) {
-      Long institutionId = Long.parseLong(data.get("institutionId"));
+      Long institutionId = ((Double) data.get("institutionId")).longValue();
       institutionSessions.put(institutionId, session);
     }
 

@@ -31,6 +31,27 @@ public class InstitutionController {
     private static final Gson gson = new Gson();
     private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
 
+    public static Route handleInstitutionExists = (Request request, Response response) -> {
+        String email = request.queryParams("email");
+
+        if (email == null || email.trim().isEmpty()) {
+            response.status(400);
+            return "{\"error\": \"Missing email parameter\"}";
+        }
+
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            boolean exists = new Institutions(entityManager).findByEmail(email).isPresent();
+            response.type("application/json");
+            return gson.toJson(exists); // true o false
+        } catch (Exception e) {
+            response.status(500);
+            return "{\"error\": \"An error occurred while checking institution existence\"}";
+        } finally {
+            entityManager.close();
+        }
+    };
+
     public static Route handleEditInstitution = (Request request, Response response) -> {
         String body = request.body();
         Map<String, String> formData = gson.fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
