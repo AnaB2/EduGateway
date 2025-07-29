@@ -9,6 +9,7 @@
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
+    id 'application'
 }
 
 repositories {
@@ -42,6 +43,9 @@ dependencies {
 
     // Implementacion de WebSocket
     implementation 'javax.websocket:javax.websocket-api:1.1'
+    // Jetty WebSocket dependencies for Spark framework
+    implementation 'org.eclipse.jetty.websocket:websocket-server:9.4.44.v20210927'
+    implementation 'org.eclipse.jetty.websocket:websocket-servlet:9.4.44.v20210927'
 
     // Implementacion de JAPA
     implementation 'org.hibernate:hibernate-core:5.4.32.Final'
@@ -56,4 +60,9 @@ dependencies {
 
     // Incluye una versión compatible de Guava
     implementation 'com.google.guava:guava:32.0.1-jre'
+}
+
+// Application main class configuration
+application {
+    mainClass = 'austral.ing.lab1.Application'
 }

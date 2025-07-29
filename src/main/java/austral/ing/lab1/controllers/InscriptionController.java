@@ -22,6 +22,8 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.util.List;
 import java.util.Map;
+import austral.ing.lab1.model.Institution;
+import austral.ing.lab1.repository.Institutions;
 
 public class InscriptionController {
 
@@ -91,6 +93,34 @@ public class InscriptionController {
       inscriptions.persist(inscription);
 
       tx.commit();
+      
+      // 🔔 NUEVA FUNCIONALIDAD: Notificar a la institución
+      try {
+          // Buscar la institución por email para obtener su ID
+          Institutions institutions = new Institutions(entityManager);
+          Institution institution = institutions.findByEmail(opportunity.getInstitutionEmail()).orElse(null);
+          
+          if (institution != null) {
+              System.out.println("🔔 Sending notification to institution: " + institution.getId());
+              
+              // Crear servicio de notificaciones
+              NotificationService notificationService = new NotificationService(entityManager);
+              
+              // Crear mensaje personalizado
+              String message = "Nuevo participante inscrito: " + user.getFirstName() + " " + user.getLastName() + 
+                             " se inscribió en la oportunidad: " + opportunity.getName();
+              
+              // Crear y enviar notificación
+              Notification notification = new Notification(message, null, institution.getId());
+              notificationService.sendNotification(notification);
+              System.out.println("✅ Notification sent to institution: " + institution.getId());
+          }
+      } catch (Exception notificationError) {
+          // No fallar la inscripción si las notificaciones fallan
+          System.err.println("⚠️ Error sending notification to institution: " + notificationError.getMessage());
+          notificationError.printStackTrace();
+      }
+      
       response.type("application/json");
       return gson.toJson(Map.of("message", "Opportunity added successfully"));
     } catch (Exception e) {

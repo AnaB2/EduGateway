@@ -1,0 +1,16 @@
+@echo off
+echo Starting EduGateway Backend...
+
+echo Step 1: Creating database directory...
+if not exist db mkdir db
+
+echo Step 2: Starting HSQLDB database...
+start "HSQLDB Server" java -cp "lib/hsqldb.jar" org.hsqldb.server.Server --database.0 file:db/mydb --dbname.0 xdb
+
+echo Step 3: Waiting for database to initialize...
+timeout /t 5 /nobreak
+
+echo Step 4: Starting backend application...
+gradlew.bat run
+
+pause

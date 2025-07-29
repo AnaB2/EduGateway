@@ -3,11 +3,18 @@ package austral.ing.lab1.controllers;
 import austral.ing.lab1.TokenManager;
 import austral.ing.lab1.model.Opportunity;
 import austral.ing.lab1.model.User;
+import austral.ing.lab1.model.Notification;
 import austral.ing.lab1.repository.Opportunities;
+import austral.ing.lab1.repository.NotificationService;
+import austral.ing.lab1.repository.Institutions;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -18,6 +25,7 @@ import com.google.gson.JsonParser;
 import spark.Request;
 import spark.Response;
 import spark.Route;
+import austral.ing.lab1.model.Institution;
 
 public class OpportunityController {
 
@@ -118,6 +126,36 @@ public class OpportunityController {
 
             opportunities.persist(opportunity);
             tx.commit();
+
+            // 🔔 NUEVA FUNCIONALIDAD: Notificar a los seguidores
+            try {
+                // Buscar la institución por email para obtener sus seguidores
+                Institutions institutions = new Institutions(entityManager);
+                Institution institution = institutions.findByEmail(requestedUserEmail).orElse(null);
+                
+                if (institution != null) {
+                    // Forzar la carga de seguidores
+                    Set<User> followers = institution.getFollowers();
+                    followers.size(); // Trigger lazy loading
+                    
+                    System.out.println("🔔 Sending notifications to " + followers.size() + " followers");
+                    
+                    // Crear servicio de notificaciones
+                    NotificationService notificationService = new NotificationService(entityManager);
+                    
+                    // Enviar notificación a cada seguidor
+                    for (User follower : followers) {
+                        String message = "Nueva oportunidad disponible: " + name + " en " + institution.getInstitutionalName();
+                        Notification notification = new Notification(message, follower.getId(), null);
+                        notificationService.sendNotification(notification);
+                        System.out.println("✅ Notification sent to user: " + follower.getId());
+                    }
+                }
+            } catch (Exception notificationError) {
+                // No fallar la creación de oportunidad si las notificaciones fallan
+                System.err.println("⚠️ Error sending notifications: " + notificationError.getMessage());
+                notificationError.printStackTrace();
+            }
 
             response.type("application/json");
             return gson.toJson(Map.of("message", "Opportunity added successfully"));

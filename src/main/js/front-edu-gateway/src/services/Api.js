@@ -64,8 +64,30 @@ const addAuthorizationHeader = (headers) => {
     return {...headers, Authorization: token, Email: email,};
 };
 
+// WebSocket singleton management
+let globalWebSocket = null;
+let globalMessageHandlers = [];
+let isConnecting = false;
+
 // Initialize WebSocket connection
 export const initializeWebSocket = (onMessageReceived) => {
+    // Add the message handler to the global list
+    if (onMessageReceived && !globalMessageHandlers.includes(onMessageReceived)) {
+        globalMessageHandlers.push(onMessageReceived);
+    }
+    
+    // If we already have an active connection, just add the handler
+    if (globalWebSocket && globalWebSocket.readyState === WebSocket.OPEN) {
+        console.log("WebSocket already connected, adding message handler");
+        return globalWebSocket;
+    }
+    
+    // If we're already connecting, wait for it
+    if (isConnecting) {
+        console.log("WebSocket connection in progress, handler added to queue");
+        return;
+    }
+    
     let reconnectAttempts = 0;
     const MAX_RECONNECT_ATTEMPTS = 5;
     const RECONNECT_DELAY = 5000;
@@ -73,51 +95,97 @@ export const initializeWebSocket = (onMessageReceived) => {
     let pingInterval;
 
     const connect = () => {
-        const socket = new WebSocket(`${API_URL}/notifications`);
+        isConnecting = true;
+        
+        // Create WebSocket URL - ensure we use ws:// protocol
+        const wsUrl = API_URL.replace('http://', 'ws://').replace('https://', 'wss://');
+        console.log("Connecting to WebSocket:", `${wsUrl}/notifications`);
+        
+        globalWebSocket = new WebSocket(`${wsUrl}/notifications`);
 
-        socket.onopen = () => {
-            console.log("WebSocket connection opened");
+        globalWebSocket.onopen = () => {
+            console.log("WebSocket connection opened successfully");
+            isConnecting = false;
             reconnectAttempts = 0;
 
             // Send initial message based on user type
-            const message = JSON.stringify(
-                getUserType() === "participant"
-                    ? { userId: getId() }
-                    : { institutionId: getId() }
-            );
-            socket.send(message);
+            try {
+                const message = JSON.stringify(
+                    getUserType() === "participant"
+                        ? { userId: getId() }
+                        : { institutionId: getId() }
+                );
+                console.log("Sending registration message:", message);
+                globalWebSocket.send(message);
+            } catch (error) {
+                console.error("Error sending registration message:", error);
+            }
 
             // Start heartbeat
             pingInterval = setInterval(() => {
-                if (socket.readyState === WebSocket.OPEN) {
-                    socket.send(JSON.stringify({ type: "ping" }));
+                if (globalWebSocket && globalWebSocket.readyState === WebSocket.OPEN) {
+                    globalWebSocket.send(JSON.stringify({ type: "ping" }));
                 }
             }, PING_INTERVAL);
         };
 
-        socket.onmessage = (event) => {
-            if (onMessageReceived) onMessageReceived(event.data);
+        globalWebSocket.onmessage = (event) => {
+            console.log("WebSocket message received:", event.data);
+            // Send message to all registered handlers
+            globalMessageHandlers.forEach(handler => {
+                try {
+                    if (handler) handler(event.data);
+                } catch (error) {
+                    console.error("Error in message handler:", error);
+                }
+            });
         };
 
-        socket.onclose = () => {
-            console.log("WebSocket connection closed");
+        globalWebSocket.onclose = (event) => {
+            console.log("WebSocket connection closed:", event.code, event.reason);
+            isConnecting = false;
             clearInterval(pingInterval);
+            
             if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+                console.log(`Attempting to reconnect... (${reconnectAttempts + 1}/${MAX_RECONNECT_ATTEMPTS})`);
                 setTimeout(() => {
                     reconnectAttempts++;
                     connect();
                 }, RECONNECT_DELAY);
             } else {
                 console.error("Max WebSocket reconnect attempts reached.");
+                globalWebSocket = null;
             }
         };
 
-        socket.onerror = (error) => {
+        globalWebSocket.onerror = (error) => {
             console.error("WebSocket error:", error);
+            isConnecting = false;
         };
     };
 
     connect();
+    return globalWebSocket;
+};
+
+// Function to remove message handlers (useful for cleanup)
+export const removeWebSocketHandler = (handler) => {
+    const index = globalMessageHandlers.indexOf(handler);
+    if (index > -1) {
+        globalMessageHandlers.splice(index, 1);
+    }
+};
+
+// Function to get current WebSocket status
+export const getWebSocketStatus = () => {
+    if (!globalWebSocket) return 'DISCONNECTED';
+    switch (globalWebSocket.readyState) {
+        case WebSocket.CONNECTING: return 'CONNECTING';
+        case WebSocket.OPEN: return 'OPEN';
+        case WebSocket.CLOSING: return 'CLOSING';
+        case WebSocket.CLOSED: return 'CLOSED';
+        default: return 'UNKNOWN';
+    }
 };
 
 export const addOpportunity = async (opportunityData) => {
@@ -741,7 +809,14 @@ export async function createChat(emailDestino, id) {
             throw new Error('Network response was not ok');
         }
 
-        return "OK";
+        const data = await response.json();
+        console.log("💬 Chat creation response:", data);
+        
+        return {
+            chatId: data.chatId,
+            existed: data.existed,
+            message: data.message
+        };
     } catch (error) {
         console.error("Error al crear chat:", error);
         throw error;
@@ -824,3 +899,206 @@ export async function updateUserTags(email, tags) {
         throw error;
     }
 }
+
+// ===== NOTIFICATION FUNCTIONS =====
+
+// Obtener notificaciones del usuario
+export const getUserNotifications = async (userId) => {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const response = await fetch(`${API_URL}/notifications/user?userId=${userId}`, {
+            method: 'GET',
+            headers,
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch user notifications');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to get user notifications:", error);
+        throw error;
+    }
+};
+
+// Obtener notificaciones de la institución
+export const getInstitutionNotifications = async (institutionId) => {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const response = await fetch(`${API_URL}/notifications/institution?institutionId=${institutionId}`, {
+            method: 'GET',
+            headers,
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch institution notifications');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to get institution notifications:", error);
+        throw error;
+    }
+};
+
+// Obtener contador de notificaciones no leídas
+export const getUnreadNotificationCount = async () => {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const userType = getUserType();
+        const id = getId();
+        const param = userType === "participant" ? `userId=${id}` : `institutionId=${id}`;
+
+        const response = await fetch(`${API_URL}/notifications/unread-count?${param}`, {
+            method: 'GET',
+            headers,
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch unread count');
+        }
+
+        const data = await response.json();
+        return data.unreadCount;
+    } catch (error) {
+        console.error("Failed to get unread notification count:", error);
+        return 0;
+    }
+};
+
+// Marcar notificación como leída
+export const markNotificationAsRead = async (notificationId) => {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const response = await fetch(`${API_URL}/notifications/mark-read`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ notificationId: notificationId.toString() }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to mark notification as read');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to mark notification as read:", error);
+        throw error;
+    }
+};
+
+// Marcar todas las notificaciones como leídas
+export const markAllNotificationsAsRead = async () => {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const userType = getUserType();
+        const id = getId();
+        const body = userType === "participant" 
+            ? { userId: id.toString() } 
+            : { institutionId: id.toString() };
+
+        const response = await fetch(`${API_URL}/notifications/mark-all-read`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(body),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to mark all notifications as read');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to mark all notifications as read:", error);
+        throw error;
+    }
+};
+
+// Obtener notificaciones según el tipo de usuario
+export const getNotifications = async () => {
+    const userType = getUserType();
+    const id = getId();
+    
+    if (userType === "participant") {
+        return await getUserNotifications(id);
+    } else {
+        return await getInstitutionNotifications(id);
+    }
+};
+
+export const getChatMessages = async (chatId) => {
+    try {
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const response = await fetch(`${API_URL}/get-messages-by-chat`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ chatId: chatId })
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log("💬 Chat messages response:", data);
+        return data;
+    } catch (error) {
+        console.error("Error al obtener mensajes del chat:", error);
+        throw error;
+    }
+};
+
+export const sendMessage = async (chatId, senderId, receiverId, content, receiverType) => {
+    try {
+        // Validar que todos los parámetros requeridos estén presentes
+        if (!chatId || !senderId || !receiverId || !content || !receiverType) {
+            throw new Error(`Missing required parameters: chatId=${chatId}, senderId=${senderId}, receiverId=${receiverId}, content=${content}, receiverType=${receiverType}`);
+        }
+
+        const headers = addAuthorizationHeader({
+            'Content-Type': 'application/json',
+        });
+
+        const response = await fetch(`${API_URL}/send-message`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ 
+                chatId: chatId.toString(),
+                sender: senderId.toString(),
+                receiver: receiverId.toString(),
+                content: content,
+                receiverType: receiverType
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log("💬 Message sent response:", data);
+        return data;
+    } catch (error) {
+        console.error("Error al enviar mensaje:", error);
+        throw error;
+    }
+};

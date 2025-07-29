@@ -2,6 +2,8 @@ package austral.ing.lab1.repository;
 
 import austral.ing.lab1.model.Chat;
 import austral.ing.lab1.model.Message;
+import austral.ing.lab1.model.User;
+import austral.ing.lab1.model.Institution;
 
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -34,8 +36,13 @@ public class Chats {
         return query.getResultList();
     }
 
-
-
+    public Optional<Chat> findChatByUserAndInstitution(User user, Institution institution) {
+        TypedQuery<Chat> query = entityManager.createQuery(
+            "SELECT c FROM Chat c WHERE c.user = :user AND c.institution = :institution", Chat.class);
+        query.setParameter("user", user);
+        query.setParameter("institution", institution);
+        return query.getResultList().stream().findFirst();
+    }
 
 
     public void persistMessage(Message message) {

@@ -37,25 +37,27 @@ public class NotificationService {
 
 
   public void sendMessageToOther(Message message, String receiverType, Long receiver){
-    EntityTransaction tx = entityManager.getTransaction();
     try {
-      tx.begin();
-      entityManager.persist(message);
-      tx.commit();
-
       // Enviar notificación en tiempo real a través de WebSocket
-      String messageContent =  message.getContent() + " from " + message.getSender() + " to " + message.getReceiver();
-      if (message.getSender() != null && message.getReceiver() != null) {
+      String messageContent = "New message: " + message.getContent() + " from " + message.getSender();
+      System.out.println("Sending WebSocket message to " + receiverType + " with ID: " + receiver);
+      
+      if (message.getSender() != null && receiver != null) {
         if ("participant".equals(receiverType)) {
-          NotificationEndpoint.sendMessageToUser(message.getSender(), messageContent);
+          System.out.println("Sending message to user: " + receiver);
+          NotificationEndpoint.sendMessageToUser(receiver, messageContent);
         } else if ("institution".equals(receiverType)) {
-          NotificationEndpoint.sendMessageToInstitution(message.getReceiver(), messageContent);
+          System.out.println("Sending message to institution: " + receiver);
+          NotificationEndpoint.sendMessageToInstitution(receiver, messageContent);
+        } else {
+          System.err.println("Unknown receiver type: " + receiverType);
         }
+      } else {
+        System.err.println("Sender or receiver is null - Sender: " + message.getSender() + ", Receiver: " + receiver);
       }
     } catch (Exception e) {
-      if (tx.isActive()) {
-        tx.rollback();
-      }
+      System.err.println("Error in sendMessageToOther: " + e.getMessage());
+      e.printStackTrace();
       throw e;
     }
   }
